@@ -1,4 +1,4 @@
-# MASTER SPEC v3: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.1: long-form 1080p screen-recording video (YouTube)
 
 Generic recipe for turning **screen recordings + your own voice recording** into a finished 16:9 YouTube long-form video: sync, render, Remotion overlays, title, description, chapters, site. Proven on "Claude Missing Features" (12:30, 1920x1080). It replaces the Shorts-only flow in `README.md` for long form; the Shorts rules there still apply to 9:16 videos.
 
@@ -99,12 +99,37 @@ Check `ffprobe` for the audio stream before claiming a clip is silent.
 
 ---
 
+## 6a. Cuts (repetitive parts)
+
+Cuts are data, not edits to the video: `remotion/src/cuts.json` = `[[from,to],...]` in **seconds on the source (base.mp4) timeline**. `cuts.ts` builds the kept segments; `LongForm` plays them back to back with `Series` (3-frame audio fade at each cut, so no click); `Root` sets the composition length with `calculateMetadata`. `srcTime(outFrame)` maps the output back to the source, so subtitles and overlays stay on **source** time and never need re-timing.
+
+1. Find candidates: `python3 -I scripts/find_repeats.py` lists repeated 4-word runs, stutters ("blank, blank") and gaps over 3 s (silence or screen-only).
+2. Decide by ear and by eye in the player (timestamped feedback), then write the ranges to `cuts.json`. Cut on sentence or breath boundaries; never inside a word.
+3. Re-run `python3 -I scripts/build_subs.py assets/whisper_words.json <offset>`: `subtitles.srt/.vtt` are rewritten on the **final** timeline (cues inside a cut dropped, later cues shifted); `subs.json`/`subs.js` stay on the source timeline.
+4. **Chapters shift:** every chapter after a cut moves earlier by the removed length. Recompute them from the final timeline before pasting into the description.
+5. Test with a still, not by eye alone: temp cut `[[10,20]]`, render frame 420, expect source second 24.0 and the matching caption, then restore `[]`.
+
+## 6b. Animated subtitles
+
+- Need **word timestamps**: `whisper voice16k.wav --model small --language en --word_timestamps True --output_format json` (about 10-15 min on CPU for 12 min of audio). Without them `build_subs.py` falls back to estimated timings (character-length weights).
+- `build_subs.py` applies the product-name fixes (`FIX`: "cloud" -> Claude, "Grok bot", "Homebrew", "HTML", "Canva"), chunks cues to 70 characters, and keeps real word timings when the fixed text still has the same word count.
+- `Subtitles.tsx`: phrase springs in and fades out; the spoken word turns accent colour and pops (scale <= 1.07); upcoming words are dimmed. **Keep the flex gap >= 24 px**, otherwise the pop makes words touch ("newfeature").
+- Burned-in captions cover UI at the bottom; also upload the `.srt` so viewers can use YouTube's own captions. Proof-read the `.srt` first.
+
+## 6c. Recorder UI and image overlays
+
+- Screen recordings often **start (and end) on the recorder itself** (OBS Studio window, dock tooltip "OBS"). Check frames at 0-3 s and the last 3 s, and sweep the whole video with a 10 s contact sheet.
+- Do not cut the opening if the voice already speaks: cover it. `overlays.json` -> `intro_card` shows the `Thumb` design over `0 to 2.3 s`, fading out over 0.3 s.
+- `overlays.json` -> `images: [{from,to,src}]` shows an image full-frame (files in `remotion/public/img/`, not committed) on source time, with 0.2 s fades. Use it wherever private or distracting screen content must be replaced.
+- Tooltips that flash while the cursor crosses the dock (iTerm, OBS) are small; cover them only if the owner asks.
+
 ## 7. Website (GitHub Pages)
 
 | Page | File | Built by | Purpose |
 |---|---|---|---|
-| Project | `index.html` | by hand | pre-prod, prod, post-prod status |
-| Player | `player.html` | by hand | plays `long.mp4` if hosted, otherwise a local file picker (the video is never committed) |
+| Project hub | `index.html` | by hand | links to the stage pages |
+| Pre / Prod / Post | `preprod.html`, `prod.html`, `postprod.html` | by hand | one page per stage with a status table |
+| Player | `player.html` | by hand | plays `long.mp4` if hosted, otherwise a local file picker (never committed); subtitle track from `subs.js`; **timestamped feedback box** (Insert current time, Copy) whose text the owner pastes back to Claude |
 | Metadata | `metadata.html` | `build_site.py` | title, description, tags with copy buttons |
 | Master spec | `spec.html` | `build_site.py` | this file, rendered |
 | Menu + notes | `nav.js` | by hand | shared menu (`LINKS`), emoji on every item, 📝 notes panel |
@@ -131,6 +156,8 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 - [ ] Chapters spot-checked against the video; first is `0:00`
 - [ ] Product names corrected in captions and copy
 - [ ] Thumbnail 1920x1080 readable at 160 px wide
+- [ ] First and last 3 s checked for recorder UI (OBS) and covered; cuts proven with a still
+- [ ] Subtitles proof-read; `.srt` matches the final timeline (cuts applied); chapters re-timed after cuts
 - [ ] No secrets in the repo (`grep -rI "fal_sk_\|sk-"`); no media files tracked (`git ls-files | grep -E "mp4|wav"`)
 
 ---
@@ -139,7 +166,7 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 
 - [ ] `~/Downloads/<slug>-1080p.mp4` rendered and verified
 - [ ] `metadata.md` written and copied to `~/Downloads`
-- [ ] Remotion project typechecks (`npx tsc --noEmit`) and Studio opens
+- [ ] Remotion project typechecks (`npx tsc --noEmit`), a test still renders (no error output) and Studio opens
 - [ ] Site built and opened in Chrome (`open -a "Google Chrome" <url>`)
 - [ ] Work on a branch (`<slug>-v1`), commit and push after each change, never commit media
 - [ ] Show every file as a clickable URL; use emojis in summaries
@@ -157,6 +184,11 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 | Private content in the first minute of a screen recording | Review the contact sheet and trim/blur before upload. |
 | Video must not go to git | `.gitignore` `*.mp4`/`*.wav`, symlinks in `remotion/public/`. |
 | Working directory moved into `remotion/` | Use absolute paths in commands. |
+| Remotion render 404 on `base.mp4` | The bundler does not follow a symlink to another folder. Use a **hard link** (`ln`, same disk, no extra space) in `remotion/public/`. |
+| `interpolate` threw "inputRange must be strictly monotonically increasing" | A volume fade with 0-frame edges made `[0,0,n,n]`. Use a `fade()` helper that only adds the edges that touch a cut. |
+| Animated captions: words touched | The active-word scale ate the 14 px gap. Gap 26 px, scale 1.07. |
+| Whole transcript flagged as repeats | 3-word runs match everywhere ("be able to"). Use 4-word runs from a different cue. |
+| Recording opened on the OBS window | Intro card over 0-2.3 s instead of cutting the first spoken words. |
 | Feature missing on screen | Title says so; do not promise the feature. |
 
 ---
