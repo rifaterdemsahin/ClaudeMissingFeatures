@@ -1,0 +1,1 @@
+window.EXPORT_MAP = {"segs": [[0.0, 68.47, 1, false, 0.0], [68.47, 79.0, 3, true, 68.47], [79.0, 750.033, 1, false, 71.98]], "total": 743.013, "outro": [[743.01, "Summary: what we learned", 11], [754.01, "Learn it in depth", 10]]};

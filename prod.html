@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude Missing Features: production</title></head><body><main>
+<h1>🎬 Production</h1>
+<table><tr><th>Step</th><th>Result</th><th>Tool</th></tr>
+<tr><td>Sync clips to voice</td><td>clip 1 at +4.75 s (conf 5.5), clip 2 at +486.09 s (conf 4.0), contiguous</td><td><code>scripts/sync_clips.py</code></td></tr>
+<tr><td>Base render</td><td>1080p30, blurred side fill, voice -14.5 LUFS, 750.07 s, 105 MB</td><td><code>scripts/render_base.sh</code></td></tr>
+<tr><td>Transcript</td><td>Whisper small, 209 subtitle cues, product names fixed</td><td><code>scripts/build_subs.py</code></td></tr>
+<tr><td>Remotion project</td><td>Composition <code>LongForm</code> + burned-in <code>Subtitles</code> + <code>Thumb</code></td><td><code>cd remotion &amp;&amp; npm run studio</code> (:3000)</td></tr>
+<tr><td>Animated subtitles (word highlight, spring in)</td><td>✅ <code>remotion/src/Subtitles.tsx</code>; word timings from Whisper <code>--word_timestamps</code></td><td><code>scripts/build_subs.py</code></td></tr>
+<tr><td>Cuts (repetitive parts)</td><td>✅ ready: edit <code>remotion/src/cuts.json</code>; candidates from <code>scripts/find_repeats.py</code></td><td>Remotion <code>Series</code></td></tr>
+<tr><td>OBS window at 0-2 s</td><td>✅ covered by an intro card; image overlays via <code>overlays.json</code></td><td>Remotion</td></tr>
+<tr><td>Intro card extended to 4.3 s, 10 explainer slides over personal windows</td><td>✅ <code>overlays.json</code> <code>slides</code></td><td>Remotion <code>Slide.tsx</code></td></tr>
+<tr><td>Blur: chat titles in the sidebar, sensitive words, screenshot sidebar</td><td>✅ generated from OCR (Apple Vision): 30 boxes</td><td><code>scripts/ocr_frames.swift</code>, <code>scripts/build_blurs.py</code></td></tr>
+<tr><td>Typing sped up 3x (1:08–1:19, muted)</td><td>✅ <code>overlays.json</code> <code>speedups</code></td><td>Remotion <code>playbackRate</code></td></tr>
+<tr><td>Export render</td><td>⏳ 22,291 frames, about 25 min → <code>remotion/out/long.mp4</code></td><td><code>npm run render</code></td></tr>
+<tr><td>End card, more overlays</td><td>waiting for your feedback from the <a href="player.html">player</a></td><td>Remotion</td></tr></table>
+<p>← <a href="preprod.html">Pre-production</a> · <a href="postprod.html">Post-production →</a></p>
+</main><script src="nav.js"></script></body></html>

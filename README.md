@@ -1,3 +1,5 @@
+> 🌐 **Live site (GitHub Pages):** https://rifaterdemsahin.github.io/ClaudeMissingFeatures/ · [Architecture](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/architecture.html) · [Player](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/player.html) · [Master spec](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/spec.html)
+
 # ClaudeMissingFeatures
 
 
@@ -425,3 +427,9 @@ Page: `design.html` (menu 🧭), built by `scripts/build_design.py` (mermaid dia
 **Measure (hypothesis, no baseline yet):** comments asking "what is X?", new community members after each Short (add a join question "Which Short brought you here?"), activation (intro/result posts), proof shared per term, member-requested terms that become Shorts. Judge the first 3–5 term Shorts as an experiment; no income or result promises to members.
 
 See [design.html](design.html) and [skool.html](skool.html).
+
+---
+
+## 24. 🆕 Long-form 1080p (2026-11-11)
+
+For 16:9 YouTube long form (screen recordings + own voice, synced with `scripts/sync_clips.py`, rendered with `scripts/render_base.sh`, overlays in `remotion/`), use the new **[MASTER_SPEC.md](MASTER_SPEC.md) v3**. Site: [index.html](index.html) · [player.html](player.html) · [metadata.html](metadata.html) · [spec.html](spec.html). Media files are never committed.

@@ -1,0 +1,155 @@
+[
+ {
+  "id": 1,
+  "when": "round 1",
+  "who": "owner",
+  "said": "have initial 0:00 stay 2 seconds more longer Claude Whiteboard missing",
+  "decision": "Intro card (Thumb design) extended from 2.3 s to 4.3 s on the source timeline",
+  "how": "overlays.json intro_card.to = 4.3",
+  "check": "still at 10 s; player"
+ },
+ {
+  "id": 2,
+  "when": "round 1",
+  "who": "owner",
+  "said": "remove the background where it shows IBM, instead place a slide that explains what we are doing",
+  "decision": "Slide 'What we are doing' over 4.3 to 16.0 s; the real recording there showed an IBM chat and a personal Grok Bot window",
+  "how": "overlays.json slides[0]",
+  "check": "OCR found the IBM chat title on screen 4 to 16 s; still at 10 s"
+ },
+ {
+  "id": 3,
+  "when": "round 1",
+  "who": "owner",
+  "said": "cover up personal stuff with slides",
+  "decision": "Found 9 more windows with personal apps (OCR: Skool, LinkedIn, Gmail, Rag Manager lists) and covered each with a short explainer slide written from what is said at that moment. Covered, not cut, so the narration stays intact",
+  "how": "scripts/find_personal_windows.py -> overlays.json slides[1..9]",
+  "check": "verify_export.py OCR of the final video"
+ },
+ {
+  "id": 4,
+  "when": "round 1",
+  "who": "owner",
+  "said": "01:08:14 typing speed up the back footage",
+  "decision": "Timecode read as mm:ss:ff at 30 fps = 68.47 s. Typing runs to the send at about 79 s: played at 3x and muted (speech sped up is unusable; the typed text is on screen). Captions hidden inside it",
+  "how": "overlays.json speedups[0]; cuts.ts playbackRate",
+  "check": "export is 10.5 s shorter there; time map in export_map.js"
+ },
+ {
+  "id": 5,
+  "when": "round 1",
+  "who": "owner",
+  "said": "blur the parts that say market participant onboarding 04:17:28 and similar places",
+  "decision": "04:17:28 = 257.93 s. Blur the chat-title list in the app sidebar whenever it shows (two fixed boxes), sensitive words anywhere, and the mini sidebar inside the pasted screenshot (anchored to the line under it). Boxes are generated from OCR, not placed by hand",
+  "how": "scripts/ocr_frames.swift, build_blurs.py -> overlays.json blurs",
+  "check": "real still at 4:17:28; verify_export.py"
+ },
+ {
+  "id": 6,
+  "when": "verification",
+  "who": "assistant",
+  "said": "verify_export.py found sensitive text still visible at 6:30, 6:58, 8:36 and 12:22",
+  "decision": "OCR samples every 2 s, so edges leaked 1 to 2 s. Pad every blur box by 1.5 s and slides by 0.5 s before and 1.8 s after; checker flags app lists only when 2+ lines show together",
+  "how": "build_blurs.py PAD; overlays.json slides; verify_export.py",
+  "check": "re-run verify_export.py on the new export"
+ },
+ {
+  "id": 7,
+  "when": "round 2",
+  "who": "owner",
+  "said": "[export 0:03] in and out transition should not be there",
+  "decision": "Removed every in/out effect: intro card and slides cut hard (no fades), slide bullets appear at once, caption phrases appear and disappear without spring or fade (the active word is still highlighted by colour). Audio fades at cuts stay (they prevent clicks)",
+  "how": "Slide.tsx, ImageOverlays.tsx, Subtitles.tsx",
+  "check": "stills; ask the owner if a specific effect at 0:03 was meant"
+ },
+ {
+  "id": 8,
+  "when": "round 2",
+  "who": "owner",
+  "said": "[export 9:25] the hoover comes in the audio, cut all that part out",
+  "decision": "Export 9:25 = source 572 s. Spectrogram and noise-floor analysis: the hoover starts at about 571 s and runs to the end of the recording (haze +12 dB). Cutting all of it would remove the planner canvas demo and the conclusion (about 3 min), so the hoover is removed with noise reduction learned from 592 to 622 s (hoover-only room tone), from 566 s on, with a 1.5 s crossfade. Result: haze back to 0 dB vs the clean part, speech level -0.5 dB",
+  "how": "scripts/denoise_audio.py -> *-1080p-clean.mp4 (video stream copied); remotion/public/base.mp4 points to it",
+  "check": "numbers printed by the script (before/after per minute). Owner to listen; a hard cut remains possible if wanted"
+ },
+ {
+  "id": 9,
+  "when": "round 2",
+  "who": "owner",
+  "said": "[export 11:20] remove the family picture part in the back",
+  "decision": "Export 11:20 = source 687 s: while the app quits and reopens the desktop shows the wallpaper and a photo widget with people. Covered by the 'Update finished' slide, extended to 672.5 to 689.0 s (narration kept)",
+  "how": "overlays.json slides[9]",
+  "check": "still at source 686 s shows the slide"
+ },
+ {
+  "id": 10,
+  "when": "round 2",
+  "who": "owner",
+  "said": "[export 12:23] end the video with a summary part",
+  "decision": "Added an ending after the footage: 'Summary: what we learned' slide, 11 s, four points taken from what is said (gradual rollout, no beta switch, update everything, use other artifact types). Silent",
+  "how": "overlays.json outro[0]; Outro.tsx",
+  "check": "still at the first outro frame"
+ },
+ {
+  "id": 11,
+  "when": "round 2",
+  "who": "owner",
+  "said": "at the end have the CTA to delivery pilot skool community to learn in depth",
+  "decision": "Final 10 s card: 'Learn it in depth', 'Join the Delivery Pilot community on Skool', skool.com/delivery-pilot-8938, 'Link in the description and the pinned comment'. No income or result promises",
+  "how": "overlays.json outro[1]",
+  "check": "still at the CTA frame"
+ },
+ {
+  "id": 12,
+  "when": "player",
+  "who": "owner",
+  "said": "player needs speed up and speed down, J K L mapped; space bar to stop",
+  "decision": "Space/K pause, L faster (1,2,4,8x), J slower (down to 0.25x), 1 normal, arrows 5 s, comma/period frame step, F fullscreen; ignored while typing",
+  "how": "player.html",
+  "check": "simulated key presses in Chrome"
+ },
+ {
+  "id": 13,
+  "when": "player",
+  "who": "owner",
+  "said": "have original and the latest export on the player page",
+  "decision": "Original / Latest export buttons, side by side with a time map, export info, version-tagged feedback notes",
+  "how": "player.html, export_map.js",
+  "check": "opened in Chrome"
+ },
+ {
+  "id": 14,
+  "when": "round 1",
+  "who": "owner",
+  "said": "have the subtitles done / animated",
+  "decision": "Whisper word timings -> animated captions (active word highlighted) and .srt/.vtt for YouTube; product names fixed (Claude, Grok bot, Homebrew)",
+  "how": "build_subs.py, Subtitles.tsx",
+  "check": "stills; owner proof-read pending"
+ },
+ {
+  "id": 15,
+  "when": "round 3",
+  "who": "owner",
+  "said": "use whiteboard.jpeg from Downloads: mention in the video this was the expected feature to see, and use an arrow to the whiteboard feature",
+  "decision": "Image card at 1:51 to 2:03 (source 111 to 123 s), where the narration says the whiteboard is missing: caption 'This is the feature I expected to see: Whiteboard', orange box around the Whiteboard (Beta) tile and an arrow pointing at it. Image stays local (remotion/public/img, not committed)",
+  "how": "overlays.json images[0]; ImageOverlays.tsx ImageCard",
+  "check": "real still at source 116 s"
+ },
+ {
+  "id": 16,
+  "when": "round 3",
+  "who": "owner",
+  "said": "logically group to menu",
+  "decision": "Site menu grouped: Start, Make, Review, Links",
+  "how": "nav.js GROUPS",
+  "check": "opened in Chrome"
+ },
+ {
+  "id": 17,
+  "when": "round 3",
+  "who": "owner",
+  "said": "master spec should create a video faster by getting what is needed; include a prompt to execute on top",
+  "decision": "Prompt to execute and a 'get what is needed' checklist added at the top of the spec",
+  "how": "MASTER_SPEC.md top",
+  "check": "kit test from scratch"
+ }
+]
