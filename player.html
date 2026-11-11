@@ -2,43 +2,61 @@
 <title>Claude Missing Features: player</title>
 <style>
 .vbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
-.vbar button.off{background:#2a2a38;color:#ddd}
+button.off{background:#2a2a38;color:#ddd}
 #vids{display:grid;grid-template-columns:1fr;gap:10px}
 #vids.cmp{grid-template-columns:1fr 1fr}
 .pane{position:relative}.pane video{width:100%;background:#000;border-radius:12px;display:block}
 .tag{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:8px;padding:2px 10px;font-size:13px;z-index:2}
 #pane2{display:none}#vids.cmp #pane2{display:block}
 .box{background:#1a1a24;border-radius:8px;padding:8px 12px;margin:8px 0}
+.grow{flex:1}
+.pn{background:#14141c;border:1px solid #2a2a38;border-radius:10px;margin:10px 0}
+.pn>summary{cursor:pointer;padding:10px 14px;font-weight:700;list-style:none;user-select:none}
+.pn>summary::-webkit-details-marker{display:none}
+.pn>summary::before{content:"▸ ";color:#ff7a3d}.pn[open]>summary::before{content:"▾ "}
+.pnb{padding:0 14px 12px}
 kbd{background:#2a2a38;border:1px solid #444;border-radius:4px;padding:0 6px;font-size:12px}
 </style></head><body><main>
 <h1>▶️ Player &amp; output</h1>
-<p>Compare the <b>original</b> (synced screen recording + voice) with the <b>latest export</b> (Remotion: intro card, slides, blurred sidebar, speed-up, animated subtitles). Neither video is stored in git.</p>
 <div class="vbar">
   <button id="bo">🎞️ Original</button>
   <button id="be" class="off">✨ Latest export</button>
   <label><input type="checkbox" id="cmp"> Side by side</label>
   <label><input type="checkbox" id="cc" checked> Subtitles (original)</label>
+  <label>Speed <select id="s"><option>0.25</option><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option><option>3</option><option>4</option><option>8</option></select></label>
+  <span class="grow"></span>
+  <button id="pa" class="off" title="Collapse or expand all panels">▾ Collapse all</button>
 </div>
 <p id="st" class="box">Loading video…</p>
 <div id="vids">
   <div class="pane"><span class="tag" id="tag1">Original</span><span class="tag" id="kb" style="left:auto;right:10px;display:none"></span><video id="v" controls src="long.mp4"></video></div>
   <div class="pane" id="pane2"><span class="tag">Latest export (burned-in subtitles)</span><video id="v2" muted playsinline></video></div>
 </div>
-<p id="expinfo" class="box"></p>
-<p class="box">⌨️ <b>Keys</b> (click outside text boxes): <kbd>Space</kbd>/<kbd>K</kbd> pause · <kbd>L</kbd> faster (1→2→4→8×) · <kbd>J</kbd> slower (÷2 down to 0.25×) · <kbd>1</kbd> normal speed · <kbd>←</kbd>/<kbd>→</kbd> ±5 s · <kbd>,</kbd>/<kbd>.</kbd> one frame back/forward · <kbd>F</kbd> fullscreen</p>
-<p>🧪 <a href="http://localhost:3000/LongForm" target="_blank" rel="noopener">Remotion Studio: http://localhost:3000/LongForm</a> (run <code>npm run studio</code> in <code>remotion/</code>) · <a href="run.html">all run commands</a></p>
-<p><label>Local file (original): <input type="file" id="f" accept="video/mp4"></label> Speed: <select id="s"><option>0.25</option><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option><option>3</option><option>4</option><option>8</option></select></p>
-<h2>📝 Feedback (timestamped)</h2>
+
+<details class="pn" data-key="fb" open><summary>📝 Feedback (timestamped)</summary><div class="pnb">
 <p><button id="ts">📍 Insert current time</button> <button id="fc">Copy feedback</button> <button id="fx" class="off">🗑️ Clear feedback</button> <button id="fu" style="display:none">↩ Undo clear</button> <span style="opacity:.7">Notes are tagged <code>[orig m:ss]</code> or <code>[export m:ss]</code> by the version you are watching.</span></p>
 <textarea id="fb" style="width:100%;height:180px;background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:8px;box-sizing:border-box" placeholder="Click Insert current time, then type your note. Saved in this browser. Copy and paste it to Claude."></textarea>
-<h2>Chapters</h2><ul id="ch"></ul>
-<h2>Measured specs</h2>
+</div></details>
+
+<details class="pn" data-key="ch" open><summary>📑 Chapters</summary><div class="pnb"><ul id="ch"></ul></div></details>
+
+<details class="pn" data-key="keys"><summary>⌨️ Keyboard shortcuts</summary><div class="pnb"><p>Click outside text boxes first. <kbd>Space</kbd>/<kbd>K</kbd> pause · <kbd>L</kbd> faster (1→2→4→8×) · <kbd>J</kbd> slower (÷2 down to 0.25×) · <kbd>1</kbd> normal speed · <kbd>←</kbd>/<kbd>→</kbd> ±5 s · <kbd>,</kbd>/<kbd>.</kbd> one frame back/forward · <kbd>F</kbd> fullscreen</p></div></details>
+
+<details class="pn" data-key="src"><summary>🧰 Sources and tools</summary><div class="pnb">
+<p id="expinfo" class="box"></p>
+<p><label>Local file (original): <input type="file" id="f" accept="video/mp4"></label></p>
+<p>🧪 <a href="http://localhost:3000/LongForm" target="_blank" rel="noopener">Remotion Studio: http://localhost:3000/LongForm</a> (run <code>npm run studio</code> in <code>remotion/</code>) · <a href="run.html">all run commands</a> · <a href="edl.html">EDL</a></p>
+<p>Compare the <b>original</b> (synced screen recording + voice) with the <b>latest export</b> (Remotion: intro card, slides, blurred sidebar, speed-up, animated subtitles). Neither video is stored in git.</p>
+</div></details>
+
+<details class="pn" data-key="specs"><summary>📊 Measured specs</summary><div class="pnb">
 <table><tr><th></th><th>Original</th><th>Latest export</th></tr>
 <tr><td>Resolution / fps</td><td>1920×1080, 30 fps</td><td>1920×1080, 30 fps</td></tr>
-<tr><td>Length</td><td>12:30 (750.07 s)</td><td id="explen">743 s planned (22,291 frames)</td></tr>
+<tr><td>Length</td><td>12:30 (750.07 s)</td><td id="explen">12:44 (764.1 s)</td></tr>
 <tr><td>File</td><td><code>long.mp4</code> (link to ~/Downloads/claude-missing-features-1080p.mp4)</td><td><code>export.mp4</code> (link to remotion/out/long.mp4)</td></tr>
 <tr><td>Subtitles</td><td>track from <code>subs.js</code> (toggle above)</td><td>burned in, animated word highlight</td></tr>
-<tr><td>Edits</td><td>none</td><td>intro card 0–4.3 s, 10 slides over personal windows, blurred chat titles, typing sped up 3x (1:08–1:19, muted)</td></tr></table>
+<tr><td>Edits</td><td>none</td><td>intro card 0–4.3 s, 10 explainer slides over personal windows, blurred chat titles, Whiteboard picture card with arrow, typing sped up 3x (1:08–1:19, muted), hoover noise removed, summary + community card at the end</td></tr></table>
+</div></details>
 </main><script src="nav.js"></script><script src="subs.js"></script><script src="export_map.js"></script><script src="chapters.js"></script><script>
 const $=id=>document.getElementById(id), v=$("v"), v2=$("v2"), st=$("st");
 const SRC={orig:"long.mp4",exp:"export.mp4"}, NAME={orig:"Original",exp:"Latest export"};
@@ -131,5 +149,12 @@ addEventListener("keydown",e=>{
   else if(k==="."&&v.paused){v.currentTime+=1/30;show("frame ▶")}
   else if(k==="f"){(v.requestFullscreen||v.webkitRequestFullscreen).call(v)}
 });
+
+// collapsible panels: remember open/closed per panel; Collapse/Expand all
+const panels=[...document.querySelectorAll("details.pn")];
+panels.forEach(d=>{try{const s=localStorage.getItem("pn:"+d.dataset.key);if(s!==null)d.open=s==="1"}catch(e){}
+  d.addEventListener("toggle",()=>{try{localStorage.setItem("pn:"+d.dataset.key,d.open?"1":"0")}catch(e){};panelBtn()})});
+function panelBtn(){$("pa").textContent=panels.every(d=>!d.open)?"▸ Expand all":"▾ Collapse all"}
+$("pa").onclick=()=>{const open=panels.every(d=>!d.open);panels.forEach(d=>d.open=open);panelBtn()};panelBtn();
 setVer(ver,false);
 </script></body></html>

@@ -1,4 +1,4 @@
-# MASTER SPEC v3.8: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.9: long-form 1080p screen-recording video (YouTube)
 
 ## ▶ Prompt to execute (paste into Claude Code, fill the `<…>`)
 
@@ -294,6 +294,7 @@ python3 -I scripts/build_blurs.py                                               
 - `scripts/serve.sh` links `long.mp4` (hard link to the original) and `export.mp4` (symlink to `remotion/out/long.mp4`, always the newest render, git-ignored).
 - Chapters in the player and in `metadata.md` come from `assets/chapters.json` through `build_chapters.py` (source and export timelines).
 - **Keyboard (YouTube/editor style, on the player):** `Space` or `K` pause/play; `L` faster (1 -> 2 -> 4 -> 8x); `J` slower (halves down to 0.25x); `1` normal speed; `<-` / `->` skip 5 s; `,` / `.` step one frame while paused; `F` fullscreen. Keys are ignored while typing in the feedback box. The speed menu follows the keys (options 0.25x to 8x). Reference for the behaviour: https://www.youtube.com/shorts/H-KoWWXG5OI
+- **Layout:** the video, then the **Feedback** panel directly under it (so notes are typed without scrolling), then collapsible panels: Chapters, Keyboard shortcuts, Sources and tools, Measured specs. Each panel is a `<details class="pn" data-key="…">`; open/closed state is remembered per panel in the browser, and **Collapse all / Expand all** sits in the control bar. Keep new panels in this pattern.
 - `player.html` has **Original / Latest export** buttons, **Side by side** (the export follows the original through speed-ups and cuts via `export_map.js`, muted, re-synced every 250 ms), live export info (size, render time from a HEAD request), chapters re-timed per version, subtitles track on the original only (the export has them burned in), and feedback notes tagged `[orig m:ss]` / `[export m:ss]`.
 
 ## 6g. EDL: the edit decision list (record every decision)
