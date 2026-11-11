@@ -24,6 +24,7 @@ rule = {"A": "chat-title list in the app sidebar", "B": "sensitive words", "C": 
 for r in "ABC":
     bs = [b for b in ov["blurs"] if b["rule"] == r]
     if bs: add("BLUR", min(b["from"] for b in bs), max(b["to"] for b in bs), f"{len(bs)} frosted boxes: {rule[r]}", "private titles and names; boxes generated from OCR (build_blurs.py)")
+for im in ov.get("images", []): add("IMAGE", im["from"], im["to"], f"Picture {im['src']}: \"{im.get('caption', '')} {im.get('caption2', '')}\" with a box and an arrow", im.get("why", "owner image"))
 for s in ov["speedups"]: add("SPEED", s["from"], s["to"], f"{s['rate']}x" + (", muted, captions hidden" if s.get("mute") else ""), s.get("why", ""))
 for af in (J("assets/audio_fixes.json") if (ROOT / "assets/audio_fixes.json").exists() else []): add("AUDIO", af["from"], af["to"], af["what"], af["why"])
 for c in cuts: add("CUT", c[0], c[1], "Removed", "see decisions")

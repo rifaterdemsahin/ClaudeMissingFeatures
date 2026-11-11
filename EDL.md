@@ -24,11 +24,12 @@ published: false
 | 11 | SLIDE | 11:12.50 | 11:29.00 | 11:05.48 | 11:21.98 | 16.5 | “Update finished”: Close and reopen Claude; My bots get updates too: all agents keep updating | covers a personal or distracting window (IBM chat, Grok Bot, family photo widget); narration kept | done |
 | 12 | BLUR | 0:13.50 | 12:30.50 | 0:13.50 | – | 737.0 | 18 frosted boxes: chat-title list in the app sidebar | private titles and names; boxes generated from OCR (build_blurs.py) | done |
 | 13 | BLUR | 3:43.50 | 12:08.50 | 3:36.48 | 12:01.48 | 505.0 | 7 frosted boxes: mini sidebar inside the pasted screenshot | private titles and names; boxes generated from OCR (build_blurs.py) | done |
-| 14 | SPEED | 1:08.47 | 1:19.00 | 1:08.47 | 1:11.98 | 10.5 | 3x, muted, captions hidden | typing the prompt (01:08:14 onwards) | done |
-| 15 | AUDIO | 9:26.00 | 12:30.03 | 9:18.98 | 12:23.01 | 184.0 | Noise reduction (hoover): stationary profile from 592–622 s, strength 0.8, 1.5 s crossfade in | owner note at export 9:25; the hoover runs from about 571 s to the end; cutting it would remove the conclusion | done |
+| 14 | IMAGE | 1:51.00 | 2:03.00 | 1:43.98 | 1:55.98 | 12.0 | Picture whiteboard.jpeg: "This is the feature I expected to see: Whiteboard" with a box and an arrow | owner image: the Whiteboard tile that should have appeared in Artifacts | done |
+| 15 | SPEED | 1:08.47 | 1:19.00 | 1:08.47 | 1:11.98 | 10.5 | 3x, muted, captions hidden | typing the prompt (01:08:14 onwards) | done |
+| 16 | AUDIO | 9:26.00 | 12:30.03 | 9:18.98 | 12:23.01 | 184.0 | Noise reduction (hoover): stationary profile from 592–622 s, strength 0.8, 1.5 s crossfade in | owner note at export 9:25; the hoover runs from about 571 s to the end; cutting it would remove the conclusion | done |
 | – | CUT | – | – | – | – | 0 | none applied | candidates below; nothing is cut until the owner decides | open |
-| 16 | OUTRO | – | – | 12:23.01 | 12:34.01 | 11.0 | Summary: what we learned | owner request: end with a summary, then the community call to action | done |
-| 17 | OUTRO | – | – | 12:34.01 | 12:44.01 | 10.0 | Learn it in depth (Delivery Pilot on Skool) | owner request: end with a summary, then the community call to action | done |
+| 17 | OUTRO | – | – | 12:23.01 | 12:34.01 | 11.0 | Summary: what we learned | owner request: end with a summary, then the community call to action | done |
+| 18 | OUTRO | – | – | 12:34.01 | 12:44.01 | 10.0 | Learn it in depth (Delivery Pilot on Skool) | owner request: end with a summary, then the community call to action | done |
 
 ## 2. How we worked
 
@@ -58,6 +59,9 @@ published: false
 | 12 | player | owner | player needs speed up and speed down, J K L mapped; space bar to stop | Space/K pause, L faster (1,2,4,8x), J slower (down to 0.25x), 1 normal, arrows 5 s, comma/period frame step, F fullscreen; ignored while typing | `player.html` | simulated key presses in Chrome |
 | 13 | player | owner | have original and the latest export on the player page | Original / Latest export buttons, side by side with a time map, export info, version-tagged feedback notes | `player.html, export_map.js` | opened in Chrome |
 | 14 | round 1 | owner | have the subtitles done / animated | Whisper word timings -> animated captions (active word highlighted) and .srt/.vtt for YouTube; product names fixed (Claude, Grok bot, Homebrew) | `build_subs.py, Subtitles.tsx` | stills; owner proof-read pending |
+| 15 | round 3 | owner | use whiteboard.jpeg from Downloads: mention in the video this was the expected feature to see, and use an arrow to the whiteboard feature | Image card at 1:51 to 2:03 (source 111 to 123 s), where the narration says the whiteboard is missing: caption 'This is the feature I expected to see: Whiteboard', orange box around the Whiteboard (Beta) tile and an arrow pointing at it. Image stays local (remotion/public/img, not committed) | `overlays.json images[0]; ImageOverlays.tsx ImageCard` | real still at source 116 s |
+| 16 | round 3 | owner | logically group to menu | Site menu grouped: Start, Make, Review, Links | `nav.js GROUPS` | opened in Chrome |
+| 17 | round 3 | owner | master spec should create a video faster by getting what is needed; include a prompt to execute on top | Prompt to execute and a 'get what is needed' checklist added at the top of the spec | `MASTER_SPEC.md top` | kit test from scratch |
 
 ## 4. Cut candidates (nothing applied yet)
 

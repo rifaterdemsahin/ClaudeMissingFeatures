@@ -1,30 +1,22 @@
 // Shared menu + notes panel. Edit LINKS once; every page loads this file.
 (function () {
   const CTA = "Join our Skool community: Delivery Pilot https://www.skool.com/delivery-pilot-8938";
-  const LINKS = [
-    ["architecture.html", "🏛️ Architecture"],
-    ["environment.html", "🧰 Environment"],
-    ["edl.html", "✂️ EDL"],
-    ["index.html", "🏠 Project"],
-    ["preprod.html", "📝 Pre-prod"],
-    ["prod.html", "🎬 Prod"],
-    ["postprod.html", "✅ Post-prod"],
-    ["player.html", "▶️ Player & output"],
-    ["run.html", "🧪 Run & links"],
-    ["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true],
-    ["metadata.html", "📺 YouTube metadata"],
-    ["spec.html", "📘 Master spec v3"],
-    ["readme.html", "📄 README (Shorts flow)"],
-    ["https://www.skool.com/delivery-pilot-8938", "🚀 Join Delivery Pilot", true],
+  // Menu grouped by what you are doing. Edit GROUPS once; every page loads this file.
+  const GROUPS = [
+    ["🧭 Start", [["architecture.html", "🏛️ Architecture"], ["environment.html", "🧰 Environment"], ["spec.html", "📘 Master spec (prompt)"]]],
+    ["🎬 Make", [["index.html", "🏠 Project"], ["preprod.html", "📝 Pre-prod"], ["prod.html", "🎬 Prod"], ["postprod.html", "✅ Post-prod"], ["run.html", "🧪 Run & links"]]],
+    ["🔎 Review", [["player.html", "▶️ Player"], ["edl.html", "✂️ EDL"], ["metadata.html", "📺 YouTube metadata"]]],
+    ["🔗 Links", [["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true], ["readme.html", "📄 README"], ["https://www.skool.com/delivery-pilot-8938", "🚀 Join Delivery Pilot", true]]],
   ];
   const here = location.pathname.split("/").pop() || "index.html";
   const nav = document.createElement("nav");
-  nav.innerHTML = '<b>🎬 Claude Missing Features</b>' + LINKS.map(([h, t, ext]) =>
-    `<a href="${h}" ${ext ? 'target="_blank" rel="noopener"' : ""} class="${h === here ? "on" : ""}">${t}</a>`).join("");
+  nav.innerHTML = '<b class="brand">🎬 Claude Missing Features</b>' + GROUPS.map(([g, items]) =>
+    `<span class="grp"><i>${g}</i>` + items.map(([h, t, ext]) =>
+      `<a href="${h}" ${ext ? 'target="_blank" rel="noopener"' : ""} class="${h === here ? "on" : ""}">${t}</a>`).join("") + "</span>").join("");
   const css = document.createElement("style");
   css.textContent = `body{margin:0;background:#0b0b0f;color:#eee;font:16px/1.6 system-ui,sans-serif}
   nav{position:sticky;top:0;z-index:9;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:10px 20px;background:#14141c;border-bottom:1px solid #2a2a38}
-  nav b{margin-right:12px}nav a{color:#bbb;text-decoration:none;padding:4px 8px;border-radius:8px}nav a:hover,nav a.on{background:#ff7a3d;color:#000}
+  nav .brand{margin-right:8px}.grp{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;padding:2px 10px;border-left:1px solid #2a2a38}.grp i{font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7a7a92;margin-right:4px}nav a{color:#bbb;text-decoration:none;padding:4px 8px;border-radius:8px}nav a:hover,nav a.on{background:#ff7a3d;color:#000}
   main{max-width:960px;margin:0 auto;padding:24px 20px 120px}h1,h2,h3{line-height:1.25}a{color:#ff9a66}
   code,pre{background:#1a1a24;border-radius:6px}code{padding:1px 5px}pre{padding:12px;overflow:auto}
   table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #2a2a38;padding:6px 10px;text-align:left;vertical-align:top}

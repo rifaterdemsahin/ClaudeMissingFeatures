@@ -29,7 +29,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | **Python packages** | numpy, scipy, noisereduce, soundfile | sync by cross-correlation, noise removal | **automatic**: created in `~/.cache/cmf-venv` on first run | `build_base.py`, `denoise_audio.py` |
 | **npm packages** (in `remotion/`) | remotion + @remotion/cli 4.0.250, react + react-dom 18.3.1, typescript 5.6.3, @types/react 18.3.12 | the video project | `cd remotion && npm install` | Studio, render, typecheck |
 | **http-server** | 14.1.1 | serves the site and player with video seeking (Range) | automatic via `npx` | `scripts/serve.sh` |
-| Optional: **gh**, **az**, **rclone** | current | GitHub Pages, Azure Key Vault (Drive folder id), Google Drive kit pull | `brew install gh azure-cli rclone`, then `gh auth login`, `az login`, `rclone config` (remote name `gdrive-shared`) | `pull_kit.sh`, Pages step |
+| Optional: **gh**, **az**, **rclone** | current | GitHub Pages, Azure Key Vault (Drive folder id), Google Drive kit pull and `scripts/backup_drive.sh` (always back up) | `brew install gh azure-cli rclone`, then `gh auth login`, `az login`, `rclone config` (remote name `gdrive-shared`) | `pull_kit.sh`, Pages step |
 
 ## 3. Files that must exist before processing
 

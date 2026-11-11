@@ -1,0 +1,5 @@
+#!/bin/zsh
+# OPTIONAL: back up to Google Drive on every push (background, never blocks the push).
+# Not active by default. To turn it on yourself:  git config core.hooksPath .githooks
+( cd "$(git rev-parse --show-toplevel)" && nohup scripts/backup_drive.sh >> "$HOME/.cache/cmf-backup.log" 2>&1 & )
+exit 0

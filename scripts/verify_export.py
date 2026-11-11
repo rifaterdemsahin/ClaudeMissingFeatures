@@ -7,8 +7,11 @@ kw = re.search(r'KEYWORDS = r"([^"]+)"', (ROOT / "scripts/build_blurs.py").read_
 extra = r"skool|linkedin|rag manager|nda agent|prospecting"          # personal app lists must be covered by slides (2+ lines in one frame)
 subprocess.check_call([str(ROOT / "scripts/ocr_all.sh"), v, str(ROOT / "assets/export_ocr.json")])
 D = json.load(open(ROOT / "assets/export_ocr.json")); leaks = []
+_m = re.search(r"=\s*(\{.*\});", (ROOT / "export_map.js").read_text()) if (ROOT / "export_map.js").exists() else None
+VIDEO_END = json.loads(_m.group(1))["total"] if _m else 1e9   # the intentional ending (summary, community CTA) starts here and is not checked
 for f, L in sorted(D.items()):
     t = int(f[:4]) - 1
+    if t >= VIDEO_END: continue
     apps = [l for l in L if re.search(extra, l["t"], re.I)]
     hits = [l for l in L if re.search(kw, l["t"], re.I)] + (apps if len(apps) >= 2 else [])
     for l in hits: leaks.append({"t": t, "text": l["t"][:80], "x": int(l["x"]), "y": int(l["y"])})

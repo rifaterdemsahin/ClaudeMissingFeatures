@@ -1,4 +1,45 @@
-# MASTER SPEC v3.6: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.8: long-form 1080p screen-recording video (YouTube)
+
+## ▶ Prompt to execute (paste into Claude Code, fill the `<…>`)
+
+```text
+Use the Master Spec (MASTER_SPEC.md in this repo; if this is a new project run scripts/pull_kit.sh <folder> then ./new-video.sh "<Title>" <seconds> first).
+Goal: turn my screen recordings + voice WAV into a finished 1080p YouTube long-form video, as fast as possible and with as few tokens as possible.
+
+Inputs: clips + WAV in ~/Downloads/<Project>/ ; title <…> ; slug <…> ; CTA community <name> at <URL> ; my images in ~/Downloads (<file> = <what it shows, where it should appear, arrow at what>) ; my notes (paste [orig m:ss] / [export m:ss] lines here).
+
+Do this in order and do not stop to ask unless you are blocked:
+1. scripts/check_env.sh, then install anything missing.
+2. scripts/pipeline.sh "~/Downloads/<Project>" <slug>, then read REPORT.md only. Do not view frames to find things; use OCR, numbers and one still to confirm a look.
+3. Edit remotion/src/overlays.json and cuts.json: slides over personal windows, speed-up for slow typing, my images with caption and arrow, a summary slide and a CTA card at the end, no transitions. Run scripts/build_blurs.py. If the audio scan shows steady noise (hoover, fan) remove it with scripts/denoise_audio.py instead of cutting minutes of content.
+4. Apply my notes: convert export time to source time, decide, log every decision in assets/edl_decisions.json.
+5. One render only (cd remotion && npm run render), then scripts/verify_export.py (OCR privacy check) and fix leaks by padding boxes or slides, then re-render once if needed.
+6. python3 -I scripts/build_subs.py ..., build_chapters.py, build_edl.py, build_site.py; write title, description, chapters, tags and pinned comment in metadata.md.
+7. Commit, push, merge to main, enable GitHub Pages, put the live link on top of README.md, back up to Google Drive (section 7b), and update the kit on Drive.
+8. Open the site, the player and Remotion Studio in Google Chrome (open -a "Google Chrome" <url>).
+
+Rules: media files, OCR output and REPORT.md never go to git; cover personal content with slides and blur titles; hard cuts; report each check with numbers; show clickable URLs; use emojis; if the permission system blocks a push, merge or upload, stop and tell me the exact command to run with the ! prefix.
+```
+
+## Get what is needed (so a video starts in minutes)
+
+| You provide | Where it comes from | Notes |
+|---|---|---|
+| Clips (`*.mp4`) + one voice `*.WAV` | `~/Downloads/<Project>/` | the only large inputs |
+| Title, slug, CTA name and URL | the prompt above | CTA is shown in the last card and in the description |
+| Your own images (feature screenshots, logos) | `~/Downloads/<file>` | copied to `remotion/public/img/` (local, not committed); placed with `overlays.json` `images` (caption, highlight box, arrow) |
+| Your notes from the player | pasted into the prompt | tagged `[orig m:ss]` / `[export m:ss]` |
+
+| The kit supplies | How to get it |
+|---|---|
+| scripts, Remotion project, templates, this spec | `scripts/pull_kit.sh <folder>` (Drive + Key Vault), then `./new-video.sh` |
+| a checked machine | `scripts/check_env.sh` (prints the install command for anything missing) |
+| the analysis | `scripts/pipeline.sh` (sync, base, Whisper, OCR, report) |
+
+Generated for you: base video, subtitles, blur boxes, personal-window list, cut candidates, chapters, EDL, site pages. Never needed: API keys, paid services.
+
+---
+
 
 Generic recipe for turning **screen recordings + your own voice recording** into a finished 16:9 YouTube long-form video: sync, render, Remotion overlays, title, description, chapters, site. Proven on "Claude Missing Features" (12:30, 1920x1080). It replaces the Shorts-only flow in `README.md` for long form; the Shorts rules there still apply to 9:16 videos.
 
@@ -199,7 +240,7 @@ Cuts are data, not edits to the video: `remotion/src/cuts.json` = `[[from,to],..
 
 - Screen recordings often **start (and end) on the recorder itself** (OBS Studio window, dock tooltip "OBS"). Check frames at 0-3 s and the last 3 s, and sweep the whole video with a 10 s contact sheet.
 - Do not cut the opening if the voice already speaks: cover it. `overlays.json` -> `intro_card` shows the `Thumb` design over `0 to 4.3 s` (2 s longer on request, so the title lands), fading out over 0.3 s.
-- `overlays.json` -> `images: [{from,to,src}]` shows an image full-frame (files in `remotion/public/img/`, not committed) on source time, with 0.2 s fades. Use it wherever private or distracting screen content must be replaced.
+- `overlays.json` -> `images: [{from,to,src,w,h,caption,caption2,highlight:{x,y,w,h},arrow:{x1,y1,x2,y2}}]` shows an image full-frame; with `caption` it becomes an **expected-feature card**: caption on top, an orange box around the feature and an arrow pointing at it (coordinates in the picture's own pixels, read them from the image; verify with one still). Example: `whiteboard.jpeg` (the Artifacts page with the Whiteboard tile) at 1:51–2:03, "This is the feature I expected to see: Whiteboard". Plain `images: [{from,to,src}]` shows an image full-frame (files in `remotion/public/img/`, not committed) on source time, with 0.2 s fades. Use it wherever private or distracting screen content must be replaced.
 - Tooltips that flash while the cursor crosses the dock (iTerm, OBS) are small; cover them only if the owner asks.
 
 ## 6d. Run it (links and commands)
@@ -282,6 +323,7 @@ Owner note example: "[export 9:25] the hoover comes in the audio, cut all that p
 
 | Page | File | Built by | Purpose |
 |---|---|---|---|
+| Menu groups | `nav.js` `GROUPS` | by hand | **🧭 Start** (Architecture, Environment, Master spec) · **🎬 Make** (Project, Pre-prod, Prod, Post-prod, Run & links) · **🔎 Review** (Player, EDL, YouTube metadata) · **🔗 Links** (Remotion Studio, README, community). Put a new page in the group that matches what the reader is doing; every item keeps its emoji |
 | Project hub | `index.html` | by hand | links to the stage pages |
 | Pre / Prod / Post | `preprod.html`, `prod.html`, `postprod.html` | by hand | one page per stage with a status table |
 | Run & links | `run.html` | by hand | Studio and player links, run commands, troubleshooting |
@@ -305,7 +347,7 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 ## 7a. Publish: GitHub Pages (do this for every project, do not forget)
 
 1. `python3 -I scripts/build_site.py` (renders the `.md` pages), check no private data or media is staged: `git add -n . | grep -Ei "\.(mp4|wav|zip)$|ocr_|REPORT.md"` must print nothing.
-2. **Commit and push** to the feature branch (never `main` directly): `git add -A && git commit -m "…" && git push -u origin <branch>`. Commit and push after every change, not only at the end.
+2. **Commit and push** the feature branch after every change: `git add -A && git commit -m "…" && git push -u origin <branch>`. When the video is finished and verified, **merge to `main`** (owner's rule): `git checkout main && git pull && git merge --no-ff <branch> && git push origin main`, then push the branch too. Work on a branch until then; do not commit unfinished work straight to `main`.
 3. **Enable GitHub Pages** (once per repo; the repo must be public or on a paid plan; everything committed becomes public):
 ```bash
 gh api -X POST repos/<user>/<repo>/pages -f "source[branch]=<branch>" -f "source[path]=/"
@@ -315,7 +357,20 @@ until [ "$(curl -s -o /dev/null -w '%{http_code}' https://<user>.github.io/<repo
    Keep an empty `.nojekyll` at the repo root so Pages serves the files as they are. Later pushes to the branch redeploy automatically (about 1 minute; add `?x=$RANDOM` to bypass the cache when checking).
 4. **Put the live link at the top of `README.md`** (first line): `> 🌐 **Live site (GitHub Pages):** https://<user>.github.io/<repo>/ · [Architecture](…/architecture.html) · [Player](…/player.html) · [Master spec](…/spec.html)`. Commit and push again.
 5. Open it in Chrome (`open -a "Google Chrome" https://<user>.github.io/<repo>/`) and click through the menu. The hosted player has no video (media is never committed): it shows the file-picker warning. To share the video itself, upload to YouTube (unlisted first).
-6. If the assistant's permission system blocks the push or the Pages call, run them yourself in the session with `! git push` and `! gh api -X POST …`, or allow them in settings.
+6. If the assistant's permission system blocks the push, the merge, the Pages call or an upload, run them yourself in the session with `! git push` and `! gh api -X POST …`, or allow them in settings.
+
+## 7b. Always back up to Google Drive
+
+After **every push** (and always after the merge to `main`), back up to the Drive folder "Claude Missing Features Kit" (id in Key Vault, secret `cmf-kit-drive-folder-id`):
+
+| What | Where in the folder | How |
+|---|---|---|
+| kit zip (scripts, Remotion project, templates) | `claude-missing-features-kit.zip` (replaced) | `scripts/build_kit.sh`, then upload |
+| `MASTER_SPEC.md`, `KIT_README.md` | same folder (replaced) | upload |
+| project backup (everything tracked by git, no media) | `project-backup-latest.zip` (replaced) and `backups/project-<time>-<branch>.zip` (kept) | `git archive --format=zip HEAD` |
+| latest export video (videos are not in git) | `videos/claude-missing-features-export-latest.mp4` | upload |
+
+Ways to do it: (a) `scripts/backup_drive.sh` does all of the above with `rclone` (0 tokens; needs `az` logged in and the `gdrive-shared` remote); (b) the assistant uploads the same files through the Google Drive connector; replace in place (upload the new file, then trash the old copy) so `pull_kit.sh` always gets the newest zip. (c) Optional, off by default: `git config core.hooksPath .githooks` makes `.githooks/pre-push` run (a) in the background on every push; install it yourself, the assistant's permission system may refuse standing automation. Never put OCR output, `REPORT.md`, keys or the Drive link in the repo; the Drive backup is private to the owner, but still back up only the tracked files plus the export video.
 
 ## 8. Sanity check (before publishing)
 
@@ -338,7 +393,8 @@ until [ "$(curl -s -o /dev/null -w '%{http_code}' https://<user>.github.io/<repo
 - [ ] `~/Downloads/<slug>-1080p.mp4` rendered and verified
 - [ ] `metadata.md` written and copied to `~/Downloads`
 - [ ] Remotion project typechecks (`npx tsc --noEmit`), a test still renders (no error output) and Studio opens
-- [ ] Site built, committed, pushed, **GitHub Pages enabled** (section 7a), live link at the top of `README.md`, opened in Chrome
+- [ ] Site built, committed, pushed, **merged to `main`**, **GitHub Pages enabled** (section 7a), live link at the top of `README.md`, opened in Chrome
+- [ ] **Backed up to Google Drive** (section 7b); every `scripts/*.py` compiles (`for f in scripts/*.py; do python3 -m py_compile $f; done`) and `zsh -n scripts/*.sh`
 - [ ] Work on a branch (`<slug>-v1`), commit and push after each change, never commit media
 - [ ] Show every file as a clickable URL; use emojis in summaries
 
@@ -375,6 +431,6 @@ until [ "$(curl -s -o /dev/null -w '%{http_code}' https://<user>.github.io/<repo
 
 ---
 
-## 11. Start prompt for a new Claude session
+## 11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)
 
 > Use MASTER_SPEC.md (v3) in this repo. Brief: title `…`; source folder `~/Downloads/<name>/`; CTA `…`. Sync the clips to the voice, render a 1920x1080 base video, transcribe, write title/description/chapters, set up Remotion and open Studio, build the site and open it in Chrome. Work on a branch, commit and push, never commit the media files. Show every file as a clickable URL and use emojis.

@@ -337,7 +337,30 @@
    "why": "typing the prompt (01:08:14 onwards)"
   }
  ],
- "images": [],
+ "images": [
+  {
+   "from": 111.0,
+   "to": 123.0,
+   "src": "whiteboard.jpeg",
+   "w": 1600,
+   "h": 1169,
+   "caption": "This is the feature I expected to see:",
+   "caption2": "Whiteboard",
+   "highlight": {
+    "x": 1073,
+    "y": 255,
+    "w": 182,
+    "h": 128
+   },
+   "arrow": {
+    "x1": 1535,
+    "y1": 215,
+    "x2": 1272,
+    "y2": 322
+   },
+   "why": "owner image: the Whiteboard tile that should have appeared in Artifacts"
+  }
+ ],
  "outro": [
   {
    "seconds": 11,
