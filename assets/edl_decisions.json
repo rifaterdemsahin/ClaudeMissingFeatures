@@ -324,9 +324,9 @@
   "when": "round 6",
   "who": "owner",
   "said": "publish page for YouTube, X.com and LinkedIn with placeholders; renders for all three with different lengths; upload exports to Azure Storage with keys in Key Vault, embed in the placeholders, let me review, add note taking",
-  "decision": "Publish page with per-platform cards, placeholders, counters, checks and notes. Platform cuts in variants.json: LinkedIn 3:19, X 1:54 (limit 2:20), YouTube full. Azure upload scripts: private container, read-only SAS links stored only locally; keys come from Key Vault. Copying the storage key into the vault was blocked by the permission system, so a one-time setup script is for the owner to run. Container created with the owner's login; file upload needs a blob-data role or a key route (pending the owner's choice)",
+  "decision": "Publish page with per-platform cards, placeholders, counters, checks and notes. Platform cuts in variants.json: LinkedIn 3:19, X 1:54 (limit 2:20), YouTube full. Azure: private container in dpprojects; the owner ran the one-time setup that stores the storage key in Key Vault (the assistant may not copy keys into the vault); upload_exports.py then read it from the vault, uploaded the three v5 files and made 30-day read-only links kept only in a git-ignored local file",
   "how": "variants.json, render_export.sh, build_publish.py, upload_exports.py, setup_azure_exports.sh",
-  "check": "page tested in Chrome; maps computed; renders and upload follow",
+  "check": "links tested: HTTP 206 with the signature, 404 without; page shows links and expiry",
   "in": "v5 platforms"
  },
  {

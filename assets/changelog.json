@@ -325,11 +325,6 @@
     "Time and order: 19 stages with who does each, measured vs estimated time, LLM involvement, parallelism, prep tips and a planning calculator (the render is about 2.3 × the video; keep the machine idle while it runs)"
    ],
    [
-    "☁️",
-    "Azure",
-    "Private container claude-missing-features-exports created in the storage account dpprojects using the owner's own login (no key). Uploading the files then failed: that identity has no blob-data role on the account. Not worked around (no role change, no key copy); three routes are offered to the owner"
-   ],
-   [
     "🎬",
     "Renders v5",
     "YouTube 11:59 (95.4 MB), LinkedIn 3:19 (27.9 MB), X 1:54 (10.5 MB, under the 2:20 limit); all three pass the OCR privacy check (0 sensitive lines); score 77.0 / 100, 11 key results met"
@@ -338,6 +333,16 @@
     "🐛",
     "Bug",
     "The privacy check flagged the ending of the platform cuts (it used the YouTube file's end); and the chapter measurement used source time for a chapter inside a cut, faking a 7 s chapter. Both fixed"
+   ],
+   [
+    "☁️",
+    "Azure",
+    "Private container claude-missing-features-exports in the storage account dpprojects. My first attempts (login identity) could create the container but not write files, and copying the storage key into Key Vault was blocked, so the owner ran the one-time setup (scripts/setup_azure_exports.sh) which stored cmf-exports-* in Key Vault. Then upload_exports.py read the key from the vault and uploaded the three v5 exports with 30-day read-only links (expire 2026-12-11)"
+   ],
+   [
+    "🧪",
+    "Azure check",
+    "All three links answer HTTP 206 with the exact file sizes (95.4, 27.9, 10.5 MB); the same URLs without the signature return 404, so the container is private. The links live only in the git-ignored publish_links.js; the live site and repo never contain them"
    ]
   ]
  }

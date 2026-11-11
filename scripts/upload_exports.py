@@ -24,7 +24,7 @@ if login: common += ["--auth-mode", "login"]
 else: env["AZURE_STORAGE_KEY"] = secret("cmf-exports-storage-key")        # passed through the environment, never printed
 if login and "--create-container" in sys.argv: subprocess.check_call(["az", "storage", "container", "create", *common, "-n", cont, "--public-access", "off", "-o", "none"], env=env)
 if not login and not env["AZURE_STORAGE_KEY"]: sys.exit("storage key missing in Key Vault; run scripts/setup_azure_exports.sh")
-expiry = (datetime.datetime.utcnow() + datetime.timedelta(days=min(days, 7) if login else days)).strftime("%Y-%m-%dT%H:%MZ")
+expiry = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=min(days, 7) if login else days)).strftime("%Y-%m-%dT%H:%MZ")
 links = json.load(open(ROOT / "assets/publish_links.json")) if (ROOT / "assets/publish_links.json").exists() else {}
 for e in items:
     blob = pathlib.Path(e["file"]).name

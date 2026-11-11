@@ -1,4 +1,4 @@
-# MASTER SPEC v3.16: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.17: long-form 1080p screen-recording video (YouTube)
 
 <!--TOC-->
 ## 📑 Contents
@@ -45,6 +45,7 @@
 40. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
 41. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
 <!--/TOC-->
+
 
 
 
@@ -480,6 +481,7 @@ All are 16:9, 1920×1080, captions burned in (no separate file needed).
 - **Check each file:** `python3 -I scripts/verify_export.py exports/<file>` (the result is stored per export and shown on the Publish page) and `measure_video.py` for the full video.
 - **Publish page** ([publish.html](publish.html), menu 📣 Publish, built by `scripts/build_publish.py` from `assets/publish.json`): one collapsible card per platform with format and limit, the export (key, length, size, what changed), a **length bar against the limit** (red when over), the privacy-check result, a player link, the **storage link placeholder** `<Azure storage link appears here after upload>`, the **post link placeholder** `<paste the … link when shared>`, ready-to-paste title and text with **character counters** (YouTube title 100, X 280, LinkedIn 3,000), a **My note** box per platform and an all-notes list (copy, send to player feedback, clear with undo, green ✔ Saved), and a "before you share" checklist. When the owner shares, they give the post links; put them in `assets/publish.json` (`post_url`, `status: shared`) and run `build_all.sh`: the page fills in and the menu **🔗 Links** group shows ▶️ YouTube post, 💼 LinkedIn post, ✖️ X post (the group also lists the community and the Azure portal links from `project.json › links`).
 - **Azure Storage and Key Vault:** exports go to a **private** blob container (`claude-missing-features-exports` in the owner's storage account), never public. Secrets live in Key Vault: `cmf-exports-storage-account`, `cmf-exports-container`, `cmf-exports-storage-key`. **One-time setup by the owner:** `! scripts/setup_azure_exports.sh [account] [resource-group] [vault]` (creates the container and stores the three secrets; the assistant's permission system does not copy storage keys into the vault). Then `python3 scripts/upload_exports.py [--version N] [--days 30]` reads the vault, uploads the latest export of each platform and creates **time-limited read-only SAS links**; or `--login` uses `az login` (Azure AD, no key, links up to 7 days). **Signed links are credentials:** they are written only to the git-ignored `publish_links.js` / `assets/publish_links.json`, which the Publish page loads locally; never commit them or put them on the public site.
+- **Verify the links (done this way here):** HEAD/range requests with the signature must return 206 with the full file size, and the same URL without the signature must return 404 (private). Print status and sizes only, never the signed URL.
 - **Review flow:** render all platforms → verify each → upload → open `publish.html` locally and the player → write notes → the owner shares and sends the post links → fill the placeholders → rebuild → back up to Drive.
 
 ## 6s. Completion time: stages, order, who, and how to prepare
@@ -626,7 +628,7 @@ Support files every page loads: `project.js` (from `project.json`), `nav.js` (me
 | **A scaffold test run from the repo root overwrote real pages** (`new-video.sh` used relative paths) | Scaffold scripts must `cd` to their own folder, check `templates/` exists and refuse in a git folder with uncommitted changes. **Only ever test them in a temp dir** (`T=$(mktemp -d); unzip kit.zip -d $T; (cd /tmp && $T/new-video.sh ...)`), then confirm `git status` shows nothing new. Recovery was `git checkout -- <files>` because work was committed: commit before experimenting. |
 | A note's timecode pointed into a sentence | Cut at the nearest sentence boundary and record why; never chop words. |
 | A note named a file that was not in Downloads | Two recent files were byte-identical (`shasum`); asked which one instead of guessing. |
-| The assistant could not copy a storage key into Key Vault (permission system: secret-store write) | A one-time `! scripts/setup_azure_exports.sh` run by the owner; the upload script then reads the vault. A login-based mode (`--login`, no key) exists as an alternative. |
+| The assistant could not copy a storage key into Key Vault (permission system: secret-store write); a login identity could create the container but not write blobs (no data role) | The owner ran `! scripts/setup_azure_exports.sh` once; the upload script then read the vault and worked. `--login` (no key) needs the Storage Blob Data Contributor role on the account. Never grant yourself roles or move keys without the owner. |
 | Subtitles had stutters, flicker and garbled readings of on-screen text | `check_subtitles.py` (Whisper probabilities) found them; fixed from the screen text and by clean-up rules; four doubtful spots listed for the owner (section 6n). |
 | A chapter inside a cut jumped to the end | `build_chapters.py` returned the video total for times before a segment; now it returns the next kept moment. |
 | Render slowed to 8.7 fps after adding the cleaned audio | The remux left `moov` at the end of the file. Use `-movflags +faststart`. |
