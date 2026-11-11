@@ -1,374 +1,379 @@
 [
  {
-  "round": "Round 0 · 🚀 Start: from the README to a first video",
+  "round": "Round 0 \u00b7 \ud83d\ude80 Start: from the README to a first video",
   "when": "2026-11-11 morning",
   "items": [
    [
-    "🎬",
+    "\ud83c\udfac",
     "Source",
-    "Read the README spec; the repo held only that file. Material: two screen recordings (3456×2234 @ 60 fps, 8:01 and 4:34) and a Zoom voice WAV (12:35) in ~/Downloads/Claude Missing Features"
+    "Read the README spec; the repo held only that file. Material: two screen recordings (3456\u00d72234 @ 60 fps, 8:01 and 4:34) and a Zoom voice WAV (12:35) in ~/Downloads/Claude Missing Features"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Sync",
     "Synced the clips to the clean voice by cross-correlation: clip 1 at +4.75 s (confidence 5.5), clip 2 at +486.09 s (confidence 4.0); the two clips tile exactly"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Base video",
-    "Rendered a 1920×1080, 30 fps base with a blurred side fill (nothing cropped) and the voice normalised to −14.5 LUFS: 12:30"
+    "Rendered a 1920\u00d71080, 30 fps base with a blurred side fill (nothing cropped) and the voice normalised to \u221214.5 LUFS: 12:30"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Transcript",
     "Whisper transcript with word timings; title, description, 14 chapters and tags written (YouTube metadata page)"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Remotion",
     "Remotion project created; Studio on :3000; Chrome path set in remotion.config.ts because the bundled browser fails on this Mac"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Website",
     "First site: project hub, pre-prod, prod, post-prod, player, metadata, spec; shared menu and notes panel (nav.js)"
    ],
    [
-    "☁️",
+    "\u2601\ufe0f",
     "Publish",
     "First commit and push on a feature branch; media never committed"
    ]
   ]
  },
  {
-  "round": "Round 1 · ✂️ First edit list from the owner",
+  "round": "Round 1 \u00b7 \u2702\ufe0f First edit list from the owner",
   "when": "2026-11-11 midday",
   "items": [
    [
-    "🎬",
+    "\ud83c\udfac",
     "Intro",
-    "The recording opened on the OBS window: covered by a title card; later extended by 2 s on request (0–4.3 s)"
+    "The recording opened on the OBS window: covered by a title card; later extended by 2 s on request (0\u20134.3 s)"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Slides",
     "The opening IBM chat scene replaced by a slide \"What we are doing\"; nine more windows with personal apps (Grok Bot lists) found by OCR and covered with explainer slides written from the narration"
    ],
    [
-    "🔒",
+    "\ud83d\udd12",
     "Blur",
     "Chat titles in the app sidebar (Market Participant Onboarding and the rest) blurred. Boxes are generated from Apple Vision OCR, not placed by hand (two fixed sidebar boxes, sensitive words, the screenshot's mini sidebar)"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Speed",
-    "Typing at 1:08 played at 3× and muted (68.47 to 79 s); captions hidden inside it"
+    "Typing at 1:08 played at 3\u00d7 and muted (68.47 to 79 s); captions hidden inside it"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Captions",
     "Word-by-word animated captions from Whisper word timings; product names fixed (Claude, Grok bot, Homebrew, Canva, HTML); .srt/.vtt for YouTube"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Cuts",
     "Cut-aware timeline in Remotion (cuts.json) with audio fades; script that lists repeats, stutters and silences as cut candidates (nothing cut without the owner)"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "Volume fade made an invalid range and crashed the render: replaced by a helper that only fades at real cuts"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "A symlink to the video made the render bundle 404: Remotion needs a hard link"
    ],
    [
-    "📈",
+    "\ud83d\udcc8",
     "Render",
     "The first on-screen render ETA said hours; real speed was 13 frames/s (about 25 min)"
    ]
   ]
  },
  {
-  "round": "Round 2 · 🧰 Kit, Drive, Key Vault and the mistakes",
+  "round": "Round 2 \u00b7 \ud83e\uddf0 Kit, Drive, Key Vault and the mistakes",
   "when": "2026-11-11 afternoon",
   "items": [
    [
-    "♻️",
+    "\u267b\ufe0f",
     "Kit",
     "Packed scripts, Remotion project, templates and the spec into a kit zip; MASTER_SPEC v3 written for reuse"
    ],
    [
-    "☁️",
+    "\u2601\ufe0f",
     "Drive",
     "Created the Drive folder \"Claude Missing Features Kit\" and uploaded the kit; stored its id and link in the existing Azure Key Vault (dp-kv-deliverypilot) as secrets, never in the repo; pull_kit.sh reads the id and pulls with rclone"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Mistake",
-    "I tested new-video.sh from the repo root: it emptied real pages (index, prod, player, metadata…) and set the duration to 900 frames. Everything was restored from git and the script now changes into its own folder and refuses to run in a git folder with changes. Lesson: test scaffolding only in a temp folder, commit before experiments"
+    "I tested new-video.sh from the repo root: it emptied real pages (index, prod, player, metadata\u2026) and set the duration to 900 frames. Everything was restored from git and the script now changes into its own folder and refuses to run in a git folder with changes. Lesson: test scaffolding only in a temp folder, commit before experiments"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "build_kit.sh given a relative output path zipped into a temp folder and left the old zip; now resolves the path first"
    ],
    [
-    "🛑",
+    "\ud83d\uded1",
     "Blocked",
     "The permission system blocked a bundled commit+push, and later a standing git hook plus an automatic Drive upload. I did not work around either; the hook is written but not installed, and Drive backups go through the Drive tool"
    ],
    [
-    "☁️",
+    "\u2601\ufe0f",
     "Publish",
     "Merged to main (GitHub already held two PR merges of this branch: integrated, no force), pushed, enabled GitHub Pages from main, README starts with the live link"
    ]
   ]
  },
  {
-  "round": "Round 3 · 🎙️ Owner's second notes, privacy and the hoover",
-  "when": "2026-11-11 afternoon–evening",
+  "round": "Round 3 \u00b7 \ud83c\udf99\ufe0f Owner's second notes, privacy and the hoover",
+  "when": "2026-11-11 afternoon\u2013evening",
   "items": [
    [
-    "🔒",
+    "\ud83d\udd12",
     "Privacy check",
     "verify_export.py OCRs the finished video every 2 s: it found private text at 6:30, 6:58, 8:36 and 12:22 at the edges of boxes and slides (sampling every 2 s); boxes padded 1.5 s, slides 0.5 s before and 1.8 s after; result 0 leaks"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Transitions",
     "All fades and springs removed: hard cuts, captions appear and disappear without animation (only the active word is highlighted)"
    ],
    [
-    "🔊",
+    "\ud83d\udd0a",
     "Hoover",
-    "Noise found with numbers (noise-floor, spectrogram: a steady haze from source 571 s to the end). Cutting it would have removed the conclusion, so it was removed with noisereduce learned from a noise-only stretch: haze +12 dB → about 0 dB, speech −0.5 dB"
+    "Noise found with numbers (noise-floor, spectrogram: a steady haze from source 571 s to the end). Cutting it would have removed the conclusion, so it was removed with noisereduce learned from a noise-only stretch: haze +12 dB \u2192 about 0 dB, speech \u22120.5 dB"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Family photo",
     "A photo widget on the desktop (while the app reopened) covered by the \"Update finished\" slide"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Ending",
     "Summary slide (4 points from the narration) and a 10 s Skool call-to-action card for Delivery Pilot"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Picture",
     "whiteboard.jpeg shown at 1:44 with caption, orange box and arrow: \"This is the feature I expected to see: Whiteboard\""
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "Adding the cleaned audio put the video index at the end of the file and slowed the render from 13 to 8.7 frames/s: fixed with faststart"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "A syntax slip (a comment inside a call) in denoise_audio.py was caught by the kit test and fixed"
    ]
   ]
  },
  {
-  "round": "Round 4 · 🧱 Structure, reuse and review tools",
+  "round": "Round 4 \u00b7 \ud83e\uddf1 Structure, reuse and review tools",
   "when": "2026-11-11 evening",
   "items": [
    [
-    "🧩",
+    "\ud83e\udde9",
     "Pages",
-    "Architecture, Environment (with check_env.sh), EDL (edit decision list with source and export timecodes and a decision log), Artifacts (every added element with a frame, how it is used and a link into the player), Script, Changelog; menu grouped Start · Make · Review · Links and collapsible"
+    "Architecture, Environment (with check_env.sh), EDL (edit decision list with source and export timecodes and a decision log), Artifacts (every added element with a frame, how it is used and a link into the player), Script, Changelog; menu grouped Start \u00b7 Make \u00b7 Review \u00b7 Links and collapsible"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Player",
-    "Original vs export side by side; keys (Space/K, J/L speed, arrows, frame step); 📍 add note; ⏪ ⏩ 1-second buttons; ⏮ last review point; collapsible panels with the feedback under the video; green ✔ Saved animation; version selector"
+    "Original vs export side by side; keys (Space/K, J/L speed, arrows, frame step); \ud83d\udccd add note; \u23ea \u23e9 1-second buttons; \u23ee last review point; collapsible panels with the feedback under the video; green \u2714 Saved animation; version selector"
    ],
    [
-    "📈",
+    "\ud83d\udcc8",
     "OKRs",
-    "Objectives and key results, value proposition, value-recognition checkpoints and a 100-point score from measured numbers (loudness, dead air, time to first action…); honest pre-publish estimate 75.5 / 100 (B)"
+    "Objectives and key results, value proposition, value-recognition checkpoints and a 100-point score from measured numbers (loudness, dead air, time to first action\u2026); honest pre-publish estimate 75.5 / 100 (B)"
    ],
    [
-    "♻️",
+    "\u267b\ufe0f",
     "Reuse first",
     "The owner's standing rule: every per-video fact moved into remotion/src/project.json; scripts, components, menu and templates read it; check_reuse.sh fails if code contains this video's words; kit carries blanks"
    ],
    [
-    "♻️",
+    "\u267b\ufe0f",
     "Whole site",
     "build_all.sh builds all pages from the kit and check_site.py checks every menu item, link and script. The test caught two reuse bugs (a script assuming a kit/ folder; missing subtitle files)"
    ],
    [
-    "🧪",
+    "\ud83e\uddea",
     "Tests",
     "Each change is checked: py_compile of every script, tsc, the kit unpacked in a temp folder, outputs regenerated and compared byte for byte"
    ],
    [
-    "☁️",
+    "\u2601\ufe0f",
     "Backup",
     "Standing rule: after every push back up to Drive (kit, spec, project zip, each export version)"
    ]
   ]
  },
  {
-  "round": "Round 5 · 📝 Owner's third notes (export v3) and versions",
+  "round": "Round 5 \u00b7 \ud83d\udcdd Owner's third notes (export v3) and versions",
   "when": "2026-11-11 night",
   "items": [
    [
-    "🎬",
+    "\ud83c\udfac",
     "Blur",
-    "WhatsApp notification banner (sender \"Onur Alp Taner\") blurred at the top right, 250–256 s; OCR had missed it because the keyword had no space"
+    "WhatsApp notification banner (sender \"Onur Alp Taner\") blurred at the top right, 250\u2013256 s; OCR had missed it because the keyword had no space"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Grok Bot",
     "The real Grok Bot window shown for the update (slide shortened) with its list of personal agent chats blurred in two states (menu closed/open) so the update menu with \"76% used\" stays readable"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Lower third",
     "\"We are entering a world of exponentially more updates and deliveries\" at 8:44"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Hoover cut",
-    "Cut 574.4–625.2 s (50.8 s) at sentence boundaries (the note's end time would have chopped a sentence) and an apology card with an animated cartoon hoover; every later time moves 45 s earlier"
+    "Cut 574.4\u2013625.2 s (50.8 s) at sentence boundaries (the note's end time would have chopped a sentence) and an apology card with an animated cartoon hoover; every later time moves 45 s earlier"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Picture",
     "The Whiteboard picture shown again at 12:01 as the expected output (the only new file in Downloads; asked the owner first because two files were identical)"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Versions",
     "Every export is numbered and never overwritten (exports/<slug>-vN.mp4, registry, render_export.sh); notes are tagged [vN m:ss]; copied feedback names the version; the registry keeps each version's own time map"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "A chapter inside a cut jumped to the end of the video: it now starts at the next kept moment"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Notes",
     "The Artifacts page has per-artifact notes (saved per browser, version-tagged, green Saved animation, copy all, send to player feedback, clear with undo)"
    ],
    [
-    "📈",
+    "\ud83d\udcc8",
     "Subtitles",
     "check_subtitles.py (Whisper confidence, stutters, reading speed, flicker) found real problems: Claude's on-screen answer garbled by the recogniser (fixed from the screen text), \"code connectors\", 5 stutters, 21 flickering captions; 4 spots left for the owner's ear. The Script page lists every issue and how it was fixed"
    ],
    [
-    "🔒",
+    "\ud83d\udd12",
     "v4 check",
     "Export v4 passed the OCR privacy check: 360 frames, 0 sensitive lines"
    ]
   ]
  },
  {
-  "round": "Round 6 · 📣 Publishing: three platforms, Azure, script and changelog",
+  "round": "Round 6 \u00b7 \ud83d\udce3 Publishing: three platforms, Azure, script and changelog",
   "when": "2026-11-11 night",
   "items": [
    [
-    "🧩",
+    "\ud83e\udde9",
     "Script page",
-    "Whole script by chapter with clickable timecodes, a before→after table of every caption change and the subtitle issues with how each was found and fixed"
+    "Whole script by chapter with clickable timecodes, a before\u2192after table of every caption change and the subtitle issues with how each was found and fixed"
    ],
    [
-    "📈",
+    "\ud83d\udcc8",
     "Subtitles",
-    "check_subtitles.py found 57 low-confidence words, 5 stutters, 21 flickering captions; fixed from the on-screen text, rules and clean-up (stutters 5→0, flicker 21→5); 4 doubtful spots left for the owner"
+    "check_subtitles.py found 57 low-confidence words, 5 stutters, 21 flickering captions; fixed from the on-screen text, rules and clean-up (stutters 5\u21920, flicker 21\u21925); 4 doubtful spots left for the owner"
    ],
    [
-    "🗒️",
+    "\ud83d\uddd2\ufe0f",
     "Changelog",
     "This page: rounds, versions, decisions, commits"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Artifacts notes",
     "Per-artifact notes with green Saved animation, version tags, copy and send-to-player"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "README",
     "Generated navigation hub with the prompt to execute; spec gets a linked contents table"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Platform cuts",
     "One edit, three cuts: LinkedIn 3:19 (9 highlight ranges + ending), X 1:54 (5 ranges + ending, under the 2:20 limit), YouTube full; shorter endings per platform"
    ],
    [
-    "🧩",
+    "\ud83e\udde9",
     "Publish page",
     "YouTube, LinkedIn, X cards with limits, length bars, checks, text with character counters, placeholders for storage and post links, notes"
    ],
    [
-    "🛑",
+    "\ud83d\uded1",
     "Blocked",
     "Copying the storage key into Key Vault was refused by the permission system (secret-store write). Not worked around: a one-time setup script is for the owner to run with !"
    ],
    [
-    "🔗",
+    "\ud83d\udd17",
     "Menu",
     "Links group now has Azure Storage, Azure Key Vault and the platform post links (once shared)"
    ],
    [
-    "⏱️",
+    "\u23f1\ufe0f",
     "Time page",
-    "Time and order: 19 stages with who does each, measured vs estimated time, LLM involvement, parallelism, prep tips and a planning calculator (the render is about 2.3 × the video; keep the machine idle while it runs)"
+    "Time and order: 19 stages with who does each, measured vs estimated time, LLM involvement, parallelism, prep tips and a planning calculator (the render is about 2.3 \u00d7 the video; keep the machine idle while it runs)"
    ],
    [
-    "🎬",
+    "\ud83c\udfac",
     "Renders v5",
     "YouTube 11:59 (95.4 MB), LinkedIn 3:19 (27.9 MB), X 1:54 (10.5 MB, under the 2:20 limit); all three pass the OCR privacy check (0 sensitive lines); score 77.0 / 100, 11 key results met"
    ],
    [
-    "🐛",
+    "\ud83d\udc1b",
     "Bug",
     "The privacy check flagged the ending of the platform cuts (it used the YouTube file's end); and the chapter measurement used source time for a chapter inside a cut, faking a 7 s chapter. Both fixed"
    ],
    [
-    "☁️",
+    "\u2601\ufe0f",
     "Azure",
     "Private container claude-missing-features-exports in the storage account dpprojects. My first attempts (login identity) could create the container but not write files, and copying the storage key into Key Vault was blocked, so the owner ran the one-time setup (scripts/setup_azure_exports.sh) which stored cmf-exports-* in Key Vault. Then upload_exports.py read the key from the vault and uploaded the three v5 exports with 30-day read-only links (expire 2026-12-11)"
    ],
    [
-    "🧪",
+    "\ud83e\uddea",
     "Azure check",
     "All three links answer HTTP 206 with the exact file sizes (95.4, 27.9, 10.5 MB); the same URLs without the signature return 404, so the container is private. The links live only in the git-ignored publish_links.js; the live site and repo never contain them"
    ]
   ]
  },
  {
-  "round": "Round 7 · 🗺️ Pipeline canvas, public player on Azure, deterministic spec evals (spec v3.18)",
+  "round": "Round 7 \u00b7 \ud83d\uddfa\ufe0f Pipeline canvas, public player on Azure, deterministic spec evals (spec v3.18)",
   "when": "2026-11-11 evening",
   "items": [
    [
-    "🗺️",
+    "\ud83d\uddfa\ufe0f",
     "Pipeline canvas",
     "Built tldraw interactive pipeline diagram (pipeline.html) driven by assets/timings.json with 3 bands (prepare, render, publish), swimlanes (MacBook, Claude, owner), zoom/pan, editable toggle, and PNG export"
    ],
    [
-    "☁️",
+    "\u2601\ufe0f",
     "Public player",
     "Added stored access policy site-player (read-only, 90 days) on Azure container via upload_exports.py --site; writes azure_links.js; public mode plays from Azure while keeping original recording locked"
    ],
    [
-    "🧪",
+    "\ud83e\uddea",
     "Spec evals",
     "Added deterministic spec evaluation suite (scripts/eval_spec.py) testing 4 groups: A. Recreate from kit (40), B. Spec coverage (30), C. Retrieval questions (20), E. Kit completeness (10); evals.html page displays score 100/100 (A)"
    ],
    [
-    "♻️",
+    "\u267b\ufe0f",
     "Kit completeness",
     "Updated build_kit.sh to bundle pipeline app, evals, questions and Azure player support; passes reuse and idempotence checks"
+   ],
+   [
+    "\ud83e\udde9",
+    "Export naming",
+    "Standardized export naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x); updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented the unified naming rule in MASTER_SPEC.md"
    ]
   ]
  }

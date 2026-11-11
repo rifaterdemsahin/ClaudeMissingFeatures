@@ -57,7 +57,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | Report | the above | `report.py` | `REPORT.md` | **no** |
 | Blur boxes | OCR, slides | `build_blurs.py` | `overlays.json` (`blurs`) | yes |
 | Noise removal | base video | `denoise_audio.py` | `~/Downloads/<slug>-1080p-clean.mp4` | no (video) |
-| Export | base video, `overlays.json`, `cuts.json`, `subs.json` | `scripts/render_export.sh` | `exports/<slug>-vN.mp4`, `remotion/out/long.mp4` (latest), `assets/exports.json`, `exports.js` | media no; registry yes |
+| Export | base video, `overlays.json`, `cuts.json`, `subs.json` | `scripts/render_export.sh` | `exports/<slug>-<platform>-vN.mp4`, `remotion/out/long.mp4` (latest), `assets/exports.json`, `exports.js` | media no; registry yes |
 | Privacy check | export | `verify_export.py` | `assets/export_leaks.json` | **no** |
 | Score and OKRs | export, metrics | `measure_video.py`, `build_okr.py` | `assets/metrics.json`, `assets/okr_result.json`, OKR block in `preprod.html` | yes |
 | Evals | spec, kit, questions | `eval_spec.py` | `assets/evals.json`, `evals.html` | yes |
@@ -84,7 +84,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `scripts/build_pipeline_diagram.py`, `pipeline/` | the tldraw pipeline page: data from `timings.json`; app built with `npm install && npm run build` in `pipeline/` (needs node; `node_modules` not committed) |
 | `scripts/eval_spec.py`, `evals/spec_questions.json` | the evals that test whether the spec and kit can recreate the project, and the Evals page |
 | `scripts/build_all.sh`, `check_site.py` | build every page of the site in order, then check menu items, links and scripts |
-| `scripts/render_export.sh`, `register_export.py` | numbered exports (`exports/<slug>-vN.mp4`) and their registry `assets/exports.json` |
+| `scripts/render_export.sh`, `register_export.py` | numbered exports (`exports/<slug>-<platform>-vN.mp4`) and their registry `assets/exports.json` |
 | `scripts/check_reuse.sh` | fails if reusable code contains this video's words (from `project.json`) |
 | `scripts/measure_video.py`, `build_okr.py` | measure the export, then write the OKR and value-recognition score into the Pre-prod page (`assets/okr.json`) |
 | `scripts/build_artifacts.py` | the Artifacts page: every added element with timecodes, frames from the export, links into the player |

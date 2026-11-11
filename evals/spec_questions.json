@@ -38,7 +38,7 @@
   "id": "Q5",
   "question": "How are exports named and versioned?",
   "must": [
-   "<slug>-v<N>\\.mp4",
+   "<slug>-(?:[a-z]+-)?v<N>\\.mp4",
    "exports\\.json",
    "never overwrit"
   ]

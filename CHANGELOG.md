@@ -28,6 +28,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 - ☁️ **Public player**: Added stored access policy site-player (read-only, 90 days) on Azure container via upload_exports.py --site; writes azure_links.js; public mode plays from Azure while keeping original recording locked
 - 🧪 **Spec evals**: Added deterministic spec evaluation suite (scripts/eval_spec.py) testing 4 groups: A. Recreate from kit (40), B. Spec coverage (30), C. Retrieval questions (20), E. Kit completeness (10); evals.html page displays score 100/100 (A)
 - ♻️ **Kit completeness**: Updated build_kit.sh to bundle pipeline app, evals, questions and Azure player support; passes reuse and idempotence checks
+- 🧩 **Export naming**: Standardized export naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x); updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented the unified naming rule in MASTER_SPEC.md
 
 ## Round 6 · 📣 Publishing: three platforms, Azure, script and changelog
 *2026-11-11 night*
@@ -122,6 +123,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | # | In | Said | Decision |
 |---|---|---|---|
+| 36 | site | rename exports properly x youtube linkedin > update master spec | Standardized export file naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x). Updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented in MASTER_SPEC.md |
 | 35 | site | add a page for the completion time and how long each stage takes with the llm, give the order and what can be done to prep up | Time and order page: 19 stages in order with who does them, measured or estimated time, LLM involvement, parallelism, prep tips, a planning calculator and the elapsed time |
 | 34 | site | in the links add azure and links | Menu Links group: Azure Storage and Azure Key Vault portal links (generic, no account ids) from project.json, and the platform post links once shared |
 | 33 | v5 platforms | publish page for YouTube, X.com and LinkedIn with placeholders; renders for all three with different lengths; upload exports to Azure Storage with keys in Key Vault, embed in the placeholders, let me review, add note taking | Publish page with per-platform cards, placeholders, counters, checks and notes. Platform cuts in variants.json: LinkedIn 3:19, X 1:54 (limit 2:20), YouTube full. Azure: private container in dpprojects; the owner ran the one-time setup that stores the storage key in Key Vault (the assistant may not copy keys into the vault); upload_exports.py then read it from the vault, uploaded the three v5 files and made 30-day read-only links kept only in a git-ignored local file |
@@ -162,6 +164,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `45a3727` | 2026-11-11 21:23 | Notes copy formatting: output 'task N: [url]: [note]' for single and multiple notes |
 | `cc6dad9` | 2026-11-11 21:20 | Notes copy formatting: output '[url] : [ note ]' for all copied notes |
 | `08e4df5` | 2026-11-11 21:17 | Top menu: make each section individually collapsable with persistence and active state awareness |
 | `88a50d4` | 2026-11-11 20:59 | Azure per-video source backup (<slug>-source), tldraw pipeline diagram, deterministic spec evals (score 100/100), note saver with URL in nav, download all exports with metadata |

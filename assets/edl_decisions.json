@@ -348,5 +348,15 @@
   "how": "scripts/build_timeline.py, assets/timings.json",
   "check": "calculator tested in Chrome",
   "in": "site"
+ },
+ {
+  "id": 36,
+  "when": "round 6",
+  "who": "owner",
+  "said": "rename exports properly x youtube linkedin > update master spec",
+  "decision": "Standardized export file naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x). Updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented in MASTER_SPEC.md",
+  "how": "scripts/render_export.sh, register_export.py, upload_exports.py, MASTER_SPEC.md",
+  "check": "verified in Chrome and azure_links.js",
+  "in": "site"
  }
 ]

@@ -1,7 +1,7 @@
 // Public player links (read-only, stored access policy site-player). Exports only; the original recording is never listed.
 window.AZURE_LINKS = {
  "v5": {
-  "url": "https://dpprojects.blob.core.windows.net/claude-missing-features-exports/claude-missing-features-v5.mp4?spr=https&sv=2026-04-06&si=site-player&sr=b&sig=He3oZ656aLroLLZz7okSLKLZuHIlZY0X80LzCFxCXSA%3D",
+  "url": "https://dpprojects.blob.core.windows.net/claude-missing-features-exports/claude-missing-features-youtube-v5.mp4?spr=https&sv=2026-04-06&si=site-player&sr=b&sig=5P23SQ8wrIp%2BwZtoF1GRu1F9MMCjjhet%2B0ojXDyHdJo%3D",
   "seconds": 719.3,
   "size_mb": 95.4,
   "policy_expires": "2027-02-09"

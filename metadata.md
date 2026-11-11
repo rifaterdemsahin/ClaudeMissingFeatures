@@ -1,6 +1,6 @@
 # YouTube metadata: Claude Missing Features (long form, 1080p)
 
-Video: `~/Downloads/claude-missing-features-v5.mp4` (export v5, 719.3 s, 1920x1080, 30 fps)
+Video: `~/Downloads/claude-missing-features-youtube-v5.mp4` (export v5, 719.3 s, 1920x1080, 30 fps)
 
 ## Title (87 chars)
 

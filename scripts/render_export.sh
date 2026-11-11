@@ -3,7 +3,7 @@
 # Usage: scripts/render_export.sh "what changed" [platform ...] [--version N]
 #   platforms: youtube (the full video, default), linkedin, x  (see remotion/src/variants.json)
 #   --version N : render more platforms for an already used number (same state of the edit); otherwise the next number is used.
-# Files: exports/<slug>-v<N>.mp4 (youtube) and exports/<slug>-<platform>-v<N>.mp4. About 2x the video length per render at 13 frames/s.
+# Files: exports/<slug>-<platform>-v<N>.mp4 (e.g. youtube, linkedin, x). About 2x the video length per render at 13 frames/s.
 cd "$(dirname "$0")/.." || exit 1
 NOTES=""; PLATFORMS=(); VER=""
 while [ $# -gt 0 ]; do case "$1" in --version) VER="$2"; shift 2;; *) if [ -z "$NOTES" ]; then NOTES="$1"; else PLATFORMS+=("$1"); fi; shift;; esac; done
@@ -13,7 +13,7 @@ SLUG=$(python3 -c "import json;print(json.load(open('remotion/src/project.json')
 mkdir -p exports assets/maps
 OFF=$(cat assets/whisper_offset.txt 2>/dev/null || echo 0)
 for P in $PLATFORMS; do
-  if [ "$P" = youtube ]; then OUT="exports/$SLUG-v$VER.mp4"; else OUT="exports/$SLUG-$P-v$VER.mp4"; fi
+  OUT="exports/$SLUG-$P-v$VER.mp4"
   [ -f "$OUT" ] && { echo "refusing to overwrite $OUT (use the next version)"; exit 1; }
   [ -f assets/whisper_words.json ] && python3 -I scripts/build_subs.py assets/whisper_words.json "$OFF" $P | tail -1   # captions + time map for THIS state and platform
   [ "$P" = youtube ] && python3 -I scripts/build_chapters.py | tail -1

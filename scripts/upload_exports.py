@@ -39,7 +39,9 @@ site_links = {}
 links = json.load(open(ROOT / "assets/publish_links.json")) if (ROOT / "assets/publish_links.json").exists() else {}
 for e in items:
     blob = pathlib.Path(e["file"]).name
-    if "--skip-upload" not in sys.argv: subprocess.check_call(["az", "storage", "blob", "upload", *common, "-c", cont, "-n", blob, "-f", str(ROOT / e["file"]), "--overwrite", "false", "--no-progress", "-o", "none"], env=env)
+    if "--skip-upload" not in sys.argv:
+        r = subprocess.run(["az", "storage", "blob", "upload", *common, "-c", cont, "-n", blob, "-f", str(ROOT / e["file"]), "--overwrite", "false", "--no-progress", "-o", "none"], capture_output=True, text=True, env=env)
+        if r.returncode != 0 and "BlobAlreadyExists" not in r.stderr: sys.exit(f"upload failed for {blob}: {r.stderr}")
     sas = ["az", "storage", "blob", "generate-sas", *common, "-c", cont, "-n", blob, "--permissions", "r", "--expiry", expiry, "--https-only", "--full-uri", "-o", "tsv"]
     if login: sas += ["--as-user"]
     url = subprocess.run(sas, capture_output=True, text=True, env=env).stdout.strip()

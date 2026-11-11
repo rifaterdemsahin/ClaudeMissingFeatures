@@ -1,8 +1,8 @@
 {
- "timestamp": "2026-11-11 21:16",
+ "timestamp": "2026-11-11 22:12",
  "score": 100.0,
  "grade": "A (excellent)",
- "quick": true,
+ "quick": false,
  "groups": {
   "A": {
    "name": "Recreate from the kit",
@@ -13,7 +13,7 @@
     {
      "name": "Kit builds cleanly and produces valid zip",
      "pass": true,
-     "detail": "Kit zip size 837 KB, 120 files",
+     "detail": "Kit zip size 838 KB, 120 files",
      "hint": "Check scripts/build_kit.sh"
     },
     {
@@ -31,26 +31,32 @@
     {
      "name": "New video scaffolds from kit (new-video.sh)",
      "pass": true,
-     "detail": "Scaffold test (cached from previous run; run without --quick for fresh test)",
-     "hint": "Run full eval: python3 scripts/eval_spec.py"
+     "detail": "Scaffold succeeded",
+     "hint": "Check kit/new-video.sh"
     },
     {
      "name": "Full site builds and check_site passes in scaffolded project",
      "pass": true,
-     "detail": "Build & check (cached)",
-     "hint": "Run full eval"
+     "detail": "19 pages, 19 menu items checked\n\u2705 site check passed: every menu item, link and script resolves",
+     "hint": "Check build_all.sh and check_site.py in the scaffolded kit"
     },
     {
      "name": "TypeScript compiles without errors in scaffolded project",
      "pass": true,
-     "detail": "TSC compile (cached)",
-     "hint": "Run full eval"
+     "detail": "tsc clean",
+     "hint": "Fix TypeScript types in remotion/src"
     },
     {
      "name": "Build is idempotent (second build changes nothing)",
      "pass": true,
-     "detail": "Idempotence (cached)",
-     "hint": "Run full eval"
+     "detail": "zero newly modified files on second build",
+     "hint": "Ensure generators produce deterministic identical output on re-runs"
+    },
+    {
+     "name": "Build is idempotent (second build changes nothing)",
+     "pass": true,
+     "detail": "clean git status after second build",
+     "hint": "Ensure generators produce deterministic identical output on re-runs"
     }
    ]
   },
@@ -404,6 +410,18 @@
    "score": 100.0,
    "grade": "A (excellent)",
    "quick": true
+  },
+  {
+   "timestamp": "2026-11-11 22:11",
+   "score": 99.3,
+   "grade": "A (excellent)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 22:12",
+   "score": 100.0,
+   "grade": "A (excellent)",
+   "quick": false
   }
  ]
 }

@@ -24,6 +24,6 @@ reg = [e for e in reg if not (e["v"] == v and e.get("platform", "youtube") == pl
 (ROOT / "exports.js").write_text("window.EXPORTS = " + json.dumps([{k: e.get(k) for k in ("v", "platform", "file", "rendered", "seconds", "size_mb", "notes", "map")} for e in reg]) + ";")
 md = ROOT / "metadata.md"
 if md.exists() and platform == "youtube":
-    t = md.read_text(); line = f"Video: `~/Downloads/{P.get('slug', 'video')}-v{v}.mp4` (export v{v}, {entry['seconds']} s, 1920x1080, 30 fps)" if platform == "youtube" else None
+    t = md.read_text(); line = f"Video: `~/Downloads/{P.get('slug', 'video')}-youtube-v{v}.mp4` (export v{v}, {entry['seconds']} s, 1920x1080, 30 fps)" if platform == "youtube" else None
     md.write_text(re.sub(r"^Video:.*$", line, t, count=1, flags=re.M) if re.search(r"^Video:", t, re.M) else t)
 print(f"registered export v{v} ({platform}): {entry['seconds']} s, {entry['size_mb']} MB, {entry['sha12']}")
