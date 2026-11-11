@@ -1,0 +1,11 @@
+node_modules/
+__pycache__/
+.DS_Store
+remotion/out/
+remotion/public/*
+!remotion/public/.gitkeep
+*.mp4
+*.wav
+*.WAV
+kit-dist/
+*.zip

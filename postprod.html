@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude Missing Features: post-production</title></head><body><main>
+<h1>✅ Post-production</h1>
+<table><tr><th>Item</th><th>Status</th></tr>
+<tr><td>Subtitles: <a href="subtitles.srt">subtitles.srt</a> · <a href="subtitles.vtt">subtitles.vtt</a> (upload to YouTube), plus burned-in option in Remotion</td><td>✅ generated, ⬜ proof-read</td></tr>
+<tr><td>Cut repetitive parts (see candidates below)</td><td>⬜ your call from the player</td></tr>
+<tr><td>Replace flagged screen parts with images</td><td>✅ OBS window 0-2 s covered; ⬜ tell me other parts and which images</td></tr>
+<tr><td>Feedback pass in the <a href="player.html">player</a> (timestamped notes)</td><td>⬜ yours</td></tr>
+<tr><td>Thumbnail 1920×1080 (<code>npm run still</code>)</td><td>⬜ placeholder</td></tr>
+<tr><td>Final render <code>npm run render</code> → <code>remotion/out/long.mp4</code></td><td>⬜</td></tr>
+<tr><td>Sanity check (<a href="spec.html">spec §8</a>), upload private, publish</td><td>⬜</td></tr></table>
+<h2>Cut candidates (source timeline)</h2>
+<table><tr><th>Time</th><th>Why</th></tr>
+<tr><td>1:00 to 1:18</td><td>Stutter: "How do I, how do I find the new whiteboards feature, feature… blank, blank canvas around it, around it"</td></tr>
+<tr><td>2:14 to 2:22</td><td>"How do I enable beta?" said twice</td></tr>
+<tr><td>4:20 to 4:30</td><td>"I will do a brew upgrade, a brew upgrade"</td></tr>
+<tr><td>6:15 to 6:35</td><td>Waiting on screen (gaps 6.8 s and 7.5 s)</td></tr>
+<tr><td>7:37 to 7:55</td><td>Stutters while dictating: "over there over there", "I need to I need to", "for for"</td></tr>
+<tr><td>7:52 to 8:01</td><td>Gap 9.6 s</td></tr>
+<tr><td>9:46 to 10:08</td><td>Gap 22 s while the canvas builds</td></tr>
+<tr><td>10:15 to 10:32</td><td>Gap 17 s while the canvas builds</td></tr></table>
+<p>These are only suggestions from <code>scripts/find_repeats.py</code>; nothing is cut until you decide.</p>
+<p>← <a href="prod.html">Production</a></p>
+</main><script src="nav.js"></script></body></html>

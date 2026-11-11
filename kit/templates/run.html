@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{TITLE}}: run and links</title></head><body><main>
+<h1>🧪 Run &amp; links</h1>
+<table><tr><th>What</th><th>Link</th><th>Start it with</th></tr>
+<tr><td>🧪 Remotion Studio (edit, preview, subtitles, cuts)</td><td><a href="http://localhost:3000/LongForm" target="_blank" rel="noopener">http://localhost:3000/LongForm</a></td><td><code>npm run studio</code> in <code>remotion/</code></td></tr>
+<tr><td>🖼️ Thumbnail still in Studio</td><td><a href="http://localhost:3000/Thumb" target="_blank" rel="noopener">http://localhost:3000/Thumb</a></td><td>same</td></tr>
+<tr><td>▶️ This site + player (video seeking works)</td><td><a href="http://localhost:8000/player.html" target="_blank" rel="noopener">http://localhost:8000/player.html</a></td><td><code>scripts/serve.sh</code></td></tr></table>
+<p>Both links only work while the command is running on this Mac.</p>
+
+<h2>Run it</h2>
+<pre>cd ~/projects/ClaudeMissingFeatures
+
+# 1. Remotion Studio (first time: npm install)
+cd remotion
+npm install
+ln ~/Downloads/claude-missing-features-1080p.mp4 public/base.mp4   # hard link, once (a symlink breaks renders)
+npm run studio                                    # open http://localhost:3000/LongForm
+npm run render                                    # final video -> remotion/out/long.mp4
+npm run still                                     # thumbnail  -> remotion/out/thumbnail.png
+npx tsc --noEmit                                  # typecheck
+
+# 2. Site and player (new terminal)
+cd ~/projects/ClaudeMissingFeatures
+scripts/serve.sh                                  # http://localhost:8000/player.html
+
+# 3. Open in Chrome
+open -a "Google Chrome" http://localhost:3000/LongForm
+open -a "Google Chrome" http://localhost:8000/player.html</pre>
+
+<h2>Edit, then see it</h2>
+<table><tr><th>I want to…</th><th>Edit</th><th>Then</th></tr>
+<tr><td>Cut parts</td><td><code>remotion/src/cuts.json</code> (seconds on the source timeline)</td><td>Studio reloads by itself; run <code>python3 -I scripts/build_subs.py assets/whisper_words.json 4.75</code> for the .srt</td></tr>
+<tr><td>Add an image over the screen</td><td><code>remotion/src/overlays.json</code> + file in <code>remotion/public/img/</code></td><td>Studio reloads</td></tr>
+<tr><td>Fix subtitles</td><td>words in <code>scripts/build_subs.py</code> (<code>FIX</code>)</td><td>re-run <code>build_subs.py</code></td></tr>
+<tr><td>Change a page or spec</td><td>the <code>.md</code> / <code>.html</code></td><td><code>python3 -I scripts/build_site.py</code></td></tr></table>
+
+<h2>Troubleshooting</h2>
+<table><tr><th>Symptom</th><th>Cause and fix</th></tr>
+<tr><td>Player shows no video</td><td><code>long.mp4</code> is not in the repo folder. Run <code>scripts/serve.sh</code> (links it) or use the file picker on the player.</td></tr>
+<tr><td>Studio page blank / refused</td><td>Studio not running: <code>cd remotion &amp;&amp; npm run studio</code>.</td></tr>
+<tr><td>Render error 404 on <code>base.mp4</code></td><td>Make it a hard link, not a symlink (command above).</td></tr>
+<tr><td>Port busy</td><td><code>lsof -ti :3000 | xargs kill</code> (or :8000).</td></tr></table>
+</main><script src="nav.js"></script></body></html>

@@ -1,0 +1,5 @@
+{
+  "_doc": "Image overlays on the SOURCE timeline (seconds). src = file in remotion/public/img/ (not committed). Empty list = none. Example: {\"from\": 120, \"to\": 128, \"src\": \"whiteboard.png\"}",
+  "intro_card": { "from": 0, "to": 2.3, "why": "hides the OBS Studio window visible at 0-2 s of the recording" },
+  "images": []
+}
