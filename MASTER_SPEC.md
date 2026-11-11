@@ -40,14 +40,15 @@
 35. [6t. The pipeline drawn with tldraw](#6t-the-pipeline-drawn-with-tldraw)
 36. [6u. Evals: can the spec recreate this project?](#6u-evals-can-the-spec-recreate-this-project)
 37. [6v. Post-publish performance analytics and value reconciliation](#6v-post-publish-performance-analytics-and-value-reconciliation)
-38. [7. Website (GitHub Pages)](#7-website-github-pages)
-39. [7a. Publish: GitHub Pages (do this for every project, do not forget)](#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
-40. [7b. Always back up to Google Drive](#7b-always-back-up-to-google-drive)
-41. [7c. Build the whole website (every page, from the kit)](#7c-build-the-whole-website-every-page-from-the-kit)
-42. [8. Sanity check (before publishing)](#8-sanity-check-before-publishing)
-43. [9. Delivery checklist](#9-delivery-checklist)
-44. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
-45. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
+38. [6w. AI-assisted curiosity thumbnail generation (fal.ai / FLUX / subagents)](#6w-ai-assisted-curiosity-thumbnail-generation-falai--flux--subagents)
+39. [7. Website (GitHub Pages)](#7-website-github-pages)
+40. [7a. Publish: GitHub Pages (do this for every project, do not forget)](#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
+41. [7b. Always back up to Google Drive](#7b-always-back-up-to-google-drive)
+42. [7c. Build the whole website (every page, from the kit)](#7c-build-the-whole-website-every-page-from-the-kit)
+43. [8. Sanity check (before publishing)](#8-sanity-check-before-publishing)
+44. [9. Delivery checklist](#9-delivery-checklist)
+45. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
+46. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
 <!--/TOC-->
 
 
@@ -551,6 +552,24 @@ Page: [analytics.html](analytics.html) (menu 📈 Analytics, group Review), buil
   - **Day 14 (mid-tail):** browse and suggested video recommendation velocity, audience retention drop-off check, community link clicks (KR target: 30+).
   - **Day 28 (maturity):** search indexing, final OKR evaluation (KR target: 40%+ retention, 10+ helpful comments, 5+ community joins), and value-recognition score reconciliation.
 - **Interactive scorecard:** auto-saves in browser `localStorage`, with "📋 Copy Analytics Report" for rapid status reporting, JSON export, and actuals reconciliation against the pre-production value score.
+
+## 6w. AI-assisted curiosity thumbnail generation (fal.ai / FLUX / subagents)
+
+A video's click-through rate (CTR) is heavily determined by thumbnail curiosity and visual clarity at small sizes. Remotion renders a clean, programmatic title card (`cd remotion && npm run still` -> `assets/thumbnail_card.jpg`), but competitive YouTube and social platform feeds demand a high-contrast **curiosity gap** image that visually poses an unanswered question or mystery.
+
+- **Tooling & architecture:**
+  - Script: `python3 scripts/generate_thumbnail.py [--prompt "..."] [--model fal-ai/flux/schnell] [--out assets/thumbnail_fal.jpg]`
+  - Authentication: fal.ai API key fetched from `FAL_KEY` environment variable, or retrieved from Azure Key Vault (`dp-kv-deliverypilot` secret `FAL-AI-KEY`).
+  - Fallback / Agentic generation: when direct external API access is blocked or credentials expire, the system uses built-in AI image generation subagents (`image-generator`), upscaling to 1920×1080 (16:9) via `ffmpeg -vf "scale=1920:1080:flags=lanczos" -q:v 2`.
+- **Curiosity Gap Prompt Formula:**
+  - **Subject / Context:** Authentic dark-mode product UI interface with clearly categorized panels or cards.
+  - **The Missing Piece / Anomaly:** An empty, glowing dashed slot or missing feature examined by an illuminated magnifying glass or glowing neon inspection beam.
+  - **Color Palette & Contrast:** Deep sleek charcoal/midnight navy (#0e0e17) background contrasted with vivid amber / warm bronze neon accents (#f59e0b) to create depth and focus.
+  - **Clarity at small scale:** Bold geometric silhouettes, high contrast, zero tiny illegible micro-text, 16:9 ratio (1920×1080).
+- **Dual thumbnail assets on Publish page:**
+  - `assets/thumbnail_fal.jpg`: High-CTR AI curiosity thumbnail designed for public browse feeds and discovery.
+  - `assets/thumbnail_card.jpg`: Clean Remotion typography title card still for documentation and formal previews.
+  - `assets/thumbnail.jpg`: The active default thumbnail deployed with exports and metadata bundles.
 
 ## 7. Website (GitHub Pages)
 

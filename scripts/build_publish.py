@@ -126,7 +126,26 @@ function card(p){const e=p.export,lim=p.limit_s,len=e?e.seconds:0,pct=lim&&e?Mat
   <b>Export</b><span>${e?`<b>${e.key}</b> · <code>${e.file}</code> · ${fmt(e.seconds)} · ${e.size_mb} MB · rendered ${e.rendered}<br><span style="opacity:.75">${esc(e.notes)}</span>`:'<span class="ph">Not rendered yet (run: scripts/render_export.sh "what changed" '+p.id+')</span>'}</span>
   <b>Length</b><span>${e?`<span class="bar"><i style="width:${pct}%;${over?"background:#f87171":""}"></i></span>${lim?(over?`<span class="bad">❌ ${fmt(len-lim)} over the limit</span>`:`<span class="ok">✅ ${fmt(lim-len)} under the limit</span>`):'<span class="ok">✅ no limit to worry about</span>'}`:"–"}</span>
   <b>Checks</b><span>${chk}</span>
-  ${p.id==="youtube"?`<b>Thumbnail</b><span><a href="assets/thumbnail.jpg" target="_blank"><img src="assets/thumbnail.jpg" alt="YouTube thumbnail" style="max-width:280px;width:100%;aspect-ratio:16/9;border-radius:6px;border:1px solid #2a2a38;display:block;margin:6px 0"></a><a href="assets/thumbnail.jpg" download="${(window.PROJECT||{}).slug||'video'}-thumbnail.jpg" class="btn" style="padding:4px 10px;font-size:12px;background:#2a2a38;color:#eee">⬇️ Download thumbnail (1920×1080)</a></span>`:""}
+  ${p.id==="youtube"?`<b>Thumbnails</b><span>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin:6px 0">
+    <div style="flex:1;min-width:240px;background:#181824;padding:10px;border-radius:8px;border:1px solid #2a2a38">
+      <div style="font-weight:600;font-size:12px;margin-bottom:6px;color:#f59e0b">🌟 Curiosity Trigger (AI / fal.ai)</div>
+      <a href="assets/thumbnail_fal.jpg" target="_blank"><img src="assets/thumbnail_fal.jpg" alt="AI Curiosity Thumbnail" style="width:100%;aspect-ratio:16/9;border-radius:6px;border:1px solid #3b3b4f;display:block"></a>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <a href="assets/thumbnail_fal.jpg" download="${(window.PROJECT||{}).slug||'video'}-thumbnail-curiosity.jpg" class="btn" style="padding:4px 8px;font-size:11px;background:#f59e0b;color:#111;font-weight:600;text-decoration:none;border-radius:4px">⬇️ Download AI (1920×1080)</a>
+        <a href="assets/thumbnail_fal.jpg" target="_blank" class="btn" style="padding:4px 8px;font-size:11px;background:#2a2a38;color:#eee;text-decoration:none;border-radius:4px">🔍 Full size</a>
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px;background:#181824;padding:10px;border-radius:8px;border:1px solid #2a2a38">
+      <div style="font-weight:600;font-size:12px;margin-bottom:6px;color:#a5b4fc">🏷️ Title Card Still (Remotion)</div>
+      <a href="assets/thumbnail_card.jpg" target="_blank"><img src="assets/thumbnail_card.jpg" alt="Remotion Title Card" style="width:100%;aspect-ratio:16/9;border-radius:6px;border:1px solid #3b3b4f;display:block"></a>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <a href="assets/thumbnail_card.jpg" download="${(window.PROJECT||{}).slug||'video'}-thumbnail-card.jpg" class="btn" style="padding:4px 8px;font-size:11px;background:#4338ca;color:#fff;font-weight:600;text-decoration:none;border-radius:4px">⬇️ Download Card (1920×1080)</a>
+        <a href="assets/thumbnail_card.jpg" target="_blank" class="btn" style="padding:4px 8px;font-size:11px;background:#2a2a38;color:#eee;text-decoration:none;border-radius:4px">🔍 Full size</a>
+      </div>
+    </div>
+  </div>
+  </span>`:""}
   <b>Preview</b><span>${e?`<a target="_blank" href="player.html?v=${e.key}&t=0">▶ open ${e.key} in the player</a> · <a href="${e.file}" target="_blank">local file</a>`:"–"}</span>
   <b>Storage link</b><span id="az-${p.id}">${link?`<a target="_blank" href="${link.url}">open</a> <button class="off" data-copy="${link.url}">Copy link</button> <span style="opacity:.7">read-only, expires ${esc(link.expires)}</span>`:'<span class="ph">Azure storage link appears here after upload</span>'}</span>
   <b>Post link</b><span>${p.post_url?`<a target="_blank" href="${p.post_url}">${esc(p.post_url)}</a>`:`<span class="ph">${esc(p.post_url_hint)}</span>`}</span></div>

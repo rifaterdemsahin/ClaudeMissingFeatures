@@ -79,6 +79,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `scripts/build_analytics.py` | the Analytics tracking page (Day 2, Day 14, Day 28) and post-publish OKR reconciliation |
 | `scripts/setup_azure_exports.sh`, `upload_exports.py` | one-time private Azure container + Key Vault secrets (run by the owner), then upload of the exports and read-only links (local, git-ignored) |
 | `scripts/upload_source.py` | save raw footage and source artifacts to per-video Azure Storage container (`<slug>-source`) |
+| `scripts/generate_thumbnail.py` | AI-assisted high-CTR curiosity thumbnail generation via fal.ai / FLUX / subagent |
 | `remotion/src/variants.json` | per-platform cuts (keep ranges, shorter ending) |
 | `scripts/check_subtitles.py`, `build_script.py` | find caption problems from data and build the Script page with the subtitle issues and fixes |
 | `scripts/build_changelog.py`, `build_toc.py`, `build_readme.py` | the Changelog, the contents table in the spec, and the navigational README |

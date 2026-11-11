@@ -378,5 +378,15 @@
   "how": "assets/publish.json, scripts/build_analytics.py, nav.js, MASTER_SPEC.md",
   "check": "verified in Chrome, links active, analytics page interactive and saved",
   "in": "site"
+ },
+ {
+  "id": 39,
+  "when": "round 6",
+  "who": "owner",
+  "said": "use fal.ai create a much more curiosoty triggering thumbnail and document the spec in the master spec",
+  "decision": "Generated high-CTR AI curiosity thumbnail (assets/thumbnail_fal.jpg, 1920x1080) depicting the mysterious missing whiteboard artifact examined under neon inspection light; preserved Remotion title card (assets/thumbnail_card.jpg); created scripts/generate_thumbnail.py for fal.ai/FLUX generation with Key Vault fallback; updated publish.html with dual thumbnail options and documented AI thumbnail architecture in MASTER_SPEC.md (Section 6w)",
+  "how": "scripts/generate_thumbnail.py, assets/thumbnail_fal.jpg, assets/thumbnail.jpg, scripts/build_publish.py, MASTER_SPEC.md",
+  "check": "verified in Chrome, dual thumbnails displayed with download buttons, 100/100 evals score",
+  "in": "site"
  }
 ]
