@@ -85,16 +85,16 @@
   const LIST_KEY = "site:saved_notes";
   const getSaved = () => { try { return JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) { return []; } };
   const setSaved = (l) => { try { localStorage.setItem(LIST_KEY, JSON.stringify(l)); } catch (e) {} };
-  const formatNote = (u, t) => `[${u}] : [ ${t} ]`;
+  const formatNote = (idx, u, t) => `task ${idx}: [${u}]: [${t}]`;
 
   const copyAllNotes = () => {
     const list = getSaved();
     const cur = ta.value.trim();
-    const all = [];
-    if (cur) all.push(formatNote(location.href, cur));
-    list.forEach(n => all.push(formatNote(n.url, n.text)));
-    if (!all.length) return false;
-    window.copyText(all.join("\n\n"));
+    const items = [];
+    if (cur) items.push({ url: location.href, text: cur });
+    list.forEach(n => items.push({ url: n.url, text: n.text }));
+    if (!items.length) return false;
+    window.copyText(items.map((n, i) => formatNote(i + 1, n.url, n.text)).join("\n"));
     return true;
   };
 
@@ -108,8 +108,9 @@
       list.map((n, i) => `
         <div class="s-item">
           <div class="s-meta">
-            <a href="${n.url}" style="color:#ff7a3d;text-decoration:none;font-weight:700" title="${n.url}">🔗 ${n.page}</a>
-            <span style="opacity:.6">${n.time}</span>
+            <span style="font-weight:700;color:#ff7a3d">task ${i + 1}:</span>
+            <a href="${n.url}" style="color:#aaa;text-decoration:none;margin-left:4px" title="${n.url}">${n.page}</a>
+            <span style="opacity:.6;margin-left:auto">${n.time}</span>
           </div>
           <div style="white-space:pre-wrap;color:#eee;line-height:1.3">${n.text.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div>
           <div class="s-acts">
@@ -119,9 +120,10 @@
         </div>
       `).join("");
     listEl.querySelectorAll(".ncopy").forEach(b => b.onclick = () => {
-      const it = getSaved()[+b.dataset.i];
+      const idx = +b.dataset.i;
+      const it = getSaved()[idx];
       if (it) {
-        window.copyText(formatNote(it.url, it.text));
+        window.copyText(formatNote(idx + 1, it.url, it.text));
         b.textContent = "Copied ✔";
         setTimeout(() => b.textContent = "Copy", 1500);
       }
@@ -162,10 +164,10 @@
     const cur = ta.value.trim();
     const list = getSaved();
     if (!cur && !list.length) return;
-    const all = [];
-    if (cur) all.push(formatNote(location.href, cur));
-    list.forEach(n => all.push(formatNote(n.url, n.text)));
-    window.copyText(all.join("\n\n"));
+    const items = [];
+    if (cur) items.push({ url: location.href, text: cur });
+    list.forEach(n => items.push({ url: n.url, text: n.text }));
+    window.copyText(items.map((n, i) => formatNote(i + 1, n.url, n.text)).join("\n"));
     const b = box.querySelector("#nc");
     b.textContent = "Copied ✔";
     setTimeout(() => b.textContent = "Copy", 1500);
@@ -173,10 +175,10 @@
   box.querySelector("#nd").onclick = () => {
     const cur = ta.value.trim();
     const list = getSaved();
-    const all = [];
-    if (cur) all.push(formatNote(location.href, cur));
-    list.forEach(n => all.push(formatNote(n.url, n.text)));
-    const content = all.length ? all.join("\n\n") : `${document.title}\n${location.href}\n${new Date().toString()}\n\n${ta.value}\n\n${CTA}\n`;
+    const items = [];
+    if (cur) items.push({ url: location.href, text: cur });
+    list.forEach(n => items.push({ url: n.url, text: n.text }));
+    const content = items.length ? items.map((n, i) => formatNote(i + 1, n.url, n.text)).join("\n") : `${document.title}\n${location.href}\n${new Date().toString()}\n\n${ta.value}\n\n${CTA}\n`;
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
     a.download = here + "-notes.txt";

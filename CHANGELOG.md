@@ -162,6 +162,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `cc6dad9` | 2026-11-11 21:20 | Notes copy formatting: output '[url] : [ note ]' for all copied notes |
 | `08e4df5` | 2026-11-11 21:17 | Top menu: make each section individually collapsable with persistence and active state awareness |
 | `88a50d4` | 2026-11-11 20:59 | Azure per-video source backup (<slug>-source), tldraw pipeline diagram, deterministic spec evals (score 100/100), note saver with URL in nav, download all exports with metadata |
 | `c03d0c7` | 2026-11-11 19:06 | Azure upload done: v5 exports in a private container with read-only links (local only); changelog, decisions and spec v3.17 |
