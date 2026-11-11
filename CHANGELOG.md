@@ -162,6 +162,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `88a50d4` | 2026-11-11 20:59 | Azure per-video source backup (<slug>-source), tldraw pipeline diagram, deterministic spec evals (score 100/100), note saver with URL in nav, download all exports with metadata |
 | `c03d0c7` | 2026-11-11 19:06 | Azure upload done: v5 exports in a private container with read-only links (local only); changelog, decisions and spec v3.17 |
 | `2f4a7e8` | 2026-11-11 18:59 | Platform cuts (LinkedIn 3:19, X 1:54), numbered exports v5 for all three, Publish page, Time & order page, Script page, Changelog, README hub, artifact notes, Azure upload tooling (spec v3.16) |
 | `3690f0f` | 2026-11-11 18:01 | Reuse-first refactor (project.json), export versions, artifacts page, OKRs, player features, whole-site build, collapsible menu (spec v3.13) |
