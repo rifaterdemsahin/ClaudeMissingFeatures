@@ -45,9 +45,12 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 
 | Step | Reads | Script | Writes | Committed? |
 |---|---|---|---|---|
-| Sync + base video | clips, WAV | `build_base.py` | `~/Downloads/<slug>-1080p.mp4`, `assets/base_info.json`, `DURATION` in `theme.ts` | no (video) |
-| Transcript | base audio | Whisper (`pipeline.sh`) | `assets/whisper_words.json` | yes |
+| Audio sync | scratch audio from clips, clean WAV | `sync_clips.py` | cross-correlation offsets and confidence | no |
+| Source backup | raw footage, source artifacts | `upload_source.py` | Azure Blob: `<slug>-source` (raw/, artifacts/) | cloud private |
+| Sync + base video | clips, WAV | `build_base.py`, `render_base.sh` | `~/Downloads/<slug>-1080p.mp4`, `assets/base_info.json`, `DURATION` in `theme.ts` | no (video) |
+| Transcript | base audio | Whisper (`pipeline.sh`) | `assets/whisper_words.json`, `assets/whisper_raw.json`, `assets/whisper_offset.txt` | words yes; raw optional |
 | Subtitles | transcript, `overlays.json`, `cuts.json` | `build_subs.py` | `subtitles.srt/.vtt`, `remotion/src/subs.json`, `subs.js`, `export_map.js` | yes |
+| Subtitle check | transcript, fixes | `check_subtitles.py` | `assets/subtitle_issues.json`, `assets/subtitle_report.json` | yes |
 | Screen text | base video | `ocr_all.sh` + `ocr_frames.swift` | `assets/ocr_frames.json` | **no: contains the private text** |
 | Cut candidates | subs | `find_repeats.py` | `assets/repeats.txt` | optional |
 | Personal windows | OCR, subs | `find_personal_windows.py` | `assets/personal_windows.json` | **no** |
@@ -56,6 +59,8 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | Noise removal | base video | `denoise_audio.py` | `~/Downloads/<slug>-1080p-clean.mp4` | no (video) |
 | Export | base video, `overlays.json`, `cuts.json`, `subs.json` | `scripts/render_export.sh` | `exports/<slug>-vN.mp4`, `remotion/out/long.mp4` (latest), `assets/exports.json`, `exports.js` | media no; registry yes |
 | Privacy check | export | `verify_export.py` | `assets/export_leaks.json` | **no** |
+| Score and OKRs | export, metrics | `measure_video.py`, `build_okr.py` | `assets/metrics.json`, `assets/okr_result.json`, OKR block in `preprod.html` | yes |
+| Evals | spec, kit, questions | `eval_spec.py` | `assets/evals.json`, `evals.html` | yes |
 | EDL | decisions, overlays | `build_edl.py` | `EDL.md` | yes |
 | Site | `*.md` | `build_site.py` | `spec.html`, `edl.html`, `environment.html`, `metadata.html`, `readme.html` | yes |
 
@@ -72,9 +77,12 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `scripts/check_env.sh` | verifies this whole page on the machine |
 | `scripts/build_publish.py` | the Publish page (YouTube, LinkedIn, X) from `assets/publish.json` and the export registry |
 | `scripts/setup_azure_exports.sh`, `upload_exports.py` | one-time private Azure container + Key Vault secrets (run by the owner), then upload of the exports and read-only links (local, git-ignored) |
+| `scripts/upload_source.py` | save raw footage and source artifacts to per-video Azure Storage container (`<slug>-source`) |
 | `remotion/src/variants.json` | per-platform cuts (keep ranges, shorter ending) |
 | `scripts/check_subtitles.py`, `build_script.py` | find caption problems from data and build the Script page with the subtitle issues and fixes |
 | `scripts/build_changelog.py`, `build_toc.py`, `build_readme.py` | the Changelog, the contents table in the spec, and the navigational README |
+| `scripts/build_pipeline_diagram.py`, `pipeline/` | the tldraw pipeline page: data from `timings.json`; app built with `npm install && npm run build` in `pipeline/` (needs node; `node_modules` not committed) |
+| `scripts/eval_spec.py`, `evals/spec_questions.json` | the evals that test whether the spec and kit can recreate the project, and the Evals page |
 | `scripts/build_all.sh`, `check_site.py` | build every page of the site in order, then check menu items, links and scripts |
 | `scripts/render_export.sh`, `register_export.py` | numbered exports (`exports/<slug>-vN.mp4`) and their registry `assets/exports.json` |
 | `scripts/check_reuse.sh` | fails if reusable code contains this video's words (from `project.json`) |
@@ -83,7 +91,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `remotion/src/project.json` | the one per-video config: title, community, sensitive words, caption fixes |
 | `scripts/verify_export.py` | OCR the final video for leaked text |
 | `scripts/build_edl.py`, `build_site.py`, `build_architecture.py` | docs and site pages |
-| `scripts/serve.sh`, `pull_kit.sh`, `build_kit.sh`, `check_env.sh` | serve, kit, environment |
+| `scripts/serve.sh`, `pull_kit.sh`, `build_kit.sh`, `check_env.sh`, `sync_clips.py`, `render_base.sh` | helpers, serve, kit, environment |
 | `remotion/src/LongForm.tsx` | the video: cut-aware playback, speed-ups, overlays, captions, ending |
 | `remotion/src/{Slide,Outro,ImageOverlays,Subtitles,Thumb,cuts}.ts(x)` | slides, ending, blur/intro, captions, thumbnail, timeline maths |
 | `remotion/src/overlays.json`, `cuts.json` | **the edit list as data** (slides, blurs, speed-ups, outro, cuts) |

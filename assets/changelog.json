@@ -345,5 +345,31 @@
     "All three links answer HTTP 206 with the exact file sizes (95.4, 27.9, 10.5 MB); the same URLs without the signature return 404, so the container is private. The links live only in the git-ignored publish_links.js; the live site and repo never contain them"
    ]
   ]
+ },
+ {
+  "round": "Round 7 · 🗺️ Pipeline canvas, public player on Azure, deterministic spec evals (spec v3.18)",
+  "when": "2026-11-11 evening",
+  "items": [
+   [
+    "🗺️",
+    "Pipeline canvas",
+    "Built tldraw interactive pipeline diagram (pipeline.html) driven by assets/timings.json with 3 bands (prepare, render, publish), swimlanes (MacBook, Claude, owner), zoom/pan, editable toggle, and PNG export"
+   ],
+   [
+    "☁️",
+    "Public player",
+    "Added stored access policy site-player (read-only, 90 days) on Azure container via upload_exports.py --site; writes azure_links.js; public mode plays from Azure while keeping original recording locked"
+   ],
+   [
+    "🧪",
+    "Spec evals",
+    "Added deterministic spec evaluation suite (scripts/eval_spec.py) testing 4 groups: A. Recreate from kit (40), B. Spec coverage (30), C. Retrieval questions (20), E. Kit completeness (10); evals.html page displays score 100/100 (A)"
+   ],
+   [
+    "♻️",
+    "Kit completeness",
+    "Updated build_kit.sh to bundle pipeline app, evals, questions and Azure player support; passes reuse and idempotence checks"
+   ]
+  ]
  }
 ]

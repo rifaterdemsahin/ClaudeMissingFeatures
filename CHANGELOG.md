@@ -21,6 +21,14 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 - 🎯 Value-recognition score **77.0 / 100**, grade B (good); key results: ✅ 11 met · 🟡 1 almost · ❌ 0 missed · ⏳ 4 open (see the Pre-prod page)
 
+## Round 7 · 🗺️ Pipeline canvas, public player on Azure, deterministic spec evals (spec v3.18)
+*2026-11-11 evening*
+
+- 🗺️ **Pipeline canvas**: Built tldraw interactive pipeline diagram (pipeline.html) driven by assets/timings.json with 3 bands (prepare, render, publish), swimlanes (MacBook, Claude, owner), zoom/pan, editable toggle, and PNG export
+- ☁️ **Public player**: Added stored access policy site-player (read-only, 90 days) on Azure container via upload_exports.py --site; writes azure_links.js; public mode plays from Azure while keeping original recording locked
+- 🧪 **Spec evals**: Added deterministic spec evaluation suite (scripts/eval_spec.py) testing 4 groups: A. Recreate from kit (40), B. Spec coverage (30), C. Retrieval questions (20), E. Kit completeness (10); evals.html page displays score 100/100 (A)
+- ♻️ **Kit completeness**: Updated build_kit.sh to bundle pipeline app, evals, questions and Azure player support; passes reuse and idempotence checks
+
 ## Round 6 · 📣 Publishing: three platforms, Azure, script and changelog
 *2026-11-11 night*
 
@@ -154,6 +162,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `c03d0c7` | 2026-11-11 19:06 | Azure upload done: v5 exports in a private container with read-only links (local only); changelog, decisions and spec v3.17 |
 | `2f4a7e8` | 2026-11-11 18:59 | Platform cuts (LinkedIn 3:19, X 1:54), numbered exports v5 for all three, Publish page, Time & order page, Script page, Changelog, README hub, artifact notes, Azure upload tooling (spec v3.16) |
 | `3690f0f` | 2026-11-11 18:01 | Reuse-first refactor (project.json), export versions, artifacts page, OKRs, player features, whole-site build, collapsible menu (spec v3.13) |
 | `f087cbc` | 2026-11-11 17:25 | Player: add-note button on the video (+ M key, Ctrl/Cmd+Enter resumes); fix build_kit.sh relative output path; spec v3.10 |

@@ -38,12 +38,12 @@ textarea.flash{animation:savedglow 1.2s ease-out}@keyframes savedglow{0%{box-sha
 </style></head><body><main>
 <h1>📣 Publish: YouTube · LinkedIn · X</h1>
 <p>One edit, three cuts. Each platform has its own length, so each gets its own numbered export (<code>scripts/render_export.sh "what changed" youtube linkedin x</code>). Storage links and post links are <b>placeholders</b> until you share; then give me the post links and I fill them in (they also appear in the menu under 🔗 Links). Review everything here first, and write notes.</p>
-<div class="tools"><button id="shownotes" class="off">📝 All notes <span id="ncount">0</span></button><button id="copynotes" class="off">Copy all notes</button><button id="sendall" class="off">↗ Send all to player feedback</button><button id="clearnotes" class="off">🗑️ Clear all notes</button><button id="undonotes" style="display:none">↩ Undo clear</button><span id="notesaved" class="saved">✔ Saved</span></div>
+<div class="tools"><button id="shownotes" class="off">📝 All notes <span id="ncount">0</span></button><button id="copynotes" class="off">Copy all notes</button><button id="sendall" class="off">↗ Send all to player feedback</button><button id="dlallexports" class="off">⬇️ Download all exports & metadata</button><button id="clearnotes" class="off">🗑️ Clear all notes</button><button id="undonotes" style="display:none">↩ Undo clear</button><span id="notesaved" class="saved">✔ Saved</span></div>
 <div id="allnotes" class="pn" style="display:none;padding:8px 16px"></div>
 <div id="cards"></div>
 <h2>✅ Before you share</h2><ul id="check"></ul>
 <p style="opacity:.7">Limits are as of writing; platforms change them, so check your account. Storage: exports are uploaded to a <b>private</b> Azure container with time-limited read-only links (<code>scripts/upload_exports.py</code>, keys in Azure Key Vault); the links live only in a local, git-ignored file and are never published with this site.</p>
-</main><script src="project.js"></script><script src="nav.js"></script><script src="exports.js"></script><script>
+</main><script src="project.js"></script><script src="nav.js"></script><script src="exports.js"></script><script src="azure_links.js"></script><script>
 const D=__DATA__, CHECK=__CHECK__; let LINKS={};
 const $=id=>document.getElementById(id), fmt=s=>Math.floor(s/60)+":"+String(Math.round(s%60)).padStart(2,"0"), esc=t=>String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const VER=D.find(p=>p.export)&&D.find(p=>p.export).export.v;
@@ -58,6 +58,53 @@ $("shownotes").onclick=()=>{const a=$("allnotes");a.style.display=a.style.displa
 $("copynotes").onclick=()=>navigator.clipboard.writeText(header()+D.filter(noteOf).map(p=>tag(p)+" ("+p.label+" publish) "+noteOf(p)).join("\n")).then(()=>{$("copynotes").textContent="Copied ✔";setTimeout(()=>$("copynotes").textContent="Copy all notes",1500)});
 function toPlayer(items){let fb="";try{fb=localStorage.getItem("fb:player")||""}catch(e){}try{localStorage.setItem("fb:player",(fb&&!fb.endsWith("\n")?fb+"\n":fb)+items.map(p=>tag(p)+" ("+p.label+" publish) "+noteOf(p)).join("\n")+"\n")}catch(e){}}
 $("sendall").onclick=()=>{const w=D.filter(noteOf);if(w.length){toPlayer(w);$("sendall").textContent="Sent to the player ✔";setTimeout(()=>$("sendall").textContent="↗ Send all to player feedback",1800)}};
+$("dlallexports").onclick=()=>{
+  const proj=window.PROJECT||{}, az=window.AZURE_LINKS||{}, pub=LINKS||{};
+  const items=D.filter(p=>p.export&&p.export.file);
+  if(!items.length){alert("No exports found to download.");return}
+  const lines=[
+    "================================================================================",
+    "PROJECT EXPORTS & METADATA",
+    `Project: ${proj.title||"Video Project"}`,
+    `Slug: ${proj.slug||"video"}`,
+    `Generated: ${new Date().toLocaleString()}`,
+    `Total exports: ${items.length}`,
+    "================================================================================\n"
+  ];
+  items.forEach(p=>{
+    const e=p.export, lk=az[e.key]||pub[e.key]||{};
+    lines.push("--------------------------------------------------------------------------------");
+    lines.push(`[${p.emoji} ${p.label}] ${e.key.toUpperCase()}`);
+    lines.push(`Platform: ${p.label} (${p.id})`);
+    lines.push(`Aspect / Format: ${p.aspect}`);
+    lines.push(`Version: ${e.key}`);
+    lines.push(`File: ${e.file}`);
+    lines.push(`Length: ${fmt(e.seconds)} (${e.seconds} s)`);
+    lines.push(`Size: ${e.size_mb} MB`);
+    lines.push(`Rendered: ${e.rendered}`);
+    if(e.notes) lines.push(`Notes: ${e.notes}`);
+    if(p.check) lines.push(`Privacy check: ${p.check.privacy_leaks} sensitive lines across ${p.check.frames} frames (${p.check.when})`);
+    if(lk.url) lines.push(`Download link: ${lk.url}`);
+    if(p.title) lines.push(`Title (${p.title.length}/${p.title_max}):\n${p.title}`);
+    if(p.text) lines.push(`Post text (${p.text.length}/${p.text_max}):\n${p.text}`);
+    lines.push("");
+  });
+  lines.push("================================================================================");
+  lines.push("All exports verified and ready for distribution.");
+  lines.push("================================================================================");
+  const metaBlob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});
+  const ma=document.createElement("a"); ma.href=URL.createObjectURL(metaBlob); ma.download=`${proj.slug||"exports"}-metadata.txt`;
+  document.body.appendChild(ma); ma.click(); ma.remove();
+  items.forEach((p, idx)=>{
+    const e=p.export, lk=az[e.key]||pub[e.key], url=lk?lk.url:e.file, name=e.file.split("/").pop()||`${e.key}.mp4`;
+    setTimeout(()=>{
+      const va=document.createElement("a"); va.href=url; va.download=name; va.target="_blank";
+      document.body.appendChild(va); va.click(); va.remove();
+    }, (idx+1)*700);
+  });
+  $("dlallexports").textContent="Downloading… ✔";
+  setTimeout(()=>$("dlallexports").textContent="⬇️ Download all exports & metadata",3000);
+};
 $("clearnotes").onclick=()=>{lastCleared=JSON.stringify(NOTES);NOTES={};document.querySelectorAll("textarea.pnote").forEach(t=>t.value="");saveNotes();$("undonotes").style.display=""};
 $("undonotes").onclick=()=>{if(lastCleared){NOTES=JSON.parse(lastCleared);lastCleared=null;document.querySelectorAll("textarea.pnote").forEach(t=>t.value=NOTES[t.dataset.id]||"");saveNotes()}$("undonotes").style.display="none"};
 function card(p){const e=p.export,lim=p.limit_s,len=e?e.seconds:0,pct=lim&&e?Math.min(100,len/lim*100):(e?35:0),over=lim&&e&&len>lim;

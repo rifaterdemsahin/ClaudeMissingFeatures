@@ -18,11 +18,13 @@ python3 -I scripts/build_script.py
 python3 -I scripts/build_architecture.py
 python3 -I scripts/build_artifacts.py | tail -1        # works without an export too (cards without pictures)
 python3 -I scripts/build_timeline.py | tail -1
+python3 -I scripts/build_pipeline_diagram.py | tail -1
 python3 -I scripts/build_publish.py
 python3 -I scripts/build_changelog.py
 python3 -I scripts/build_toc.py | tail -1
 python3 -I scripts/build_readme.py | tail -1
 # 3. markdown pages (spec, readme, environment, metadata, edl) + project.js, after their sources are final
 python3 -I scripts/build_site.py | tail -1
+python3 -I scripts/eval_spec.py --page-only | tail -1
 # 4. check everything resolves
 python3 -I scripts/check_site.py

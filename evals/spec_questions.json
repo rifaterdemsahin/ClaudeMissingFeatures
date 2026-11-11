@@ -1,0 +1,246 @@
+[
+ {
+  "id": "Q1",
+  "question": "Which command renders all three platform cuts?",
+  "must": [
+   "render_export\\.sh",
+   "linkedin",
+   "youtube"
+  ]
+ },
+ {
+  "id": "Q2",
+  "question": "Where do per-video facts live, and where must they never be?",
+  "must": [
+   "project\\.json",
+   "overlays\\.json",
+   "never in code"
+  ]
+ },
+ {
+  "id": "Q3",
+  "question": "How do I check that no private text is visible in an export?",
+  "must": [
+   "verify_export\\.py",
+   "OCR"
+  ]
+ },
+ {
+  "id": "Q4",
+  "question": "Which tool removes steady background noise such as a hoover, and how is it found?",
+  "must": [
+   "denoise_audio\\.py",
+   "noisereduce",
+   "--scan"
+  ]
+ },
+ {
+  "id": "Q5",
+  "question": "How are exports named and versioned?",
+  "must": [
+   "<slug>-v<N>\\.mp4",
+   "exports\\.json",
+   "never overwrit"
+  ]
+ },
+ {
+  "id": "Q6",
+  "question": "What tag do feedback notes carry?",
+  "must": [
+   "\\[vN m:ss\\]",
+   "\\[orig m:ss\\]"
+  ]
+ },
+ {
+  "id": "Q7",
+  "question": "How do I build and check the whole website?",
+  "must": [
+   "build_all\\.sh",
+   "check_site\\.py"
+  ]
+ },
+ {
+  "id": "Q8",
+  "question": "What is the length limit for X?",
+  "must": [
+   "2 min 20 s"
+  ]
+ },
+ {
+  "id": "Q9",
+  "question": "How do exports get to Azure and where do the keys live?",
+  "must": [
+   "upload_exports\\.py",
+   "setup_azure_exports\\.sh",
+   "Key Vault"
+  ]
+ },
+ {
+  "id": "Q10",
+  "question": "How do I start a new video from the kit?",
+  "must": [
+   "pull_kit\\.sh",
+   "new-video\\.sh"
+  ]
+ },
+ {
+  "id": "Q11",
+  "question": "Where is the kit stored and how is the folder id kept?",
+  "must": [
+   "Google Drive",
+   "cmf-kit-drive-folder-id"
+  ]
+ },
+ {
+  "id": "Q12",
+  "question": "How long does each stage take and which dominates?",
+  "must": [
+   "timeline\\.html",
+   "2\\.3"
+  ]
+ },
+ {
+  "id": "Q13",
+  "question": "How are caption mistakes found and fixed?",
+  "must": [
+   "check_subtitles\\.py",
+   "caption_fixes"
+  ]
+ },
+ {
+  "id": "Q14",
+  "question": "What does the reuse check do?",
+  "must": [
+   "check_reuse\\.sh",
+   "hard-coded|this video's words"
+  ]
+ },
+ {
+  "id": "Q15",
+  "question": "How are sidebar titles blurred?",
+  "must": [
+   "build_blurs\\.py",
+   "ocr_frames\\.swift|Apple Vision"
+  ]
+ },
+ {
+  "id": "Q16",
+  "question": "How is a cut shown with an apology card?",
+  "must": [
+   "inserts",
+   "InsertCard"
+  ]
+ },
+ {
+  "id": "Q17",
+  "question": "How do I measure and score a video?",
+  "must": [
+   "measure_video\\.py",
+   "build_okr\\.py"
+  ]
+ },
+ {
+  "id": "Q18",
+  "question": "How do I back up to Google Drive?",
+  "must": [
+   "backup_drive\\.sh|Always back up to Google Drive"
+  ]
+ },
+ {
+  "id": "Q19",
+  "question": "How do I enable GitHub Pages?",
+  "must": [
+   "gh api",
+   "pages"
+  ]
+ },
+ {
+  "id": "Q20",
+  "question": "What do I do when the permission system blocks a push or an upload?",
+  "must": [
+   "! git push|with the `!` prefix|stop and tell"
+  ]
+ },
+ {
+  "id": "Q21",
+  "question": "What is variants.json?",
+  "must": [
+   "variants\\.json",
+   "keep"
+  ]
+ },
+ {
+  "id": "Q22",
+  "question": "How does the public player play videos and what stays private?",
+  "must": [
+   "azure_links\\.js",
+   "original recording is locked|original is private|never uploaded"
+  ]
+ },
+ {
+  "id": "Q23",
+  "question": "Where is the pipeline drawn?",
+  "must": [
+   "pipeline\\.html",
+   "tldraw"
+  ]
+ },
+ {
+  "id": "Q24",
+  "question": "What are the menu groups?",
+  "must": [
+   "Start",
+   "Make",
+   "Review",
+   "Links"
+  ]
+ },
+ {
+  "id": "Q25",
+  "question": "How are clips synced to the voice recording?",
+  "must": [
+   "build_base\\.py",
+   "cross-correlation"
+  ]
+ },
+ {
+  "id": "Q26",
+  "question": "What must be filled in before editing?",
+  "must": [
+   "project\\.json",
+   "okr\\.json"
+  ]
+ },
+ {
+  "id": "Q27",
+  "question": "Where are owner decisions recorded?",
+  "must": [
+   "edl_decisions\\.json",
+   "EDL"
+  ]
+ },
+ {
+  "id": "Q28",
+  "question": "How are the README and the contents table produced?",
+  "must": [
+   "build_readme\\.py",
+   "build_toc\\.py"
+  ]
+ },
+ {
+  "id": "Q29",
+  "question": "How long does a render take?",
+  "must": [
+   "13 frames",
+   "2\\.3"
+  ]
+ },
+ {
+  "id": "Q30",
+  "question": "How do I run the evals that test this spec?",
+  "must": [
+   "eval_spec\\.py",
+   "spec_questions\\.json"
+  ]
+ }
+]

@@ -1,0 +1,403 @@
+{
+ "timestamp": "2026-11-11 20:15",
+ "score": 100.0,
+ "grade": "A (excellent)",
+ "quick": true,
+ "groups": {
+  "A": {
+   "name": "Recreate from the kit",
+   "weight": 40,
+   "points": 40.0,
+   "description": "A fresh folder made only from the kit builds the whole project",
+   "checks": [
+    {
+     "name": "Kit builds cleanly and produces valid zip",
+     "pass": true,
+     "detail": "Kit zip size 837 KB, 120 files",
+     "hint": "Check scripts/build_kit.sh"
+    },
+    {
+     "name": "Every python script compiles cleanly",
+     "pass": true,
+     "detail": "29/29 python scripts compiled cleanly",
+     "hint": "Fix syntax errors in scripts/*.py"
+    },
+    {
+     "name": "Reuse check passed (no project-specific words in code)",
+     "pass": true,
+     "detail": "No hard-coded video words found",
+     "hint": "Move hardcoded video terms into remotion/src/project.json"
+    },
+    {
+     "name": "New video scaffolds from kit (new-video.sh)",
+     "pass": true,
+     "detail": "Scaffold test (cached from previous run; run without --quick for fresh test)",
+     "hint": "Run full eval: python3 scripts/eval_spec.py"
+    },
+    {
+     "name": "Full site builds and check_site passes in scaffolded project",
+     "pass": true,
+     "detail": "Build & check (cached)",
+     "hint": "Run full eval"
+    },
+    {
+     "name": "TypeScript compiles without errors in scaffolded project",
+     "pass": true,
+     "detail": "TSC compile (cached)",
+     "hint": "Run full eval"
+    },
+    {
+     "name": "Build is idempotent (second build changes nothing)",
+     "pass": true,
+     "detail": "Idempotence (cached)",
+     "hint": "Run full eval"
+    }
+   ]
+  },
+  "B": {
+   "name": "Spec coverage",
+   "weight": 30,
+   "points": 30.0,
+   "description": "Nothing the project needs is undocumented in MASTER_SPEC.md or ENVIRONMENT.md",
+   "checks": [
+    {
+     "name": "Every script documented in spec or environment",
+     "pass": true,
+     "detail": "42/42 scripts documented",
+     "hint": "Add missing scripts to ENVIRONMENT.md code table"
+    },
+    {
+     "name": "Every website page documented in spec or environment",
+     "pass": true,
+     "detail": "20/20 pages documented",
+     "hint": "Add missing pages to MASTER_SPEC.md section 7 or ENVIRONMENT.md"
+    },
+    {
+     "name": "Every asset data file documented in spec or environment",
+     "pass": true,
+     "detail": "23/23 assets documented",
+     "hint": "Add missing data files to ENVIRONMENT.md section 4"
+    },
+    {
+     "name": "Every scripts/... path in spec exists on disk",
+     "pass": true,
+     "detail": "35/35 referenced scripts exist",
+     "hint": "Fix obsolete script paths in MASTER_SPEC.md"
+    },
+    {
+     "name": "Every contents anchor link in spec resolves to a heading",
+     "pass": true,
+     "detail": "43/43 links resolve",
+     "hint": "Run scripts/build_toc.py to regenerate TOC table"
+    },
+    {
+     "name": "Every section reference in spec resolves to an actual section",
+     "pass": true,
+     "detail": "9/9 section references resolve",
+     "hint": "Check section number references in MASTER_SPEC.md"
+    },
+    {
+     "name": "Every script command in 'Prompt to execute' exists",
+     "pass": true,
+     "detail": "0/0 commands valid",
+     "hint": "Ensure all commands in the top prompt reference existing scripts"
+    }
+   ]
+  },
+  "C": {
+   "name": "Retrieval questions",
+   "weight": 20,
+   "points": 20.0,
+   "description": "The spec alone answers what a newcomer must know (30 questions)",
+   "checks": [
+    {
+     "id": "Q1",
+     "name": "Q1: Which command renders all three platform cuts?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q2",
+     "name": "Q2: Where do per-video facts live, and where must they never be?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q3",
+     "name": "Q3: How do I check that no private text is visible in an export?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q4",
+     "name": "Q4: Which tool removes steady background noise such as a hoover, and how is it found?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q5",
+     "name": "Q5: How are exports named and versioned?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q6",
+     "name": "Q6: What tag do feedback notes carry?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q7",
+     "name": "Q7: How do I build and check the whole website?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q8",
+     "name": "Q8: What is the length limit for X?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q9",
+     "name": "Q9: How do exports get to Azure and where do the keys live?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q10",
+     "name": "Q10: How do I start a new video from the kit?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q11",
+     "name": "Q11: Where is the kit stored and how is the folder id kept?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q12",
+     "name": "Q12: How long does each stage take and which dominates?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q13",
+     "name": "Q13: How are caption mistakes found and fixed?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q14",
+     "name": "Q14: What does the reuse check do?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q15",
+     "name": "Q15: How are sidebar titles blurred?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q16",
+     "name": "Q16: How is a cut shown with an apology card?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q17",
+     "name": "Q17: How do I measure and score a video?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q18",
+     "name": "Q18: How do I back up to Google Drive?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q19",
+     "name": "Q19: How do I enable GitHub Pages?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q20",
+     "name": "Q20: What do I do when the permission system blocks a push or an upload?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q21",
+     "name": "Q21: What is variants.json?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q22",
+     "name": "Q22: How does the public player play videos and what stays private?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q23",
+     "name": "Q23: Where is the pipeline drawn?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q24",
+     "name": "Q24: What are the menu groups?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q25",
+     "name": "Q25: How are clips synced to the voice recording?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q26",
+     "name": "Q26: What must be filled in before editing?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q27",
+     "name": "Q27: Where are owner decisions recorded?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q28",
+     "name": "Q28: How are the README and the contents table produced?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q29",
+     "name": "Q29: How long does a render take?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    },
+    {
+     "id": "Q30",
+     "name": "Q30: How do I run the evals that test this spec?",
+     "pass": true,
+     "detail": "All required patterns present in spec",
+     "hint": "Document  in MASTER_SPEC.md"
+    }
+   ]
+  },
+  "E": {
+   "name": "Kit completeness",
+   "weight": 10,
+   "points": 10.0,
+   "description": "Everything generic is shipped in the kit zip",
+   "checks": [
+    {
+     "name": "All project scripts shipped in kit zip",
+     "pass": true,
+     "detail": "42/42 scripts present in kit",
+     "hint": "Add missing scripts to scripts/build_kit.sh"
+    },
+    {
+     "name": "Remotion source files shipped in kit zip",
+     "pass": true,
+     "detail": "11/11 Remotion source files present in kit",
+     "hint": "Check remotion/src copy rule in scripts/build_kit.sh"
+    },
+    {
+     "name": "HTML templates shipped in kit zip",
+     "pass": true,
+     "detail": "0/0 templates present in kit",
+     "hint": "Check templates copy rule in scripts/build_kit.sh"
+    },
+    {
+     "name": "Navigation & runtime support files shipped in kit zip",
+     "pass": true,
+     "detail": "8/8 support files present in kit",
+     "hint": "Ensure nav.js, support js and pipeline.html are included in build_kit.sh"
+    }
+   ]
+  }
+ },
+ "unanswered": [],
+ "history": [
+  {
+   "timestamp": "2026-11-11 19:55",
+   "score": 94.3,
+   "grade": "A (excellent)",
+   "quick": true
+  },
+  {
+   "timestamp": "2026-11-11 19:55",
+   "score": 88.6,
+   "grade": "B+ (very good)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 19:56",
+   "score": 94.3,
+   "grade": "A (excellent)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 19:57",
+   "score": 94.3,
+   "grade": "A (excellent)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 19:57",
+   "score": 94.3,
+   "grade": "A (excellent)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 19:59",
+   "score": 100.0,
+   "grade": "A (excellent)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 20:15",
+   "score": 100.0,
+   "grade": "A (excellent)",
+   "quick": true
+  }
+ ]
+}

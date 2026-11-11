@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pipeline</title>
+<link rel="stylesheet" href="pipeline/dist/app.css">
+<style>#app{height:76vh;min-height:520px;border:1px solid #2a2a38;border-radius:12px;overflow:hidden;background:#fff;position:relative}.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.tools button.off{background:#2a2a38;color:#ddd}
+.lg span{display:inline-block;padding:2px 10px;border-radius:999px;color:#000;font-weight:700;font-size:13px;margin-right:8px}</style></head><body><main style="max-width:1400px">
+<h1>🗺️ Video production pipeline</h1>
+<p>The whole flow on one canvas, drawn with <a href="https://tldraw.dev" target="_blank" rel="noopener">tldraw</a>: every stage in order, in the lane of whoever does it, with its tool and time, the review loop, and where the results go. <b>Drag to pan, scroll to zoom</b>, click a box to inspect it. Times are the ones from <a href="timeline.html">Time &amp; order</a> (<i>est.</i> = estimate).</p>
+<div class="tools"><button class="off band" data-i="0">① Prepare and ingest</button><button class="off band" data-i="1">② Decide, render, check</button><button class="off band" data-i="2">③ Publish, review, wrap up</button><button id="fit" class="off">⤢ Whole pipeline</button><button id="edit" class="off">✏️ Make editable</button><button id="png" class="off">⬇ Download PNG</button><span class="lg"><span style="background:#a5d8ff">🖥️ MacBook</span><span style="background:#ffd8a8">🤖 Claude</span><span style="background:#d0bfff">👤 You</span><span style="background:#b2f2bb">inputs and outputs</span></span></div>
+<div id="app"></div>
+<p id="fallback" style="display:none"></p>
+<p style="opacity:.7;font-size:13px">Data: <code>pipeline/pipeline.json</code>, made by <code>scripts/build_pipeline_diagram.py</code> from <code>assets/timings.json</code>; app: <code>pipeline/src/main.tsx</code> (tldraw, bundled with esbuild into <code>pipeline/dist</code>). tldraw is used under its own license (<a href="https://github.com/tldraw/tldraw/blob/main/LICENSE.md" target="_blank" rel="noopener">terms</a>): it may show a small watermark and loads fonts and icons from its CDN; set a license key in <code>main.tsx</code> if you hold one.</p>
+</main><script src="project.js"></script><script src="nav.js"></script><script type="module" src="pipeline/dist/app.js"></script><script>
+const $=id=>document.getElementById(id), ed=()=>window.__pipelineEditor;
+document.querySelectorAll(".band").forEach(b=>b.onclick=()=>window.__zoomBand&&window.__zoomBand(+b.dataset.i));
+$("fit").onclick=()=>ed()&&ed().zoomToFit({animation:{duration:200}});
+$("edit").onclick=()=>{const e=ed();if(!e)return;const ro=e.getInstanceState().isReadonly;e.updateInstanceState({isReadonly:!ro});$("edit").textContent=ro?"🔒 Make read-only":"✏️ Make editable"};
+$("png").onclick=async()=>{const e=ed();if(!e)return;const ids=[...e.getCurrentPageShapeIds()];const {blob}=await e.toImage(ids,{format:"png",background:true,scale:1,padding:40});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="video-production-pipeline.png";a.click()};
+// fallback: if the canvas did not start, list the stages as text
+setTimeout(()=>{if(ed())return;fetch("pipeline/pipeline.json").then(r=>r.json()).then(d=>{const f=$("fallback");f.style.display="";f.innerHTML="<b>The canvas could not load; the stages:</b><ol>"+d.nodes.filter(n=>/^s\d/.test(n.id)).map(n=>"<li>"+n.text.replace(/\n/g," · ")+"</li>").join("")+"</ol>"}).catch(()=>{})},9000);
+</script></body></html>

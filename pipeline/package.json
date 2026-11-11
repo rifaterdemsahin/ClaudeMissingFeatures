@@ -1,0 +1,7 @@
+{
+  "name": "video-production-pipeline",
+  "private": true,
+  "scripts": { "build": "esbuild src/main.tsx --bundle --minify --format=esm --outfile=dist/app.js --loader:.woff2=dataurl --loader:.svg=dataurl --loader:.png=dataurl --define:process.env.NODE_ENV=\\\"production\\\"" },
+  "dependencies": { "react": "18.3.1", "react-dom": "18.3.1", "tldraw": "latest" },
+  "devDependencies": { "esbuild": "0.24.0", "typescript": "5.6.3", "@types/react": "18.3.12", "@types/react-dom": "18.3.1" }
+}

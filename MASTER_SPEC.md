@@ -1,4 +1,4 @@
-# MASTER SPEC v3.17: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.18: long-form 1080p screen-recording video (YouTube)
 
 <!--TOC-->
 ## 📑 Contents
@@ -11,40 +11,46 @@
 6. [0. Architecture and token budget (read first)](#0-architecture-and-token-budget-read-first)
 7. [0b. Environment (check it before you start)](#0b-environment-check-it-before-you-start)
 8. [0a. Fast start: the kit on Google Drive](#0a-fast-start-the-kit-on-google-drive)
-9. [1. Pipeline](#1-pipeline)
-10. [2. Repo layout](#2-repo-layout)
-11. [3. Sync clips to the voice recording](#3-sync-clips-to-the-voice-recording)
-12. [4. Render the base video (ffmpeg)](#4-render-the-base-video-ffmpeg)
-13. [5. Transcript, chapters, title and description](#5-transcript-chapters-title-and-description)
-14. [6. Remotion (long form)](#6-remotion-long-form)
-15. [6a. Cuts (repetitive parts)](#6a-cuts-repetitive-parts)
-16. [6b. Animated subtitles](#6b-animated-subtitles)
-17. [6c. Recorder UI and image overlays](#6c-recorder-ui-and-image-overlays)
-18. [6d. Run it (links and commands)](#6d-run-it-links-and-commands)
-19. [6e. Speed-ups, slides, blur boxes (editing personal or slow parts)](#6e-speed-ups-slides-blur-boxes-editing-personal-or-slow-parts)
-20. [6f. Export render and the player's version switch](#6f-export-render-and-the-players-version-switch)
-21. [6g. EDL: the edit decision list (record every decision)](#6g-edl-the-edit-decision-list-record-every-decision)
-22. [6h. Audio: remove steady noise (hoover, fan)](#6h-audio-remove-steady-noise-hoover-fan)
-23. [6i. Ending: summary and community call to action](#6i-ending-summary-and-community-call-to-action)
-24. [6j. OKRs and value recognition (in the Pre-prod page)](#6j-okrs-and-value-recognition-in-the-pre-prod-page)
-25. [6k. Artifacts page (every added element, clickable)](#6k-artifacts-page-every-added-element-clickable)
-26. [6l. Export versions (every export is numbered)](#6l-export-versions-every-export-is-numbered)
-27. [6m. Cuts with an apology card, lower thirds, manual blurs](#6m-cuts-with-an-apology-card-lower-thirds-manual-blurs)
-28. [6n. Script page and subtitle quality (find it, fix it, record it)](#6n-script-page-and-subtitle-quality-find-it-fix-it-record-it)
-29. [6o. Changelog page (everything that happened, with emojis)](#6o-changelog-page-everything-that-happened-with-emojis)
-30. [6p. Notes on the Artifacts page](#6p-notes-on-the-artifacts-page)
-31. [6q. README and the contents table (navigation)](#6q-readme-and-the-contents-table-navigation)
-32. [6r. Platforms: separate renders, the Publish page, Azure storage](#6r-platforms-separate-renders-the-publish-page-azure-storage)
-33. [6s. Completion time: stages, order, who, and how to prepare](#6s-completion-time-stages-order-who-and-how-to-prepare)
-34. [7. Website (GitHub Pages)](#7-website-github-pages)
-35. [7a. Publish: GitHub Pages (do this for every project, do not forget)](#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
-36. [7b. Always back up to Google Drive](#7b-always-back-up-to-google-drive)
-37. [7c. Build the whole website (every page, from the kit)](#7c-build-the-whole-website-every-page-from-the-kit)
-38. [8. Sanity check (before publishing)](#8-sanity-check-before-publishing)
-39. [9. Delivery checklist](#9-delivery-checklist)
-40. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
-41. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
+9. [0c. Save raw footage and source artifacts to Azure Storage (per-video container)](#0c-save-raw-footage-and-source-artifacts-to-azure-storage-per-video-container)
+10. [1. Pipeline](#1-pipeline)
+11. [2. Repo layout](#2-repo-layout)
+12. [3. Sync clips to the voice recording](#3-sync-clips-to-the-voice-recording)
+13. [4. Render the base video (ffmpeg)](#4-render-the-base-video-ffmpeg)
+14. [5. Transcript, chapters, title and description](#5-transcript-chapters-title-and-description)
+15. [6. Remotion (long form)](#6-remotion-long-form)
+16. [6a. Cuts (repetitive parts)](#6a-cuts-repetitive-parts)
+17. [6b. Animated subtitles](#6b-animated-subtitles)
+18. [6c. Recorder UI and image overlays](#6c-recorder-ui-and-image-overlays)
+19. [6d. Run it (links and commands)](#6d-run-it-links-and-commands)
+20. [6e. Speed-ups, slides, blur boxes (editing personal or slow parts)](#6e-speed-ups-slides-blur-boxes-editing-personal-or-slow-parts)
+21. [6f. Export render and the player's version switch](#6f-export-render-and-the-players-version-switch)
+22. [6g. EDL: the edit decision list (record every decision)](#6g-edl-the-edit-decision-list-record-every-decision)
+23. [6h. Audio: remove steady noise (hoover, fan)](#6h-audio-remove-steady-noise-hoover-fan)
+24. [6i. Ending: summary and community call to action](#6i-ending-summary-and-community-call-to-action)
+25. [6j. OKRs and value recognition (in the Pre-prod page)](#6j-okrs-and-value-recognition-in-the-pre-prod-page)
+26. [6k. Artifacts page (every added element, clickable)](#6k-artifacts-page-every-added-element-clickable)
+27. [6l. Export versions (every export is numbered)](#6l-export-versions-every-export-is-numbered)
+28. [6m. Cuts with an apology card, lower thirds, manual blurs](#6m-cuts-with-an-apology-card-lower-thirds-manual-blurs)
+29. [6n. Script page and subtitle quality (find it, fix it, record it)](#6n-script-page-and-subtitle-quality-find-it-fix-it-record-it)
+30. [6o. Changelog page (everything that happened, with emojis)](#6o-changelog-page-everything-that-happened-with-emojis)
+31. [6p. Notes on the Artifacts page](#6p-notes-on-the-artifacts-page)
+32. [6q. README and the contents table (navigation)](#6q-readme-and-the-contents-table-navigation)
+33. [6r. Platforms: separate renders, the Publish page, Azure storage](#6r-platforms-separate-renders-the-publish-page-azure-storage)
+34. [6s. Completion time: stages, order, who, and how to prepare](#6s-completion-time-stages-order-who-and-how-to-prepare)
+35. [6t. The pipeline drawn with tldraw](#6t-the-pipeline-drawn-with-tldraw)
+36. [6u. Evals: can the spec recreate this project?](#6u-evals-can-the-spec-recreate-this-project)
+37. [7. Website (GitHub Pages)](#7-website-github-pages)
+38. [7a. Publish: GitHub Pages (do this for every project, do not forget)](#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
+39. [7b. Always back up to Google Drive](#7b-always-back-up-to-google-drive)
+40. [7c. Build the whole website (every page, from the kit)](#7c-build-the-whole-website-every-page-from-the-kit)
+41. [8. Sanity check (before publishing)](#8-sanity-check-before-publishing)
+42. [9. Delivery checklist](#9-delivery-checklist)
+43. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
+44. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
 <!--/TOC-->
+
+
+
 
 
 
@@ -92,7 +98,7 @@ Inputs: clips + WAV in ~/Downloads/<Project>/ ; title <…> ; slug <…> ; CTA c
 
 Do this in order and do not stop to ask unless you are blocked:
 1. scripts/check_env.sh, then install anything missing. Fill remotion/src/project.json (title, community, sensitive words, caption fixes) and assets/okr.json (objectives, key results, value proposition) BEFORE producing.
-2. scripts/pipeline.sh "~/Downloads/<Project>" <slug>, then read REPORT.md only. Do not view frames to find things; use OCR, numbers and one still to confirm a look.
+2. At the start of the project, save raw footage and source artifacts to Azure Storage in a dedicated per-video container (<slug>-source): python3 scripts/upload_source.py. Run scripts/pipeline.sh "~/Downloads/<Project>" <slug>, then read REPORT.md only. Do not view frames to find things; use OCR, numbers and one still to confirm a look.
 3. Edit remotion/src/overlays.json and cuts.json: slides over personal windows, speed-up for slow typing, my images with caption and arrow, a summary slide and a CTA card at the end, no transitions. Run scripts/build_blurs.py. If the audio scan shows steady noise (hoover, fan) remove it with scripts/denoise_audio.py instead of cutting minutes of content.
 4. Apply my notes: convert export time to source time, decide, log every decision in assets/edl_decisions.json.
 5. One render round: scripts/render_export.sh "what changed" youtube linkedin x (numbers it v1, v2, … and never overwrites; each platform has its own length, section 6r), then scripts/verify_export.py on every file, then scripts/upload_exports.py (private Azure container, read-only links, keys in Key Vault) and review everything on the Publish page (OCR privacy check) and fix leaks by padding boxes or slides, then re-render once if needed.
@@ -223,11 +229,26 @@ Templates in the kit (`templates/`): `BRIEF`, `metadata`, `SANITY_CHECK`, and th
 
 ---
 
+## 0c. Save raw footage and source artifacts to Azure Storage (per-video container)
+
+At the start of the project, save raw footage (`*.mp4` clips, `*.WAV` clean audio) and generated source artifacts to a **dedicated private Azure Storage container per video** (`<slug>-source`).
+
+- **Per-video container:** each video project has its own separate container named `<slug>-source` (e.g. `claude-missing-features-source` in storage account `dpprojects`), keeping large source files and per-video assets isolated from other projects.
+- **What is saved:**
+  - Raw footage (`raw/` prefix): original camera/screen recording clips (`*.mp4`, `*.mov`), the clean audio track (`*.WAV`), and the base synced video (`<slug>-1080p.mp4`).
+  - Source artifacts (`artifacts/` prefix): `REPORT.md`, `BRIEF.md`, `metadata.md`, `EDL.md`, analysis data (`assets/base_info.json`, `whisper_words.json`, `ocr_frames.json`, `personal_windows.json`, `repeats.txt`, `timings.json`), and the edit data (`remotion/src/project.json`, `overlays.json`, `cuts.json`, `variants.json`).
+- **Tool:** `python3 scripts/upload_source.py [--folder ~/Downloads/<Project>] [--artifacts-only] [--raw-only] [--force]`
+- **Credentials & Security:** uses Azure Key Vault (`cmf-exports-storage-account`, `cmf-exports-storage-key`); the container is strictly **private** (`--public-access off`); nothing private or signed is committed to git.
+- **Why at the start:** guarantees that raw footage and source artifacts are preserved in the cloud immediately, allowing reproduction or recovery on any machine even if local files are deleted.
+
+---
+
 ## 1. Pipeline
 
 ```
 screen clips (.mp4, own audio) ─┐
-voice recording (.WAV)          ├─► sync (cross-correlation) ─► offsets
+voice recording (.WAV)          ├─► upload_source.py ─► Azure Storage: <slug>-source (raw/ + artifacts/)
+                                ├─► sync (cross-correlation) ─► offsets
                                 ┘
  offsets ─► ffmpeg: 1080p video + clean voice ─► base.mp4 (check loudness, frames)
  base.mp4 + voice ─► Whisper (small, en) ─► transcript + chapters
@@ -482,6 +503,7 @@ All are 16:9, 1920×1080, captions burned in (no separate file needed).
 - **Publish page** ([publish.html](publish.html), menu 📣 Publish, built by `scripts/build_publish.py` from `assets/publish.json`): one collapsible card per platform with format and limit, the export (key, length, size, what changed), a **length bar against the limit** (red when over), the privacy-check result, a player link, the **storage link placeholder** `<Azure storage link appears here after upload>`, the **post link placeholder** `<paste the … link when shared>`, ready-to-paste title and text with **character counters** (YouTube title 100, X 280, LinkedIn 3,000), a **My note** box per platform and an all-notes list (copy, send to player feedback, clear with undo, green ✔ Saved), and a "before you share" checklist. When the owner shares, they give the post links; put them in `assets/publish.json` (`post_url`, `status: shared`) and run `build_all.sh`: the page fills in and the menu **🔗 Links** group shows ▶️ YouTube post, 💼 LinkedIn post, ✖️ X post (the group also lists the community and the Azure portal links from `project.json › links`).
 - **Azure Storage and Key Vault:** exports go to a **private** blob container (`claude-missing-features-exports` in the owner's storage account), never public. Secrets live in Key Vault: `cmf-exports-storage-account`, `cmf-exports-container`, `cmf-exports-storage-key`. **One-time setup by the owner:** `! scripts/setup_azure_exports.sh [account] [resource-group] [vault]` (creates the container and stores the three secrets; the assistant's permission system does not copy storage keys into the vault). Then `python3 scripts/upload_exports.py [--version N] [--days 30]` reads the vault, uploads the latest export of each platform and creates **time-limited read-only SAS links**; or `--login` uses `az login` (Azure AD, no key, links up to 7 days). **Signed links are credentials:** they are written only to the git-ignored `publish_links.js` / `assets/publish_links.json`, which the Publish page loads locally; never commit them or put them on the public site.
 - **Verify the links (done this way here):** HEAD/range requests with the signature must return 206 with the full file size, and the same URL without the signature must return 404 (private). Print status and sizes only, never the signed URL.
+- **Public player (GitHub Pages) plays from Azure:** `python3 scripts/upload_exports.py --version N --site --skip-upload` creates a **stored access policy** `site-player` (read only, 90 days) on the container and writes `azure_links.js` (committed on purpose; read-only SAS links that reference the policy, no key in them). `player.html` switches to **public mode** on any host except localhost (or with `?public=1`): only exports that have a link are listed, they play from `*.blob.core.windows.net`, and the **original recording is locked** (it shows unblurred screen content and is never uploaded; side-by-side is off). To extend access change the policy expiry (`az storage container policy update --name site-player --expiry …`); to **revoke** delete the policy (`az storage container policy delete`) and every public link stops working without touching the repo. Only publish exports that passed `verify_export.py`; test with `?public=1` locally before pushing. Links in the repo are public by nature: treat them as a published video.
 - **Review flow:** render all platforms → verify each → upload → open `publish.html` locally and the player → write notes → the owner shares and sends the post links → fill the placeholders → rebuild → back up to Drive.
 
 ## 6s. Completion time: stages, order, who, and how to prepare
@@ -494,11 +516,31 @@ Page: [timeline.html](timeline.html) (menu ⏱️ Time & order, group Start), bu
 
 **What to do to prepare (each saves real time):** install and check everything first and cache the Whisper model; create the Azure container and Key Vault secrets once; start Whisper as soon as the sync is done; **keep the machine idle during a render**; make the base video with the index at the front (faststart, about 35% faster renders); **collect all notes and render once per round**; use stills, `--scale=0.5` or `--frames=a-b` for quick looks instead of full renders; choose the platform highlight ranges while the YouTube render runs and queue all platforms in one command; run the privacy check on the YouTube file while choosing cuts; keep caches (OCR, transcript, registry); fill `project.json` and `okr.json` before editing; record cleanly (no notifications, quiet room), which avoids blur work, cuts and apology cards. Update `assets/timings.json` when a stage gets faster; add new stages with who, basis, parallel and prep.
 
+## 6t. The pipeline drawn with tldraw
+
+Page: [pipeline.html](pipeline.html) (menu 🗺️ Pipeline, group Start). The whole flow on one **tldraw** canvas: every stage as a box in the lane of whoever does it (🖥️ MacBook, 🤖 Claude, 👤 you) with its tool and time, arrows for the order, the Whisper-beside-base-render parallel step, the **review loop** back to the decide step, and where results go (Azure private container, Key Vault, Google Drive, GitHub Pages, the platforms). Three **bands** (1 prepare and ingest, 2 decide, render and check, 3 publish, review and wrap up) with buttons to jump between them; Fit, Make editable and Download PNG.
+- **Data, not drawing:** `python3 -I scripts/build_pipeline_diagram.py` turns `assets/timings.json` (the Time & order data) into `pipeline/pipeline.json` (boxes, arrows, bands); the page reads it at runtime, so changing a stage or a time needs no rebuild of the JavaScript. Arrows are bound to their boxes, so dragging a box in edit mode keeps them connected.
+- **The app** is `pipeline/src/main.tsx` (React + tldraw 5.x), bundled with esbuild: `cd pipeline && npm install && npm run build` writes `pipeline/dist/app.js` and `app.css` (about 2 MB, **committed**, so GitHub Pages and the kit need no build). `node_modules` is not committed.
+- **License:** tldraw is used under its own license; it may show a "Get a license for production" watermark and loads fonts and icons from its CDN. Set `licenseKey` in `main.tsx` if you hold one. If the canvas cannot load, the page lists the stages as text.
+
+## 6u. Evals: can the spec recreate this project?
+
+Page: [evals.html](evals.html) (menu 🧪 Evals, group Start), built from `assets/evals.json` by `python3 -I scripts/eval_spec.py --page-only`; **run the evals with `python3 scripts/eval_spec.py`** (about 2 minutes; `--quick` skips the from-scratch kit test). Run them before every release; a failing eval is a **gap in the spec or the kit**: fix the spec or kit, never the test.
+
+| Group (weight) | What it proves | Checks |
+|---|---|---|
+| **A. Recreate from the kit** (40) | A fresh folder made only from the kit builds the whole project | the kit builds and has every required file; `new-video.sh` scaffolds; `build_all.sh` + `check_site.py` pass; TypeScript compiles; every script compiles; a second build changes nothing; the kit contains none of this video's words |
+| **B. Spec coverage** (30) | Nothing the project needs is undocumented | every script, data file and site page is named in the spec or `ENVIRONMENT.md`; every `scripts/...` path in the spec exists; every contents link and every "section 6x" reference resolves; every command in the prompt to execute exists |
+| **C. Retrieval questions** (20) | The spec alone answers what a newcomer must know | `evals/spec_questions.json`: about 30 questions, each with the facts (regular expressions) that must appear in the spec; score = share answered |
+| **E. Kit completeness** (10) | Everything generic is in the kit | every script, Remotion source file, template and the nav/menu code in the repo is shipped in the kit zip |
+
+The page shows the score and grade, every check with its detail and a fix hint, the unanswered questions, the history of runs, and a **ready-to-paste prompt for an LLM eval**: give a fresh Claude session only `MASTER_SPEC.md` and the questions, then compare its answers with the expected facts. Deterministic evals prove the spec is *complete*; the LLM eval shows whether it is *clear*.
+
 ## 7. Website (GitHub Pages)
 
 | Page | File | Built by | Purpose |
 |---|---|---|---|
-| Menu groups | `nav.js` `GROUPS` | by hand | **🧭 Start** (Architecture, Environment, Time & order, Master spec) · **🎬 Make** (Project, Pre-prod with OKRs, Prod, Post-prod, Run & links, Publish) · **🔎 Review** (Player, Artifacts, Script, EDL, Changelog, YouTube metadata) · **🔗 Links** (Remotion Studio, README, community, Azure portal links from `project.json › links`, and the platform post links once shared). Put a new page in the group that matches what the reader is doing; every item keeps its emoji |
+| Menu groups | `nav.js` `GROUPS` | by hand | **🧭 Start** (Architecture, Environment, Time & order, Pipeline, Evals, Master spec) · **🎬 Make** (Project, Pre-prod with OKRs, Prod, Post-prod, Run & links, Publish) · **🔎 Review** (Player, Artifacts, Script, EDL, Changelog, YouTube metadata) · **🔗 Links** (Remotion Studio, README, community, Azure portal links from `project.json › links`, and the platform post links once shared). Put a new page in the group that matches what the reader is doing; every item keeps its emoji |
 | Project hub | `index.html` | by hand | links to the stage pages |
 | Pre / Prod / Post | `preprod.html`, `prod.html`, `postprod.html` | by hand | one page per stage with a status table |
 | Run & links | `run.html` | by hand | Studio and player links, run commands, troubleshooting |
@@ -562,6 +604,8 @@ Ways to do it: (a) `scripts/backup_drive.sh` does all of the above with `rclone`
 | Post-prod | `postprod.html` | template (edit by hand) | `subtitles.srt/.vtt` |
 | Run & links | `run.html` | template | |
 | Time and order | `timeline.html` | `build_timeline.py` | `assets/timings.json` |
+| Pipeline (tldraw) | `pipeline.html` | template + `build_pipeline_diagram.py`, app in `pipeline/` | `assets/timings.json` -> `pipeline/pipeline.json` |
+| Evals (spec can recreate?) | `evals.html` | `eval_spec.py --page-only` | `assets/evals.json`, `evals/spec_questions.json` |
 | Publish (YouTube, LinkedIn, X) | `publish.html` | `build_publish.py` | `assets/publish.json`, `assets/exports.json`, `assets/export_checks.json`, local `publish_links.js` |
 | Player | `player.html` | template | `subs.js`, `chapters.js`, `export_map.js`, `exports.js` |
 | Script and subtitle issues | `script.html` | `build_script.py` (+ `check_subtitles.py`) | `subs.json`, `assets/chapters.json`, `assets/subtitle_issues.json`, `assets/whisper_words.json`, `project.json` caption rules |
@@ -602,7 +646,7 @@ Support files every page loads: `project.js` (from `project.json`), `nav.js` (me
 - [ ] `metadata.md` written and copied to `~/Downloads`
 - [ ] Remotion project typechecks (`npx tsc --noEmit`), a test still renders (no error output) and Studio opens
 - [ ] Site built, committed, pushed, **merged to `main`**, **GitHub Pages enabled** (section 7a), live link at the top of `README.md`, opened in Chrome
-- [ ] **Whole site builds and checks** (`scripts/build_all.sh`, 7c)
+- [ ] **Whole site builds and checks** (`scripts/build_all.sh`, 7c); **evals pass** (`python3 scripts/eval_spec.py`, 6u)
 - [ ] **Reuse check passed** (`scripts/check_reuse.sh`) and the kit tested from scratch; OKRs measured and scored (6j); Artifacts page rebuilt (6k)
 - [ ] **Backed up to Google Drive** (section 7b); every `scripts/*.py` compiles (`for f in scripts/*.py; do python3 -m py_compile $f; done`) and `zsh -n scripts/*.sh`
 - [ ] Work on a branch (`<slug>-v1`), commit and push after each change, never commit media

@@ -1,0 +1,556 @@
+{
+ "title": "Claude Missing Features: video production pipeline",
+ "bands": [
+  {
+   "name": "1 · Prepare and ingest",
+   "x": 20,
+   "y": 30,
+   "w": 1985,
+   "h": 920
+  },
+  {
+   "name": "2 · Decide, render and check",
+   "x": 20,
+   "y": 990,
+   "w": 1985,
+   "h": 920
+  },
+  {
+   "name": "3 · Publish, review and wrap up",
+   "x": 20,
+   "y": 1950,
+   "w": 2535,
+   "h": 920
+  }
+ ],
+ "nodes": [
+  {
+   "id": "s0",
+   "x": 60,
+   "y": 150,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "0. Check and install the machine\nscripts/check_env.sh\n⏱ 10 s"
+  },
+  {
+   "id": "s1",
+   "x": 335,
+   "y": 650,
+   "w": 240,
+   "h": 112,
+   "color": "violet",
+   "fill": "semi",
+   "text": "1. Azure container and Key Vault secrets\nscripts/setup_azure_exports.sh\n⏱ 60 s (est.)"
+  },
+  {
+   "id": "s2",
+   "x": 610,
+   "y": 150,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "2. Scaffold the project from the kit\nscripts/pull_kit.sh + new-video.sh\n⏱ 30 s"
+  },
+  {
+   "id": "s3",
+   "x": 885,
+   "y": 150,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "3. Sync clips to the voice recording\nscripts/build_base.py\n⏱ 73 s"
+  },
+  {
+   "id": "s4",
+   "x": 1160,
+   "y": 150,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "4. Render the 1080p base video\nscripts/build_base.py\n⏱ 4 min"
+  },
+  {
+   "id": "s5",
+   "x": 1160,
+   "y": 278,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "5. Transcript with word timings (Whisper small)\nwhisper --word_timestamps\n⏱ 5 min"
+  },
+  {
+   "id": "s6",
+   "x": 1435,
+   "y": 150,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "6. OCR of the screen every 2 s (Apple Vision)\nscripts/ocr_all.sh\n⏱ 5 min"
+  },
+  {
+   "id": "s7",
+   "x": 1710,
+   "y": 150,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "7. Captions, repeats, personal windows, report\nbuild_subs, find_repeats, find_perso\n⏱ 15 s"
+  },
+  {
+   "id": "s8",
+   "x": 60,
+   "y": 1360,
+   "w": 240,
+   "h": 112,
+   "color": "orange",
+   "fill": "semi",
+   "text": "8. Read REPORT.md, write slides, cuts, speed-ups, ending, OKRs\noverlays.json, cuts.json, okr.json\n⏱ 15 min (est.)"
+  },
+  {
+   "id": "s9",
+   "x": 335,
+   "y": 1110,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "9. Blur boxes from OCR, noise check\nbuild_blurs.py, denoise_audio.py\n⏱ 60 s"
+  },
+  {
+   "id": "s10",
+   "x": 610,
+   "y": 1360,
+   "w": 240,
+   "h": 112,
+   "color": "orange",
+   "fill": "semi",
+   "text": "10. Stills and Studio check of the new edits\nnpx remotion still, Studio\n⏱ 5 min (est.)"
+  },
+  {
+   "id": "s11",
+   "x": 885,
+   "y": 1110,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "11. YouTube export (the full video)\nscripts/render_export.sh\n⏱ 28 min"
+  },
+  {
+   "id": "s12",
+   "x": 1160,
+   "y": 1110,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "12. LinkedIn and X cuts\nscripts/render_export.sh ... linkedi\n⏱ 13 min"
+  },
+  {
+   "id": "s13",
+   "x": 1435,
+   "y": 1110,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "13. Privacy check of every export (OCR)\nscripts/verify_export.py\n⏱ 4 min"
+  },
+  {
+   "id": "s14",
+   "x": 1710,
+   "y": 1110,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "14. Measure, score, rebuild every page\nmeasure_video.py, build_okr.py, buil\n⏱ 2 min"
+  },
+  {
+   "id": "s15",
+   "x": 60,
+   "y": 2070,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "15. Upload to Azure and make read-only links\nscripts/upload_exports.py\n⏱ 60 s (est.)"
+  },
+  {
+   "id": "s16",
+   "x": 335,
+   "y": 2570,
+   "w": 240,
+   "h": 112,
+   "color": "violet",
+   "fill": "semi",
+   "text": "16. You watch in the player and write notes\nplayer.html, artifacts.html, publish\n⏱ 18 min (est.)"
+  },
+  {
+   "id": "s17",
+   "x": 610,
+   "y": 2320,
+   "w": 240,
+   "h": 112,
+   "color": "orange",
+   "fill": "semi",
+   "text": "17. Turn the notes into edits (each extra round)\noverlays.json, cuts.json, project.js\n⏱ 20 min (est.)"
+  },
+  {
+   "id": "s18",
+   "x": 885,
+   "y": 2070,
+   "w": 240,
+   "h": 112,
+   "color": "light-blue",
+   "fill": "semi",
+   "text": "18. Commit, push, merge, backup, fill the post links\ngit, Drive tool, rclone\n⏱ 5 min (est.)"
+  },
+  {
+   "id": "band0",
+   "kind": "text",
+   "x": 50,
+   "y": 40,
+   "text": "1 · Prepare and ingest",
+   "color": "black",
+   "size": "xl"
+  },
+  {
+   "id": "lane0machine",
+   "kind": "text",
+   "x": 60,
+   "y": 110,
+   "text": "🖥️ MacBook: local tools, 0 Claude tokens",
+   "color": "light-blue",
+   "size": "m"
+  },
+  {
+   "id": "lane0claude",
+   "kind": "text",
+   "x": 60,
+   "y": 360,
+   "text": "🤖 Claude: judgement from one page of text",
+   "color": "orange",
+   "size": "m"
+  },
+  {
+   "id": "lane0owner",
+   "kind": "text",
+   "x": 60,
+   "y": 610,
+   "text": "👤 You: record, review, decide",
+   "color": "violet",
+   "size": "m"
+  },
+  {
+   "id": "band1",
+   "kind": "text",
+   "x": 50,
+   "y": 1000,
+   "text": "2 · Decide, render and check",
+   "color": "black",
+   "size": "xl"
+  },
+  {
+   "id": "lane1machine",
+   "kind": "text",
+   "x": 60,
+   "y": 1070,
+   "text": "🖥️ MacBook: local tools, 0 Claude tokens",
+   "color": "light-blue",
+   "size": "m"
+  },
+  {
+   "id": "lane1claude",
+   "kind": "text",
+   "x": 60,
+   "y": 1320,
+   "text": "🤖 Claude: judgement from one page of text",
+   "color": "orange",
+   "size": "m"
+  },
+  {
+   "id": "lane1owner",
+   "kind": "text",
+   "x": 60,
+   "y": 1570,
+   "text": "👤 You: record, review, decide",
+   "color": "violet",
+   "size": "m"
+  },
+  {
+   "id": "band2",
+   "kind": "text",
+   "x": 50,
+   "y": 1960,
+   "text": "3 · Publish, review and wrap up",
+   "color": "black",
+   "size": "xl"
+  },
+  {
+   "id": "lane2machine",
+   "kind": "text",
+   "x": 60,
+   "y": 2030,
+   "text": "🖥️ MacBook: local tools, 0 Claude tokens",
+   "color": "light-blue",
+   "size": "m"
+  },
+  {
+   "id": "lane2claude",
+   "kind": "text",
+   "x": 60,
+   "y": 2280,
+   "text": "🤖 Claude: judgement from one page of text",
+   "color": "orange",
+   "size": "m"
+  },
+  {
+   "id": "lane2owner",
+   "kind": "text",
+   "x": 60,
+   "y": 2530,
+   "text": "👤 You: record, review, decide",
+   "color": "violet",
+   "size": "m"
+  },
+  {
+   "id": "inputs",
+   "x": 610,
+   "y": 650,
+   "w": 240,
+   "h": 112,
+   "color": "green",
+   "fill": "solid",
+   "text": "🎥 Clips (.mp4) + voice (.WAV)\n~/Downloads/<Project>/"
+  },
+  {
+   "id": "azure",
+   "x": 1435,
+   "y": 2010,
+   "w": 240,
+   "h": 112,
+   "color": "blue",
+   "fill": "solid",
+   "text": "☁️ Azure Blob (private)\nread-only links"
+  },
+  {
+   "id": "kv",
+   "x": 1435,
+   "y": 2152,
+   "w": 240,
+   "h": 112,
+   "color": "yellow",
+   "fill": "solid",
+   "text": "🔑 Key Vault\nstorage key + folder id"
+  },
+  {
+   "id": "drive",
+   "x": 1435,
+   "y": 2294,
+   "w": 240,
+   "h": 112,
+   "color": "green",
+   "fill": "solid",
+   "text": "📦 Google Drive\nkit, spec, backups, videos"
+  },
+  {
+   "id": "pages",
+   "x": 1435,
+   "y": 2436,
+   "w": 240,
+   "h": 112,
+   "color": "grey",
+   "fill": "solid",
+   "text": "🌐 GitHub Pages\nthis site + player"
+  },
+  {
+   "id": "platforms",
+   "x": 1435,
+   "y": 2578,
+   "w": 240,
+   "h": 112,
+   "color": "red",
+   "fill": "solid",
+   "text": "▶️ YouTube · 💼 LinkedIn · ✖️ X\nyou share, I fill the post links"
+  }
+ ],
+ "edges": [
+  {
+   "from": "s0",
+   "to": "s2",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s1",
+   "to": "s2",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s2",
+   "to": "s3",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s3",
+   "to": "s4",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s3",
+   "to": "s5",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s4",
+   "to": "s6",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s5",
+   "to": "s7",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s6",
+   "to": "s7",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s7",
+   "to": "s8",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s8",
+   "to": "s9",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s9",
+   "to": "s10",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s10",
+   "to": "s11",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s11",
+   "to": "s12",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s12",
+   "to": "s13",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s13",
+   "to": "s14",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s14",
+   "to": "s15",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s15",
+   "to": "s16",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s16",
+   "to": "s17",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s16",
+   "to": "s18",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "inputs",
+   "to": "s3",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "s17",
+   "to": "s8",
+   "label": "next round: only what changed",
+   "bend": 140
+  },
+  {
+   "from": "s15",
+   "to": "azure",
+   "label": "upload",
+   "bend": 0
+  },
+  {
+   "from": "s1",
+   "to": "kv",
+   "label": "",
+   "bend": 0
+  },
+  {
+   "from": "kv",
+   "to": "s15",
+   "label": "key",
+   "bend": -80
+  },
+  {
+   "from": "s18",
+   "to": "drive",
+   "label": "backup",
+   "bend": 0
+  },
+  {
+   "from": "s18",
+   "to": "pages",
+   "label": "push",
+   "bend": 0
+  },
+  {
+   "from": "s16",
+   "to": "platforms",
+   "label": "approve",
+   "bend": 0
+  },
+  {
+   "from": "pages",
+   "to": "platforms",
+   "label": "post links",
+   "bend": 0
+  }
+ ]
+}
