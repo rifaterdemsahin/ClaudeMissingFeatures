@@ -561,8 +561,19 @@ A video's click-through rate (CTR) is heavily determined by thumbnail curiosity 
   - Script: `python3 scripts/generate_thumbnail.py [--prompt "..."] [--model fal-ai/flux/schnell] [--out assets/thumbnail_fal.jpg]`
   - Authentication: fal.ai API key fetched from `FAL_KEY` environment variable, or retrieved from Azure Key Vault (`dp-kv-deliverypilot` secret `FAL-AI-KEY`).
   - Fallback / Agentic generation: when direct external API access is blocked or credentials expire, the system uses built-in AI image generation subagents (`image-generator`), upscaling to 1920×1080 (16:9) via `ffmpeg -vf "scale=1920:1080:flags=lanczos" -q:v 2`.
-- **Curiosity Gap Prompt Formula:**
-  - **Subject / Context:** Authentic dark-mode product UI interface with clearly categorized panels or cards.
+- **Abstract Curiosity Thumbnail Formula (Modular Framework):**
+  > **[Media Format & Style]:** High-converting YouTube thumbnail, [Aesthetic Style] aesthetic, 16:9 aspect ratio.
+  >
+  > **[Left Side - Subject & Emotion]:** [Subject/Persona] displaying [Emotion: e.g., confusion, shock, frustration] while interacting with [Hardware/Device], accompanied by [Symbolic Element: e.g., glowing question mark, exclamation point].
+  >
+  > **[Right Side - The Problem/Object]:** Enlarged 3D floating [UI / Product / Software Interface] highlighting a set of [Available/Working Features] contrasted against a [Missing/Broken Feature: depicted with placeholder outline, lock, or error symbol].
+  >
+  > **[Top/Overlay - Typography]:** Bold, high-contrast, glowing hook text reading "[BRAND/SUBJECT] [CORE CONFLICT/QUESTION]?!".
+  >
+  > **[Lighting & Atmosphere]:** Dramatic studio rim lighting, [Accent Effects: e.g., embers, sparks, glow], and warm background ambience.
+
+- **Formula Instantiation & Application:**
+  - **Subject & Context:** Authentic dark-mode product UI interface with clearly categorized panels or cards.
   - **The Missing Piece / Anomaly:** An empty, glowing dashed slot or missing feature examined by an illuminated magnifying glass or glowing neon inspection beam.
   - **Color Palette & Contrast:** Deep sleek charcoal/midnight navy (#0e0e17) background contrasted with vivid amber / warm bronze neon accents (#f59e0b) to create depth and focus.
   - **Clarity at small scale:** Bold geometric silhouettes, high contrast, zero tiny illegible micro-text, 16:9 ratio (1920×1080).

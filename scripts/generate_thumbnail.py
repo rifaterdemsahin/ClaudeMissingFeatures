@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 """AI Thumbnail generator (fal.ai / FLUX): generate high-CTR curiosity-triggering thumbnails.
 Usage: python3 scripts/generate_thumbnail.py [--prompt "custom prompt"] [--out assets/thumbnail_fal.jpg]
-Reads: FAL_KEY from environment or Azure Key Vault (secret FAL-AI-KEY in dp-kv-deliverypilot)."""
+Reads: FAL_KEY from environment or Azure Key Vault (secret FAL-AI-KEY in dp-kv-deliverypilot).
+
+Abstract Curiosity Thumbnail Formula:
+- [Media Format & Style]: High-converting YouTube thumbnail, [Aesthetic Style] aesthetic, 16:9 aspect ratio.
+- [Left Side - Subject & Emotion]: [Subject/Persona] displaying [Emotion] while interacting with [Hardware/Device], accompanied by [Symbolic Element].
+- [Right Side - The Problem/Object]: Enlarged 3D floating [UI / Product Interface] highlighting [Working Features] vs [Missing/Broken Feature].
+- [Top/Overlay - Typography]: Bold, high-contrast hook text reading "[BRAND/SUBJECT] [CORE CONFLICT/QUESTION]?!".
+- [Lighting & Atmosphere]: Dramatic studio rim lighting, [Accent Effects: embers, sparks, glow], warm background ambience.
+"""
 import argparse, json, os, pathlib, subprocess, sys, urllib.error, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent

@@ -170,6 +170,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `9f48477` | 2026-11-11 22:46 | Add AI curiosity thumbnail (fal.ai/FLUX), dual thumbnail downloads to publish page, and spec documentation in Section 6w |
 | `75df5e0` | 2026-11-11 22:32 | Document published URLs on YouTube, LinkedIn and X, and add analytics tracking page |
 | `55b8dd5` | 2026-11-11 22:26 | Remove angled brackets from publish page, add video thumbnail preview, and add document stats to spec.html |
 | `ae3f066` | 2026-11-11 22:13 | Standardize export naming across x, youtube, linkedin and update master spec |
