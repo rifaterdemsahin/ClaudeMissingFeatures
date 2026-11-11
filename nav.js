@@ -85,6 +85,18 @@
   const LIST_KEY = "site:saved_notes";
   const getSaved = () => { try { return JSON.parse(localStorage.getItem(LIST_KEY)) || []; } catch (e) { return []; } };
   const setSaved = (l) => { try { localStorage.setItem(LIST_KEY, JSON.stringify(l)); } catch (e) {} };
+  const formatNote = (u, t) => `[${u}] : [ ${t} ]`;
+
+  const copyAllNotes = () => {
+    const list = getSaved();
+    const cur = ta.value.trim();
+    const all = [];
+    if (cur) all.push(formatNote(location.href, cur));
+    list.forEach(n => all.push(formatNote(n.url, n.text)));
+    if (!all.length) return false;
+    window.copyText(all.join("\n\n"));
+    return true;
+  };
 
   const renderSaved = () => {
     const list = getSaved();
@@ -92,7 +104,7 @@
       listEl.innerHTML = '<div style="opacity:.5;font-size:12px">No saved notes yet. Click 💾 Save to save notes with page URL.</div>';
       return;
     }
-    listEl.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-weight:700;font-size:12px">Saved notes (${list.length})</span><button id="nclrall" style="background:#2a2a38;color:#ddd;padding:2px 8px;font-size:11px">Clear all</button></div>` +
+    listEl.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-weight:700;font-size:12px">Saved notes (${list.length})</span><div><button id="ncall" style="background:#ff7a3d;color:#000;padding:2px 8px;font-size:11px;font-weight:700;margin-right:4px">Copy all</button><button id="nclrall" style="background:#2a2a38;color:#ddd;padding:2px 8px;font-size:11px">Clear all</button></div></div>` +
       list.map((n, i) => `
         <div class="s-item">
           <div class="s-meta">
@@ -108,11 +120,22 @@
       `).join("");
     listEl.querySelectorAll(".ncopy").forEach(b => b.onclick = () => {
       const it = getSaved()[+b.dataset.i];
-      if (it) window.copyText(`${it.page} (${it.url})\n${it.time}\n\n${it.text}`);
+      if (it) {
+        window.copyText(formatNote(it.url, it.text));
+        b.textContent = "Copied ✔";
+        setTimeout(() => b.textContent = "Copy", 1500);
+      }
     });
     listEl.querySelectorAll(".ndel").forEach(b => b.onclick = () => {
       const cur = getSaved(); cur.splice(+b.dataset.i, 1); setSaved(cur); renderSaved();
     });
+    const callBtn = listEl.querySelector("#ncall");
+    if (callBtn) callBtn.onclick = () => {
+      if (copyAllNotes()) {
+        callBtn.textContent = "Copied ✔";
+        setTimeout(() => callBtn.textContent = "Copy all", 1500);
+      }
+    };
     const clr = listEl.querySelector("#nclrall");
     if (clr) clr.onclick = () => { if (confirm("Clear all saved notes?")) { setSaved([]); renderSaved(); } };
   };
@@ -135,8 +158,30 @@
     ta.oninput();
     renderSaved();
   };
-  box.querySelector("#nc").onclick = () => window.copyText(full());
-  box.querySelector("#nd").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([full()])); a.download = here + "-notes.txt"; a.click(); };
+  box.querySelector("#nc").onclick = () => {
+    const cur = ta.value.trim();
+    const list = getSaved();
+    if (!cur && !list.length) return;
+    const all = [];
+    if (cur) all.push(formatNote(location.href, cur));
+    list.forEach(n => all.push(formatNote(n.url, n.text)));
+    window.copyText(all.join("\n\n"));
+    const b = box.querySelector("#nc");
+    b.textContent = "Copied ✔";
+    setTimeout(() => b.textContent = "Copy", 1500);
+  };
+  box.querySelector("#nd").onclick = () => {
+    const cur = ta.value.trim();
+    const list = getSaved();
+    const all = [];
+    if (cur) all.push(formatNote(location.href, cur));
+    list.forEach(n => all.push(formatNote(n.url, n.text)));
+    const content = all.length ? all.join("\n\n") : `${document.title}\n${location.href}\n${new Date().toString()}\n\n${ta.value}\n\n${CTA}\n`;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
+    a.download = here + "-notes.txt";
+    a.click();
+  };
   box.querySelector("#nx").onclick = () => { ta.value = ""; ta.oninput(); };
   renderSaved();
   addEventListener("keydown", (e) => {
