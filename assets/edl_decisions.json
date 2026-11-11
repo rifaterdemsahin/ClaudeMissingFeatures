@@ -174,7 +174,7 @@
   "when": "round 3",
   "who": "owner",
   "said": "add a feature to go to last review point",
-  "decision": "\u23ee Last point button (video + Feedback panel) and the R key jump to the last [orig|export m:ss] note (switching version, 3 s lead-in); without notes they go to where you stopped",
+  "decision": "⏮ Last point button (video + Feedback panel) and the R key jump to the last [orig|export m:ss] note (switching version, 3 s lead-in); without notes they go to where you stopped",
   "how": "player.html",
   "check": "tested in Chrome: cross-version jump, fallback, key, typing-safe",
   "in": "site"
@@ -254,7 +254,7 @@
   "when": "round 4",
   "who": "owner",
   "said": "[export 9:29] there is a hover sound it needs to be cutted start; [export 10:20] cut till this timeline hover ends and the design is out. Show a hover gif and apologize",
-  "decision": "Cut source 574.4 to 625.2 s (50.8 s). The note said export 10:20 (= source 627.0) but the next sentence starts at 625.4, so the cut ends just before it instead of chopping \"Yes, now it's created\u2026\"; it starts in the silence before \"And let's see the double click\u2026\". A 6 s card is placed at the cut: \"Sorry! A hoover joined the recording here, so about 50 seconds are cut.\" with an animated cartoon hoover (frame-driven, like a GIF). Everything after moves 45 s earlier",
+  "decision": "Cut source 574.4 to 625.2 s (50.8 s). The note said export 10:20 (= source 627.0) but the next sentence starts at 625.4, so the cut ends just before it instead of chopping \"Yes, now it's created…\"; it starts in the silence before \"And let's see the double click…\". A 6 s card is placed at the cut: \"Sorry! A hoover joined the recording here, so about 50 seconds are cut.\" with an animated cartoon hoover (frame-driven, like a GIF). Everything after moves 45 s earlier",
   "how": "cuts.json; overlays.json inserts[0]; InsertCard.tsx; cuts.ts",
   "check": "stills of the card and the frame after the cut; time map checked (card at export 9:27)",
   "in": "v4"
@@ -284,9 +284,9 @@
   "when": "round 6",
   "who": "owner",
   "said": "have a page for the script and mention the issues with the subtitles and how it is fixed; if not fixed, fix it",
-  "decision": "Script page (spoken script by chapter with timecodes, every caption change before\u2192after, 14 issues with how found and fixed, 4 left for the owner's ear). Fixed from evidence: Claude's on-screen answer corrected from the screen text, 'code connectors', stutters dropped, flicker removed",
+  "decision": "Script page (spoken script by chapter with timecodes, every caption change before→after, 14 issues with how found and fixed, 4 left for the owner's ear). Fixed from evidence: Claude's on-screen answer corrected from the screen text, 'code connectors', stutters dropped, flicker removed",
   "how": "scripts/check_subtitles.py, build_script.py, project.json",
-  "check": "checker counts before/after: stutters 5\u21920, flicker 21\u21925",
+  "check": "checker counts before/after: stutters 5→0, flicker 21→5",
   "in": "v5"
  },
  {
@@ -357,6 +357,16 @@
   "decision": "Standardized export file naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x). Updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented in MASTER_SPEC.md",
   "how": "scripts/render_export.sh, register_export.py, upload_exports.py, MASTER_SPEC.md",
   "check": "verified in Chrome and azure_links.js",
+  "in": "site"
+ },
+ {
+  "id": 37,
+  "when": "round 6",
+  "who": "owner",
+  "said": "publish.html angled brackets not allowed, thumbnail on publish page, document stats at bottom of spec.html",
+  "decision": "Disallowed angled brackets in publish.html placeholders/hints and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html and export zip; added live document stats banner (lines, words, chars, sections, read time) to spec.html",
+  "how": "scripts/build_publish.py, assets/publish.json, build_site.py, MASTER_SPEC.md",
+  "check": "verified in Chrome, spec stats visible, publish page clean",
   "in": "site"
  }
 ]

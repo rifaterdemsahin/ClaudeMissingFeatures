@@ -29,6 +29,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 - 🧪 **Spec evals**: Added deterministic spec evaluation suite (scripts/eval_spec.py) testing 4 groups: A. Recreate from kit (40), B. Spec coverage (30), C. Retrieval questions (20), E. Kit completeness (10); evals.html page displays score 100/100 (A)
 - ♻️ **Kit completeness**: Updated build_kit.sh to bundle pipeline app, evals, questions and Azure player support; passes reuse and idempotence checks
 - 🧩 **Export naming**: Standardized export naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x); updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented the unified naming rule in MASTER_SPEC.md
+- 🧩 **Publish & Spec stats**: Disallowed angled brackets in publish.html placeholders and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html; added document stats banner (lines, words, chars, sections, read time) to the bottom of spec.html
 
 ## Round 6 · 📣 Publishing: three platforms, Azure, script and changelog
 *2026-11-11 night*
@@ -123,6 +124,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | # | In | Said | Decision |
 |---|---|---|---|
+| 37 | site | publish.html angled brackets not allowed, thumbnail on publish page, document stats at bottom of spec.html | Disallowed angled brackets in publish.html placeholders/hints and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html and export zip; added live document stats banner (lines, words, chars, sections, read time) to spec.html |
 | 36 | site | rename exports properly x youtube linkedin > update master spec | Standardized export file naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x). Updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented in MASTER_SPEC.md |
 | 35 | site | add a page for the completion time and how long each stage takes with the llm, give the order and what can be done to prep up | Time and order page: 19 stages in order with who does them, measured or estimated time, LLM involvement, parallelism, prep tips, a planning calculator and the elapsed time |
 | 34 | site | in the links add azure and links | Menu Links group: Azure Storage and Azure Key Vault portal links (generic, no account ids) from project.json, and the platform post links once shared |
@@ -164,6 +166,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `ae3f066` | 2026-11-11 22:13 | Standardize export naming across x, youtube, linkedin and update master spec |
 | `45a3727` | 2026-11-11 21:23 | Notes copy formatting: output 'task N: [url]: [note]' for single and multiple notes |
 | `cc6dad9` | 2026-11-11 21:20 | Notes copy formatting: output '[url] : [ note ]' for all copied notes |
 | `08e4df5` | 2026-11-11 21:17 | Top menu: make each section individually collapsable with persistence and active state awareness |

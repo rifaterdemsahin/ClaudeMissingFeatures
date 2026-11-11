@@ -23,6 +23,24 @@ if (window.marked) {{
     b.onclick = () => {{ let t = h.textContent + "\\n", n = h.nextElementSibling; while (n && n.tagName !== "H2") {{ t += n.innerText + "\\n"; n = n.nextElementSibling; }} copyText(t.trim()); b.textContent = "Copied"; }};
     h.appendChild(b);
   }});
+  if ({stats}) {{
+    const lines = SRC.split(/\\r\\n|\\r|\\n/).length;
+    const words = (SRC.match(/\\b\\w+\\b/g) || []).length;
+    const chars = SRC.length;
+    const h2s = md.querySelectorAll("h2").length;
+    const headings = md.querySelectorAll("h1,h2,h3,h4,h5,h6").length;
+    const readMin = Math.max(1, Math.round(words / 200));
+    const sb = document.createElement("div");
+    sb.id = "doc-stats";
+    sb.style.cssText = "margin-top:40px;padding:16px 20px;background:#14141c;border:1px solid #2a2a38;border-radius:10px;font-size:14px;color:#bbb;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center";
+    sb.innerHTML = '<span style="font-weight:700;color:#eee">📊 Document Stats:</span>' +
+      '<span><b>' + lines.toLocaleString() + '</b> lines</span>' +
+      '<span><b>' + words.toLocaleString() + '</b> words</span>' +
+      '<span><b>' + chars.toLocaleString() + '</b> characters</span>' +
+      '<span><b>' + h2s + '</b> sections (' + headings + ' headings total)</span>' +
+      '<span>~<b>' + readMin + '</b> min read</span>';
+    document.querySelector("main").appendChild(sb);
+  }}
 }} else {{ raw.hidden = false; raw.textContent = SRC; }}
 </script></body></html>"""
 PROJ = json.load(open(ROOT / "remotion/src/project.json"))
@@ -33,5 +51,5 @@ for src, (out, title) in MD.items():
     if not (ROOT / src).exists(): continue
     text = (ROOT / src).read_text()
     if text.startswith("---\n"): text = text.split("---\n", 2)[2]
-    html = PAGE.format(proj=PROJ["title"], title=title, src=json.dumps(text).replace("</", "<\\/"), copy="true" if src == "metadata.md" else "false")
+    html = PAGE.format(proj=PROJ["title"], title=title, src=json.dumps(text).replace("</", "<\\/"), copy="true" if src == "metadata.md" else "false", stats="true" if src == "MASTER_SPEC.md" else "false")
     (ROOT / out).write_text(html); print("built", out)

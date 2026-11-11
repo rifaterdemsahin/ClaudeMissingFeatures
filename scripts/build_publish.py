@@ -40,6 +40,11 @@ textarea.flash{animation:savedglow 1.2s ease-out}@keyframes savedglow{0%{box-sha
 <p>One edit, three cuts. Each platform has its own length, so each gets its own numbered export (<code>scripts/render_export.sh "what changed" youtube linkedin x</code>). Storage links and post links are <b>placeholders</b> until you share; then give me the post links and I fill them in (they also appear in the menu under 🔗 Links). Review everything here first, and write notes.</p>
 <div class="tools"><button id="shownotes" class="off">📝 All notes <span id="ncount">0</span></button><button id="copynotes" class="off">Copy all notes</button><button id="sendall" class="off">↗ Send all to player feedback</button><button id="dlallexports" class="off">⬇️ Download all exports & metadata</button><button id="clearnotes" class="off">🗑️ Clear all notes</button><button id="undonotes" style="display:none">↩ Undo clear</button><span id="notesaved" class="saved">✔ Saved</span></div>
 <div id="allnotes" class="pn" style="display:none;padding:8px 16px"></div>
+<details class="pn" open id="thumb-sec"><summary>🖼️ Video Thumbnail (1920×1080)<span class="chip s-shared">ready</span></summary><div class="pnb">
+<div class="row"><b>Preview</b><span><a href="assets/thumbnail.jpg" target="_blank"><img src="assets/thumbnail.jpg" alt="Video thumbnail preview" style="max-width:440px;width:100%;aspect-ratio:16/9;border-radius:8px;border:1px solid #2a2a38;display:block"></a></span>
+<b>File</b><span><code>assets/thumbnail.jpg</code> (1920×1080 px, 16:9) · <a href="assets/thumbnail.jpg" id="dlthumb" class="btn" style="padding:4px 12px;font-size:13px">⬇️ Download Thumbnail</a> <a href="assets/thumbnail.jpg" target="_blank" class="btn" style="padding:4px 12px;font-size:13px;background:#2a2a38;color:#eee;margin-left:6px">🔍 View Full Size</a></span>
+<b>Render still</b><span><code>cd remotion && npm run still</code> (renders <code>remotion/out/thumbnail.png</code> from <code>Thumb.tsx</code>)</span></div>
+</div></details>
 <div id="cards"></div>
 <h2>✅ Before you share</h2><ul id="check"></ul>
 <p style="opacity:.7">Limits are as of writing; platforms change them, so check your account. Storage: exports are uploaded to a <b>private</b> Azure container with time-limited read-only links (<code>scripts/upload_exports.py</code>, keys in Azure Key Vault); the links live only in a local, git-ignored file and are never published with this site.</p>
@@ -89,6 +94,7 @@ $("dlallexports").onclick=()=>{
     if(p.text) lines.push(`Post text (${p.text.length}/${p.text_max}):\n${p.text}`);
     lines.push("");
   });
+  lines.push("Thumbnail: assets/thumbnail.jpg (1920x1080 px)");
   lines.push("================================================================================");
   lines.push("All exports verified and ready for distribution.");
   lines.push("================================================================================");
@@ -102,6 +108,11 @@ $("dlallexports").onclick=()=>{
       document.body.appendChild(va); va.click(); va.remove();
     }, (idx+1)*700);
   });
+  setTimeout(()=>{
+    const ta=document.createElement("a"); ta.href="assets/thumbnail.jpg";
+    ta.download=`${proj.slug||"video"}-thumbnail.jpg`; ta.target="_blank";
+    document.body.appendChild(ta); ta.click(); ta.remove();
+  }, (items.length+1)*700);
   $("dlallexports").textContent="Downloading… ✔";
   setTimeout(()=>$("dlallexports").textContent="⬇️ Download all exports & metadata",3000);
 };
@@ -112,11 +123,12 @@ function card(p){const e=p.export,lim=p.limit_s,len=e?e.seconds:0,pct=lim&&e?Mat
   const txt=p.text||"", max=p.text_max;
   return `<details class="pn" open data-id="${p.id}"><summary>${p.emoji} ${p.label}<span class="chip s-${p.status}">${p.status}</span>${e?`<span style="font-weight:400;opacity:.7;font-size:14px;margin-left:10px">${e.key} · ${fmt(e.seconds)}${lim?" of "+fmt(lim):""}</span>`:'<span style="font-weight:400;opacity:.7;font-size:14px;margin-left:10px">not rendered yet</span>'}</summary><div class="pnb">
   <div class="row"><b>Format</b><span>${p.aspect} · ${esc(p.target)} · file up to ${p.file_limit}</span><b>Limit</b><span>${esc(p.limit_note)}</span><b>This cut</b><span>${esc(p.variant_note||"")}</span>
-  <b>Export</b><span>${e?`<b>${e.key}</b> · <code>${e.file}</code> · ${fmt(e.seconds)} · ${e.size_mb} MB · rendered ${e.rendered}<br><span style="opacity:.75">${esc(e.notes)}</span>`:'<span class="ph">&lt;render with scripts/render_export.sh "…" '+p.id+'&gt;</span>'}</span>
+  <b>Export</b><span>${e?`<b>${e.key}</b> · <code>${e.file}</code> · ${fmt(e.seconds)} · ${e.size_mb} MB · rendered ${e.rendered}<br><span style="opacity:.75">${esc(e.notes)}</span>`:'<span class="ph">Not rendered yet (run: scripts/render_export.sh "what changed" '+p.id+')</span>'}</span>
   <b>Length</b><span>${e?`<span class="bar"><i style="width:${pct}%;${over?"background:#f87171":""}"></i></span>${lim?(over?`<span class="bad">❌ ${fmt(len-lim)} over the limit</span>`:`<span class="ok">✅ ${fmt(lim-len)} under the limit</span>`):'<span class="ok">✅ no limit to worry about</span>'}`:"–"}</span>
   <b>Checks</b><span>${chk}</span>
+  ${p.id==="youtube"?`<b>Thumbnail</b><span><a href="assets/thumbnail.jpg" target="_blank"><img src="assets/thumbnail.jpg" alt="YouTube thumbnail" style="max-width:280px;width:100%;aspect-ratio:16/9;border-radius:6px;border:1px solid #2a2a38;display:block;margin:6px 0"></a><a href="assets/thumbnail.jpg" download="${(window.PROJECT||{}).slug||'video'}-thumbnail.jpg" class="btn" style="padding:4px 10px;font-size:12px;background:#2a2a38;color:#eee">⬇️ Download thumbnail (1920×1080)</a></span>`:""}
   <b>Preview</b><span>${e?`<a target="_blank" href="player.html?v=${e.key}&t=0">▶ open ${e.key} in the player</a> · <a href="${e.file}" target="_blank">local file</a>`:"–"}</span>
-  <b>Storage link</b><span id="az-${p.id}">${link?`<a target="_blank" href="${link.url}">open</a> <button class="off" data-copy="${link.url}">Copy link</button> <span style="opacity:.7">read-only, expires ${esc(link.expires)}</span>`:'<span class="ph">&lt;Azure storage link appears here after upload&gt;</span>'}</span>
+  <b>Storage link</b><span id="az-${p.id}">${link?`<a target="_blank" href="${link.url}">open</a> <button class="off" data-copy="${link.url}">Copy link</button> <span style="opacity:.7">read-only, expires ${esc(link.expires)}</span>`:'<span class="ph">Azure storage link appears here after upload</span>'}</span>
   <b>Post link</b><span>${p.post_url?`<a target="_blank" href="${p.post_url}">${esc(p.post_url)}</a>`:`<span class="ph">${esc(p.post_url_hint)}</span>`}</span></div>
   ${p.title?`<p><b>Title</b> <span class="cnt">${p.title.length} / ${p.title_max}</span></p><textarea readonly style="min-height:46px">${esc(p.title)}</textarea><div class="tools"><button class="off" data-copy-id="t-${p.id}">Copy title</button></div>`:""}
   <p><b>${p.id==="youtube"?"Description":"Post text"}</b> <span class="cnt ${txt.length>max?"bad":""}">${txt.length} / ${max} characters</span></p><textarea id="t-${p.id}" readonly>${esc(txt)}</textarea><div class="tools"><button class="off" data-copy-id="t-${p.id}">Copy text</button></div>

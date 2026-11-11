@@ -16,7 +16,7 @@
    "text_max": 5000,
    "post_url": "",
    "status": "draft",
-   "post_url_hint": "<paste the YouTube link when shared>"
+   "post_url_hint": "Paste the YouTube post link when shared"
   },
   {
    "id": "linkedin",
@@ -30,7 +30,7 @@
    "text_max": 3000,
    "post_url": "",
    "status": "draft",
-   "post_url_hint": "<paste the LinkedIn post link when shared>",
+   "post_url_hint": "Paste the LinkedIn post link when shared",
    "text": ""
   },
   {
@@ -45,7 +45,7 @@
    "text_max": 280,
    "post_url": "",
    "status": "draft",
-   "post_url_hint": "<paste the X post link when shared>",
+   "post_url_hint": "Paste the X post link when shared",
    "text": ""
   }
  ],
