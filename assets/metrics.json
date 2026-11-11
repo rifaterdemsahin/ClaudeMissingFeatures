@@ -1,21 +1,16 @@
 {
- "export_seconds": 764.1,
- "video_seconds": 743.013,
+ "export_seconds": 719.3,
+ "video_seconds": 698.213,
  "outro_seconds": 21,
  "loudness_lufs": -14.6,
  "true_peak_dbfs": -1.2,
- "words": 1811,
+ "words": 1807,
  "words_per_minute": 172,
- "dead_air_gaps": 1,
- "dead_air_seconds": 38.5,
- "dead_air_percent": 5.2,
- "longest_silence_s": 38.5,
- "dead_air_ranges_source": [
-  [
-   586.9,
-   625.4
-  ]
- ],
+ "dead_air_gaps": 0,
+ "dead_air_seconds": 0,
+ "dead_air_percent": 0.0,
+ "longest_silence_s": 0,
+ "dead_air_ranges_source": [],
  "stutter_spots": 4,
  "time_to_problem_s": 4.3,
  "time_to_first_action_s": 22.0,
@@ -28,5 +23,5 @@
  "blur_boxes": 25,
  "speedups": 1,
  "privacy_leaks": 0,
- "noise_haze_max_db_after_fix": 3
+ "noise_haze_max_db_after_fix": 2
 }

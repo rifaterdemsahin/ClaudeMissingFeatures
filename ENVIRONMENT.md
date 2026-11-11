@@ -29,7 +29,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | **Python packages** | numpy, scipy, noisereduce, soundfile | sync by cross-correlation, noise removal | **automatic**: created in `~/.cache/cmf-venv` on first run | `build_base.py`, `denoise_audio.py` |
 | **npm packages** (in `remotion/`) | remotion + @remotion/cli 4.0.250, react + react-dom 18.3.1, typescript 5.6.3, @types/react 18.3.12 | the video project | `cd remotion && npm install` | Studio, render, typecheck |
 | **http-server** | 14.1.1 | serves the site and player with video seeking (Range) | automatic via `npx` | `scripts/serve.sh` |
-| Optional: **gh**, **az**, **rclone** | current | GitHub Pages, Azure Key Vault (Drive folder id), Google Drive kit pull and `scripts/backup_drive.sh` (always back up) | `brew install gh azure-cli rclone`, then `gh auth login`, `az login`, `rclone config` (remote name `gdrive-shared`) | `pull_kit.sh`, Pages step |
+| Optional: **gh**, **az** (also `az storage`), **rclone** | current | GitHub Pages, Azure Key Vault (Drive folder id), Google Drive kit pull and `scripts/backup_drive.sh` (always back up) | `brew install gh azure-cli rclone`, then `gh auth login`, `az login`, `rclone config` (remote name `gdrive-shared`) | `pull_kit.sh`, Pages step |
 
 ## 3. Files that must exist before processing
 
@@ -70,6 +70,11 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `scripts/denoise_audio.py` | remove steady noise (hoover, fan) with `noisereduce`; `--scan` finds where it starts |
 | `scripts/build_chapters.py` | chapters on the source and export timelines (`assets/chapters.json`) -> `chapters.js`, `metadata.md` |
 | `scripts/check_env.sh` | verifies this whole page on the machine |
+| `scripts/build_publish.py` | the Publish page (YouTube, LinkedIn, X) from `assets/publish.json` and the export registry |
+| `scripts/setup_azure_exports.sh`, `upload_exports.py` | one-time private Azure container + Key Vault secrets (run by the owner), then upload of the exports and read-only links (local, git-ignored) |
+| `remotion/src/variants.json` | per-platform cuts (keep ranges, shorter ending) |
+| `scripts/check_subtitles.py`, `build_script.py` | find caption problems from data and build the Script page with the subtitle issues and fixes |
+| `scripts/build_changelog.py`, `build_toc.py`, `build_readme.py` | the Changelog, the contents table in the spec, and the navigational README |
 | `scripts/build_all.sh`, `check_site.py` | build every page of the site in order, then check menu items, links and scripts |
 | `scripts/render_export.sh`, `register_export.py` | numbered exports (`exports/<slug>-vN.mp4`) and their registry `assets/exports.json` |
 | `scripts/check_reuse.sh` | fails if reusable code contains this video's words (from `project.json`) |

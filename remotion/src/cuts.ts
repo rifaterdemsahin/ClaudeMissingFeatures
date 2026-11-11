@@ -1,4 +1,6 @@
+import { getInputProps } from "remotion";
 import cutsJson from "./cuts.json";
+import variants from "./variants.json";
 import overlays from "./overlays.json";
 import { DURATION, FPS } from "./theme";
 
@@ -7,6 +9,11 @@ export type Insert = { at: number; seconds: number; kind?: string; animation?: s
 export type Seg = { src0: number; src1: number; rate: number; mute: boolean; out0: number; frames: number; insert?: Insert };
 type Speed = { from: number; to: number; rate: number; mute?: boolean };
 
+// Platform variants: the same edit cut for another platform (variants.json). Chosen at render time with --props '{"variant":"x"}'; Studio and the default render use "youtube" (the full video).
+type VCfg = { keep?: number[][]; outro?: unknown[]; inserts?: boolean };
+export const variantName = (): string => ((getInputProps() as { variant?: string }).variant) || "youtube";
+export const variantCfg = (): VCfg => ((variants as unknown as Record<string, VCfg>)[variantName()] ?? {}) as VCfg;
+
 export const speedups = (): Speed[] => [...(overlays.speedups as Speed[])].sort((a, b) => a.from - b.from);
 export const inserts = (): Insert[] => [...(((overlays as { inserts?: Insert[] }).inserts ?? []) as Insert[])].sort((a, b) => a.at - b.at);
 
@@ -14,11 +21,14 @@ export const getSegments = (): Seg[] => {
   const total = DURATION / FPS;
   const cuts = [...(cutsJson as number[][])].sort((a, b) => a[0] - b[0]);
   const kept: [number, number][] = [];
-  let pos = 0;
-  for (const [a, b] of cuts) { if (a > pos) kept.push([pos, a]); pos = Math.max(pos, b); }
-  if (pos < total) kept.push([pos, total]);
+  const base: number[][] = variantCfg().keep ?? [[0, total]];
+  for (const [ba, bb] of base) {                // each wanted range, minus the global cuts
+    let pos = ba;
+    for (const [a, b] of cuts) { if (b <= pos || a >= bb) continue; if (a > pos) kept.push([pos, Math.min(a, bb)]); pos = Math.max(pos, b); }
+    if (pos < bb) kept.push([pos, Math.min(bb, total)]);
+  }
   const segs: Seg[] = [];
-  const pending = inserts();
+  const pending = (variantCfg().inserts ?? !variantCfg().keep) ? inserts() : [];
   let out = 0;
   const flush = (upTo: number) => {            // place every insert whose point is at or before the next video piece
     while (pending.length && pending[0].at <= upTo + 1e-6) {

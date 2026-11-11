@@ -4,6 +4,8 @@ Cuts live in remotion/src/cuts.json as [[from,to],...] seconds on the source (ba
 import json, re, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 raw, offset = json.load(open(sys.argv[1])), float(sys.argv[2])
+VARIANT = sys.argv[3] if len(sys.argv) > 3 else "youtube"   # platform cut (remotion/src/variants.json); a variant only writes its own time map
+VCFG = json.load(open(ROOT / "remotion/src/variants.json")).get(VARIANT, {})
 cuts = sorted(json.load(open(ROOT / "remotion/src/cuts.json")))   # [[from,to],...] source seconds
 P = json.load(open(ROOT / "remotion/src/project.json"))
 FIX = [(x, y) for x, y in P["caption_fixes"]]   # project.json: ASR slips -> correct names
@@ -13,14 +15,17 @@ def fix(t):
 OV = json.load(open(ROOT / "remotion/src/overlays.json"))
 SPEED = sorted(OV.get("speedups", []), key=lambda x: x["from"])
 TOTAL = int(re.search(r"DURATION = (\d+)", (ROOT / "remotion/src/theme.ts").read_text()).group(1)) / 30   # source seconds from theme.ts
-INSERTS_SRC = sorted(OV.get("inserts", []), key=lambda x: x["at"])
+INSERTS_SRC = sorted(OV.get("inserts", []), key=lambda x: x["at"]) if VCFG.get("inserts", "keep" not in VCFG) else []
 INSERTS = []   # [out0_seconds, seconds, source_point, title] : cards placed on the timeline (e.g. at a cut)
 def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/src/cuts.ts (inserts shift later export times)
-    kept, pos = [], 0.0
-    for a, b in cuts:
-        if a > pos: kept.append((pos, a))
-        pos = max(pos, b)
-    if pos < TOTAL: kept.append((pos, TOTAL))
+    kept = []
+    for ba, bb in VCFG.get("keep", [[0.0, TOTAL]]):        # each wanted range, minus the global cuts (same as remotion/src/cuts.ts)
+        pos = ba
+        for a, b in cuts:
+            if b <= pos or a >= bb: continue
+            if a > pos: kept.append((pos, min(a, bb)))
+            pos = max(pos, b)
+        if pos < bb: kept.append((pos, min(bb, TOTAL)))
     segs, out, pending = [], 0.0, list(INSERTS_SRC)
     def flush(up_to):
         nonlocal out
@@ -41,7 +46,7 @@ def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/
     return segs
 SEGS = segments()
 _t = SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2] + sum(i[1] for i in INSERTS if i[0] >= SEGS[-1][4]); OUTRO = []; _t_total = _t
-for _p in OV.get("outro", []): OUTRO.append([round(_t, 2), _p["title"], _p["seconds"]]); _t += _p["seconds"]
+for _p in VCFG.get("outro", OV.get("outro", [])): OUTRO.append([round(_t, 2), _p["title"], _p["seconds"]]); _t += _p["seconds"]
 def remap(t):  # source seconds -> final (export) seconds; None inside a cut
     for a, b, r, m, o in SEGS:
         if a <= t < b + 1e-9: return o + (t - a) / r
@@ -58,8 +63,12 @@ for s in raw["segments"]:
         en = min(en, max(st, 0) + max(1.5, len(text) / 13)); tot = sum(len(t) for t in toks); t0 = st; tw = []
         for t in toks: d = (en - st) * len(t) / tot; tw.append((t0, t0 + d)); t0 += d
     chunks, cur = [], []
+    prev = None
     for t, (a, b) in zip(toks, tw):
         a = max(a, 0.0); b = min(max(b, 0.0), a + 1.2)   # cap a word at 1.2 s so the highlight never sticks over silence
+        nk = re.sub(r"[^a-z']", "", t.lower())
+        if prev and nk == prev[0] and len(nk) >= 2 and nk not in ("that", "had") and cur: cur[-1] = (cur[-1][0], cur[-1][1], max(cur[-1][2], b)); continue   # stutter: "on on" -> "on" (the voice keeps it; the caption does not)
+        prev = (nk,)
         if cur and (sum(len(x[0]) + 1 for x in cur) + len(t) > 70 or a - cur[-1][2] > 1.5): chunks.append(cur); cur = []   # new cue after a long gap
         cur.append((t, a, b))
     if cur: chunks.append(cur)
@@ -68,6 +77,18 @@ for s in raw["segments"]:
                      "words": [{"t": x[0], "from": round(x[1], 2), "to": round(x[2], 2)} for x in c]})
 for i in range(len(cues) - 1): cues[i]["to"] = round(min(cues[i]["to"], cues[i + 1]["from"]), 2)
 cues = [c for c in cues if c["to"] > c["from"]]
+merged = []   # flicker fix 1: a very short caption joins the previous one when they are close together and the result still fits two lines
+for c in cues:
+    if merged and c["to"] - c["from"] < 0.9 and c["from"] - merged[-1]["to"] < 0.8 and len(merged[-1]["text"]) + len(c["text"]) + 1 <= 80:
+        merged[-1]["text"] += " " + c["text"]; merged[-1]["words"] += c["words"]; merged[-1]["to"] = c["to"]
+    else: merged.append(c)
+cues = merged
+for i, c in enumerate(cues):   # flicker fix 2: a caption stays at least 0.9 s (into the silence after it), never past the next one
+    if c["to"] - c["from"] < 0.9: c["to"] = round(min(c["from"] + 0.9, cues[i + 1]["from"] if i + 1 < len(cues) else c["from"] + 0.9), 2)
+if VARIANT != "youtube":
+    (ROOT / "assets/maps").mkdir(parents=True, exist_ok=True)
+    (ROOT / f"assets/maps/{VARIANT}.json").write_text(json.dumps({"segs": [[round(a, 3), round(b, 3), r, m, round(o, 3)] for a, b, r, m, o in SEGS], "total": round(_t_total, 3), "inserts": INSERTS, "outro": OUTRO}))
+    print(f"variant {VARIANT}: map written ({round(_t_total + sum(x['seconds'] for x in VCFG.get('outro', OV.get('outro', []))), 1)} s with the ending)"); sys.exit(0)
 (ROOT / "remotion/src/subs.json").write_text(json.dumps(cues))
 (ROOT / "subs.js").write_text("window.SUBS = " + json.dumps(cues) + ";")
 final = []

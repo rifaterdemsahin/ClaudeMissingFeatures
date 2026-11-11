@@ -278,5 +278,75 @@
   "how": "scripts/render_export.sh, register_export.py, player.html, exports.js",
   "check": "tested in Chrome: selector, tags, jump across versions, legacy [export] tags, header",
   "in": "site"
+ },
+ {
+  "id": 29,
+  "when": "round 6",
+  "who": "owner",
+  "said": "have a page for the script and mention the issues with the subtitles and how it is fixed; if not fixed, fix it",
+  "decision": "Script page (spoken script by chapter with timecodes, every caption change before\u2192after, 14 issues with how found and fixed, 4 left for the owner's ear). Fixed from evidence: Claude's on-screen answer corrected from the screen text, 'code connectors', stutters dropped, flicker removed",
+  "how": "scripts/check_subtitles.py, build_script.py, project.json",
+  "check": "checker counts before/after: stutters 5\u21920, flicker 21\u21925",
+  "in": "v5"
+ },
+ {
+  "id": 30,
+  "when": "round 6",
+  "who": "owner",
+  "said": "have a page for the changelog showing everything that happened with emojis; update the master spec",
+  "decision": "Changelog page generated from a hand-written timeline, the export registry, the decision log, the score and git",
+  "how": "scripts/build_changelog.py",
+  "check": "opened in Chrome",
+  "in": "site"
+ },
+ {
+  "id": 31,
+  "when": "round 6",
+  "who": "owner",
+  "said": "add a note taking feature on the artifacts page",
+  "decision": "Per-artifact notes with stable keys, version tags, green Saved animation, copy, send to player feedback, clear with undo",
+  "how": "scripts/build_artifacts.py",
+  "check": "tested in Chrome",
+  "in": "site"
+ },
+ {
+  "id": 32,
+  "when": "round 6",
+  "who": "owner",
+  "said": "update the readme.md, make it more navigational and have the master spec populated",
+  "decision": "README is a generated navigation hub (live links, pages, spec contents, the prompt to execute, commands, what is where, versions, score); the old Shorts recipe moved to docs/; the spec has a linked contents table",
+  "how": "scripts/build_readme.py, build_toc.py",
+  "check": "kit built a new project with the same README",
+  "in": "site"
+ },
+ {
+  "id": 33,
+  "when": "round 6",
+  "who": "owner",
+  "said": "publish page for YouTube, X.com and LinkedIn with placeholders; renders for all three with different lengths; upload exports to Azure Storage with keys in Key Vault, embed in the placeholders, let me review, add note taking",
+  "decision": "Publish page with per-platform cards, placeholders, counters, checks and notes. Platform cuts in variants.json: LinkedIn 3:19, X 1:54 (limit 2:20), YouTube full. Azure upload scripts: private container, read-only SAS links stored only locally; keys come from Key Vault. Copying the storage key into the vault was blocked by the permission system, so a one-time setup script is for the owner to run. Container created with the owner's login; file upload needs a blob-data role or a key route (pending the owner's choice)",
+  "how": "variants.json, render_export.sh, build_publish.py, upload_exports.py, setup_azure_exports.sh",
+  "check": "page tested in Chrome; maps computed; renders and upload follow",
+  "in": "v5 platforms"
+ },
+ {
+  "id": 34,
+  "when": "round 6",
+  "who": "owner",
+  "said": "in the links add azure and links",
+  "decision": "Menu Links group: Azure Storage and Azure Key Vault portal links (generic, no account ids) from project.json, and the platform post links once shared",
+  "how": "nav.js, project.json links, build_site.py",
+  "check": "menu opened in Chrome",
+  "in": "site"
+ },
+ {
+  "id": 35,
+  "when": "round 6",
+  "who": "owner",
+  "said": "add a page for the completion time and how long each stage takes with the llm, give the order and what can be done to prep up",
+  "decision": "Time and order page: 19 stages in order with who does them, measured or estimated time, LLM involvement, parallelism, prep tips, a planning calculator and the elapsed time",
+  "how": "scripts/build_timeline.py, assets/timings.json",
+  "check": "calculator tested in Chrome",
+  "in": "site"
  }
 ]

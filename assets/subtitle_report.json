@@ -1,0 +1,453 @@
+{
+ "low_confidence": [
+  {
+   "t": 5.8,
+   "word": "cloud.",
+   "p": 0.32,
+   "context": "from the cloud."
+  },
+  {
+   "t": 26.8,
+   "word": "beta",
+   "p": 0.5,
+   "context": "And if we are unable to see this on here, it means there is no beta feature involved"
+  },
+  {
+   "t": 40.2,
+   "word": "user",
+   "p": 0.49,
+   "context": "And if there is a beta feature that we need to be able to find out on here, the user to"
+  },
+  {
+   "t": 40.7,
+   "word": "apparent",
+   "p": 0.15,
+   "context": "apparent your cloud, the beta feature should be able to hear capabilities."
+  },
+  {
+   "t": 41.3,
+   "word": "cloud,",
+   "p": 0.27,
+   "context": "apparent your cloud, the beta feature should be able to hear capabilities."
+  },
+  {
+   "t": 52.4,
+   "word": "beta",
+   "p": 0.27,
+   "context": "I might need to ask this question to Claude to be able to find where the beta feature"
+  },
+  {
+   "t": 53.5,
+   "word": "well",
+   "p": 0.17,
+   "context": "is well being customized skills code."
+  },
+  {
+   "t": 61.2,
+   "word": "find",
+   "p": 0.34,
+   "context": "How do I find the new whiteboard feature in Claude and create me a blank canvas around"
+  },
+  {
+   "t": 107.5,
+   "word": "tab,",
+   "p": 0.4,
+   "context": "We are on the artifacts tab, but I'm unable to see the design."
+  },
+  {
+   "t": 133.1,
+   "word": "pro",
+   "p": 0.36,
+   "context": "It's on the beta on pro max."
+  },
+  {
+   "t": 154.6,
+   "word": "whiteboard",
+   "p": 0.5,
+   "context": "plan, the whiteboard is available on beta on pro file exchanges turned on."
+  },
+  {
+   "t": 156.8,
+   "word": "file",
+   "p": 0.37,
+   "context": "plan, the whiteboard is available on beta on pro file exchanges turned on."
+  },
+  {
+   "t": 167.0,
+   "word": "Organization",
+   "p": 0.08,
+   "context": "Organization settings, organizational settings, capabilities, artifacts that use"
+  },
+  {
+   "t": 167.7,
+   "word": "settings,",
+   "p": 0.35,
+   "context": "Organization settings, organizational settings, capabilities, artifacts that use"
+  },
+  {
+   "t": 169.1,
+   "word": "organizational",
+   "p": 0.26,
+   "context": "Organization settings, organizational settings, capabilities, artifacts that use"
+  },
+  {
+   "t": 170.6,
+   "word": "settings,",
+   "p": 0.43,
+   "context": "Organization settings, organizational settings, capabilities, artifacts that use"
+  },
+  {
+   "t": 175.3,
+   "word": "cloud.",
+   "p": 0.22,
+   "context": "cloud."
+  },
+  {
+   "t": 176.8,
+   "word": "allowed",
+   "p": 0.16,
+   "context": "I got this allowed website system design."
+  },
+  {
+   "t": 187.0,
+   "word": "computer",
+   "p": 0.48,
+   "context": "Cloud on Chrome and on the sites, computer use beta."
+  },
+  {
+   "t": 191.3,
+   "word": "code",
+   "p": 0.08,
+   "context": "There's the ad app accessibility code connectors."
+  },
+  {
+   "t": 197.4,
+   "word": "beta",
+   "p": 0.48,
+   "context": "So there should be some kind of beta on here, but which I couldn't find."
+  },
+  {
+   "t": 209.7,
+   "word": "thing",
+   "p": 0.39,
+   "context": "So maybe I did not update my thing though, because I don't see the beta here."
+  },
+  {
+   "t": 211.9,
+   "word": "beta",
+   "p": 0.38,
+   "context": "So maybe I did not update my thing though, because I don't see the beta here."
+  },
+  {
+   "t": 224.4,
+   "word": "cloud",
+   "p": 0.02,
+   "context": "I will pin it and then go back to here, cloud whiteboard setup."
+  },
+  {
+   "t": 239.2,
+   "word": "launch",
+   "p": 0.25,
+   "context": "What is missing it launch itself, sheets and the whiteboards come out to last day."
+  },
+  {
+   "t": 246.4,
+   "word": "their",
+   "p": 0.27,
+   "context": "That matches what I see from their whiteboard type isn't in the list."
+  },
+  {
+   "t": 251.0,
+   "word": "Fully",
+   "p": 0.45,
+   "context": "Fully quit and reopen the cloud."
+  },
+  {
+   "t": 253.1,
+   "word": "cloud.",
+   "p": 0.2,
+   "context": "Fully quit and reopen the cloud."
+  },
+  {
+   "t": 263.4,
+   "word": "brief",
+   "p": 0.46,
+   "context": "I will do a brief upgrade, a brief upgrade to make sure that the things are getting"
+  },
+  {
+   "t": 280.5,
+   "word": "cloud",
+   "p": 0.41,
+   "context": "And I might be able to see the cloud that is getting updated as well."
+  },
+  {
+   "t": 334.6,
+   "word": "bots",
+   "p": 0.32,
+   "context": "I use this chief of staff, but from time to time, I create my own bots to be able"
+  },
+  {
+   "t": 343.7,
+   "word": "growth",
+   "p": 0.01,
+   "context": "I can just check I'm at 76% on growth bot."
+  },
+  {
+   "t": 344.0,
+   "word": "bot.",
+   "p": 0.29,
+   "context": "I can just check I'm at 76% on growth bot."
+  },
+  {
+   "t": 364.5,
+   "word": "yours",
+   "p": 0.38,
+   "context": "So the designs yours share to you all homepage move."
+  },
+  {
+   "t": 366.8,
+   "word": "homepage",
+   "p": 0.34,
+   "context": "So the designs yours share to you all homepage move."
+  },
+  {
+   "t": 374.1,
+   "word": "cloud",
+   "p": 0.3,
+   "context": "I opened cloud again."
+  },
+  {
+   "t": 375.6,
+   "word": "Cloud",
+   "p": 0.34,
+   "context": "Cloud again and updated homebrew."
+  },
+  {
+   "t": 387.6,
+   "word": "close",
+   "p": 0.35,
+   "context": "Update, close and check version version."
+  },
+  {
+   "t": 390.4,
+   "word": "version.",
+   "p": 0.33,
+   "context": "Update, close and check version version."
+  },
+  {
+   "t": 391.5,
+   "word": "Please",
+   "p": 0.06,
+   "context": "Please check it."
+  },
+  {
+   "t": 407.7,
+   "word": "five",
+   "p": 0.14,
+   "context": "And the cloud desktop is five updates itself on five four three."
+  },
+  {
+   "t": 407.9,
+   "word": "updates",
+   "p": 0.15,
+   "context": "And the cloud desktop is five updates itself on five four three."
+  },
+  {
+   "t": 409.4,
+   "word": "five",
+   "p": 0.49,
+   "context": "And the cloud desktop is five updates itself on five four three."
+  },
+  {
+   "t": 410.1,
+   "word": "four",
+   "p": 0.46,
+   "context": "And the cloud desktop is five updates itself on five four three."
+  },
+  {
+   "t": 412.8,
+   "word": "remove",
+   "p": 0.49,
+   "context": "Yes, remove the old one."
+  },
+  {
+   "t": 417.9,
+   "word": "bot",
+   "p": 0.02,
+   "context": "Maybe the old one is blocking us, but I don't think that is the bot"
+  },
+  {
+   "t": 418.1,
+   "word": "clothes",
+   "p": 0.14,
+   "context": "clothes on my up to date."
+  },
+  {
+   "t": 420.4,
+   "word": "they're",
+   "p": 0.44,
+   "context": "So they're up to date though, but the reality is I don't see that one."
+  },
+  {
+   "t": 441.8,
+   "word": "removed",
+   "p": 0.46,
+   "context": "Once I removed old copy, this is good."
+  },
+  {
+   "t": 457.0,
+   "word": "Creates",
+   "p": 0.41,
+   "context": "Creates me a canvas and place my week over there over there."
+  },
+  {
+   "t": 477.4,
+   "word": "meetup",
+   "p": 0.38,
+   "context": "meetup and plan the week according way, according way."
+  },
+  {
+   "t": 484.4,
+   "word": "nine",
+   "p": 0.34,
+   "context": "I have a nine to five job in IBM."
+  },
+  {
+   "t": 503.7,
+   "word": "canvas.",
+   "p": 0.01,
+   "context": "canvas. But what this is important is we need to understand these updates are"
+  },
+  {
+   "t": 643.4,
+   "word": "clothe",
+   "p": 0.4,
+   "context": "And all these sections can be updated and the clothe will have knowledge of it."
+  },
+  {
+   "t": 651.8,
+   "word": "Kamba,",
+   "p": 0.44,
+   "context": "And most of the tools, including Kamba, is going to this kind of a route to make things wo"
+  },
+  {
+   "t": 731.0,
+   "word": "correct",
+   "p": 0.19,
+   "context": "Be ready to be able to use the other features on here and other artifacts that you are abl"
+  },
+  {
+   "t": 740.8,
+   "word": "clothe",
+   "p": 0.06,
+   "context": "The whiteboard has more features, but you can definitely ask the clothe on here and update"
+  }
+ ],
+ "look_alikes": [
+  {
+   "t": 11.9,
+   "word": "whiteboards.",
+   "looks_like": "whiteboard",
+   "context": "about the whiteboards."
+  },
+  {
+   "t": 18.8,
+   "word": "artifact",
+   "looks_like": "artifacts",
+   "context": "So there's all these artifact types that is coming in."
+  },
+  {
+   "t": 58.4,
+   "word": "whiteboards",
+   "looks_like": "whiteboard",
+   "context": "I need to find the whiteboards feature."
+  },
+  {
+   "t": 203.4,
+   "word": "whiteboards",
+   "looks_like": "whiteboard",
+   "context": "It says capabilities team whiteboards is on by default."
+  },
+  {
+   "t": 235.7,
+   "word": "whiteboards.",
+   "looks_like": "whiteboard",
+   "context": "Your plan qualifies for the whiteboards."
+  },
+  {
+   "t": 240.6,
+   "word": "Whiteboards",
+   "looks_like": "whiteboard",
+   "context": "What's missing is the launch itself. Sheets and Whiteboards came out"
+  },
+  {
+   "t": 536.6,
+   "word": "whiteboards.",
+   "looks_like": "whiteboard",
+   "context": "You have more space to work on the whiteboards."
+  },
+  {
+   "t": 552.1,
+   "word": "artifact",
+   "looks_like": "artifacts",
+   "context": "artifact type, but different artifact types coming up on here."
+  },
+  {
+   "t": 553.7,
+   "word": "artifact",
+   "looks_like": "artifacts",
+   "context": "artifact type, but different artifact types coming up on here."
+  }
+ ],
+ "stutters": [],
+ "fast_reading": [
+  {
+   "t": 238.4,
+   "cps": 21.5,
+   "text": "What's missing is the launch itself. Sheets and Whiteboards came out"
+  }
+ ],
+ "flicker": [
+  {
+   "t": 231.1,
+   "dur": 0.58,
+   "text": "got in the"
+  },
+  {
+   "t": 270.6,
+   "dur": 0.54,
+   "text": "are getting"
+  },
+  {
+   "t": 498.1,
+   "dur": 0.58,
+   "text": "going to do"
+  },
+  {
+   "t": 636.0,
+   "dur": 0.56,
+   "text": "coming up."
+  },
+  {
+   "t": 736.5,
+   "dur": 0.64,
+   "text": "to correct."
+  }
+ ],
+ "fixed_by_rules": {
+  "\\b[Tt]he cloud\\b -> Claude": 8,
+  "\\bcloud\\b -> Claude": 15,
+  "\\b[Cc]louds?\\b -> Claude": 18,
+  "\\b[Cc]lothes?\\b -> Claude": 5,
+  "\\b[Gg]rowth ?bot\\b|\\bGrogbot\\b -> Grok bot": 3,
+  "\\bKamba\\b -> Canva": 1,
+  "\\bbrief upgrade\\b -> brew upgrade": 2,
+  "(\\b[Ww])hite ?board(s?)\\b -> \\1hiteboard\\2": 21,
+  "\\bYou're playing qualifies\\b -> Your plan qualifies": 1,
+  "What is missing it launch itself, sheets and the whiteboards come out to last day -> What's missing is the launch itself. Sheets and Whiteboards came out together in the last day": 1,
+  "\\bfrom their whiteboard type isn't in the list\\b -> from here: the Whiteboard type isn't in the list": 1,
+  "\\bcode connectors\\b -> Claude connectors": 1
+ },
+ "total_words": 1819,
+ "total_cues": 196
+}

@@ -20,3 +20,7 @@ assets/*.json.bak
 remotion/out/
 export.mp4
 long.mp4
+
+# signed storage links (read access to the exports): local only, never commit
+publish_links.js
+assets/publish_links.json

@@ -8,7 +8,11 @@ video = sys.argv[1] if len(sys.argv) > 1 else str(ROOT / "remotion/out/long.mp4"
 ov, subs, P = J("remotion/src/overlays.json"), J("remotion/src/subs.json"), J("remotion/src/project.json")
 _m = re.search(r"=\s*(\{.*\});", (ROOT / "export_map.js").read_text()); M = json.loads(_m.group(1))
 dur = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", video]))
-out = lambda t: next((o + (t - a) / r for a, b, r, m, o in M["segs"] if a <= t < b + 1e-9), None)
+def out(t):   # source -> export seconds; a time inside a cut maps to the next kept moment (same rule as the player and build_chapters.py)
+    for a, b, r, m, o in M["segs"]:
+        if a <= t < b + 1e-9: return o + (t - a) / r
+        if t < a: return o
+    return M["total"]
 X = {"export_seconds": round(dur, 1), "video_seconds": M["total"], "outro_seconds": round(sum(p["seconds"] for p in ov.get("outro", [])), 1)}
 # loudness (EBU R128 integrated) of the export
 txt = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", video, "-af", "ebur128=peak=true", "-f", "null", "-"], capture_output=True, text=True).stderr

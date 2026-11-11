@@ -1,0 +1,22 @@
+{
+ "v4": {
+  "privacy_leaks": 0,
+  "frames": 360,
+  "when": "2026-11-11 (OCR of exports/claude-missing-features-v4.mp4)"
+ },
+ "v5-x": {
+  "privacy_leaks": 0,
+  "frames": 57,
+  "when": "2026-11-11 18:56"
+ },
+ "v5-linkedin": {
+  "privacy_leaks": 0,
+  "frames": 99,
+  "when": "2026-11-11 18:56"
+ },
+ "v5": {
+  "privacy_leaks": 0,
+  "frames": 360,
+  "when": "2026-11-11 18:56"
+ }
+}

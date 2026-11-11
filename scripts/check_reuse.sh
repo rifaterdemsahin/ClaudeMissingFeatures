@@ -9,7 +9,8 @@ p=json.load(open("remotion/src/project.json")); t=set()
 for k in ("title","brand"): t.add(p.get(k,""))
 t.update([p["thumb"].get("line1",""),p["thumb"].get("line2",""),p["community"].get("name",""),p["community"].get("display",""),p["community"].get("url","").replace("https://","").replace("http://","").replace("www.","")])
 t.update(p.get("sensitive_keywords",[])); t.update(x for x in p.get("personal_app_patterns",[]) if len(x)>3)
-print("\n".join(sorted(x for x in t if len(x)>3)))
+allow={a.lower() for a in p.get("reuse_allow",[])}   # platform vocabulary that reusable code may use
+print("\n".join(sorted(x for x in t if len(x)>3 and x.lower() not in allow)))
 PY
 )
 [ -z "$TERMS" ] && { echo "project.json has no terms to check"; exit 0; }

@@ -69,12 +69,15 @@ kbd{background:#2a2a38;border:1px solid #444;border-radius:4px;padding:0 6px;fon
 </div></details>
 </main><script src="project.js"></script><script src="nav.js"></script><script src="subs.js"></script><script src="export_map.js"></script><script src="exports.js"></script><script src="chapters.js"></script><script>
 const $=id=>document.getElementById(id), v=$("v"), v2=$("v2"), st=$("st");
-const EXPS=(window.EXPORTS||[]).filter(e=>e.file), LATEST=EXPS.length?EXPS[EXPS.length-1].v:null;
-let curV=LATEST; try{const x=+localStorage.getItem("player:xv");if(EXPS.some(e=>e.v===x))curV=x}catch(e){}
-const entry=()=>EXPS.find(e=>e.v===curV);
-const SRC={orig:"long.mp4",get exp(){const e=entry();return e?e.file:"export.mp4"}}, NAME={orig:"Original",get exp(){return curV?"Export v"+curV+(curV===LATEST?" (latest)":""):"Latest export"}};
-const vtag=()=>ver==="exp"&&curV?"v"+curV:(ver==="exp"?"export":"orig");        // tag written into every feedback note
-const tagOf=p=>p.ver==="orig"?"orig":"v"+(p.v||curV);
+// export keys: "v5" (YouTube, the full video), "v5-linkedin", "v5-x" (platform cuts)
+const kOf=e=>e.platform&&e.platform!=="youtube"?"v"+e.v+"-"+e.platform:"v"+e.v;
+const labOf=e=>({youtube:"",linkedin:"LinkedIn ",x:"X "}[e.platform||"youtube"]||"")+"v"+e.v;
+const EXPS=(window.EXPORTS||[]).filter(e=>e.file).map(e=>({...e,key:kOf(e)})), YT=EXPS.filter(e=>(e.platform||"youtube")==="youtube"), LATEST=YT.length?YT[YT.length-1].key:null;
+let curV=LATEST; try{const x=localStorage.getItem("player:xv");if(EXPS.some(e=>e.key===x))curV=x}catch(e){}
+const entry=()=>EXPS.find(e=>e.key===curV);
+const SRC={orig:"long.mp4",get exp(){const e=entry();return e?e.file:"export.mp4"}}, NAME={orig:"Original",get exp(){const e=entry();return e?"Export "+labOf(e)+(curV===LATEST?" (latest)":""):"Latest export"}};
+const vtag=()=>ver==="exp"&&curV?curV:(ver==="exp"?"export":"orig");        // tag written into every feedback note
+const tagOf=p=>p.ver==="orig"?"orig":(p.v||curV);
 let ver="orig"; try{ver=localStorage.getItem("player:ver")==="exp"?"exp":"orig"}catch(e){}
 const fmt=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
 // source <-> export time maps (from export_map.js: [src0,src1,rate,mute,out0])
@@ -91,7 +94,7 @@ function msg(){ // status for the main video
 }
 function chapters(){
   const C=[[0,"What we are looking for: the new Whiteboard feature"],[22,"No beta toggle? Settings and Capabilities"],[60,"Asking Claude how to find the Whiteboard"],[102,"Artifacts tab: Design, but no Whiteboard"],[207,"Screenshot, pin the chat, ask with the image"],[247,"Claude: your plan qualifies, rollout not reached you"],[253,"Quit, reopen, update the machine"],[351,"Still not there"],[395,"Versions, removing the old copy"],[452,"Planning my week on a canvas"],[494,"Infinite canvas vs classic canvas"],[542,"What we learned"],[608,"The result: calendar and class series"],[667,"Update done, still no Whiteboard"],[726,"Use the other artifact types meanwhile"]]; // source seconds
-  const src=window.CHAPTERS?window.CHAPTERS.src:C, L=ver==="orig"?src:(window.CHAPTERS&&curV===LATEST?window.CHAPTERS.exp:[...src.map(([s,n])=>[srcToOut(s),n]),...((M&&M.outro)||[]).map(o=>[o[0],o[1]])]);
+  const src=window.CHAPTERS?window.CHAPTERS.src:C, L=ver==="orig"?src:(window.CHAPTERS&&curV===LATEST?window.CHAPTERS.exp:(()=>{let last=-99;return [...src.map(([s,n])=>[srcToOut(s),n]),...((M&&M.outro)||[]).map(o=>[o[0],o[1]])].filter(([t])=>{const ok=t-last>=5;if(ok)last=t;return ok})})());
   $("ch").innerHTML=L.map(([t,n])=>`<li><a href="#" data-s="${t}">${fmt(t)}</a> ${n}</li>`).join("");
 }
 function setVer(k,keep=true){
@@ -126,13 +129,13 @@ $("cmp").onchange=e=>{
 };
 
 // export info + version list (registry: assets/exports.json via exports.js)
-function infoExp(){const e=entry(),all=(window.EXPORTS||[]).slice().reverse().map(x=>`<li><b>v${x.v}</b>${x.v===LATEST?" (latest)":""} · ${x.rendered} · ${x.seconds} s · ${x.size_mb} MB${x.file?"":" · <i>not kept</i>"}<br><span style="opacity:.75">${x.notes||""}</span></li>`).join("");
+function infoExp(){const e=entry(),all=(window.EXPORTS||[]).slice().reverse().map(x=>`<li><b>${labOf(x)}</b>${kOf(x)===LATEST?" (latest)":""} · ${x.rendered} · ${x.seconds} s · ${x.size_mb} MB${x.file?"":" · <i>not kept</i>"}<br><span style="opacity:.75">${x.notes||""}</span></li>`).join("");
   fetch(SRC.exp,{method:"HEAD"}).then(r=>{if(!r.ok)throw 0;$("expinfo").innerHTML="✨ <b>"+NAME.exp+"</b>: "+(r.headers.get("content-length")/1048576).toFixed(0)+" MB"+(e?", rendered "+e.rendered:"")+(all?"<ul>"+all+"</ul>":"")}).catch(()=>{$("expinfo").innerHTML="✨ No export file yet. Render one with <code>scripts/render_export.sh \"what changed\"</code> (it numbers it v1, v2, …) and restart <code>scripts/serve.sh</code>."+(all?"<ul>"+all+"</ul>":"")})}
-function labels(){$("be").textContent="✨ "+(curV?"Export v"+curV+(curV===LATEST?" (latest)":""):"Latest export");const s=$("vsel");s.innerHTML=EXPS.slice().reverse().map(e=>`<option value="${e.v}">v${e.v}${e.v===LATEST?" (latest)":""} · ${e.rendered}</option>`).join("");s.value=curV;s.style.display=EXPS.length>1?"":"none"}
+function labels(){$("be").textContent="✨ "+NAME.exp;const s=$("vsel");s.innerHTML=EXPS.slice().reverse().map(e=>`<option value="${e.key}">${labOf(e)}${e.key===LATEST?" (latest)":""} · ${Math.round(e.seconds/6)/10} min · ${e.rendered}</option>`).join("");s.value=curV;s.style.display=EXPS.length>1?"":"none"}
 function useVersion(n,keepPlace=true){if(n===curV)return;const was=ver==="exp"&&keepPlace,srcT=was?outToSrc(v.currentTime):null;
   curV=n;M=(entry()&&entry().map)||window.EXPORT_MAP;try{localStorage.setItem("player:xv",n)}catch(e){}labels();
   if(was){const t=srcToOut(srcT);setVer("exp",false);v.addEventListener("loadedmetadata",function o(){v.removeEventListener("loadedmetadata",o);v.currentTime=t})}else{if(ver==="exp")setVer("exp",false);else chapters()}infoExp()}
-$("vsel").onchange=e=>useVersion(+e.target.value);
+$("vsel").onchange=e=>useVersion(e.target.value);
 labels();infoExp();
 v2.addEventListener("loadedmetadata",()=>{$("explen").textContent=fmt(v2.duration)+" ("+v2.duration.toFixed(1)+" s)"});
 
@@ -199,13 +202,13 @@ fb.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){e.
 
 // go to the last review point: the last [orig|export m:ss] note in the feedback box, else where you last stopped watching
 const LEAD=3;   // seconds of lead-in before the point
-function lastPoint(){const m=[...fb.value.matchAll(/\[(orig|export|v\d+) (\d+):(\d\d)\]/g)];if(!m.length)return null;const x=m[m.length-1],tk=x[1];return{ver:tk==="orig"?"orig":"exp",v:/^v\d+$/.test(tk)?+tk.slice(1):LATEST,t:+x[2]*60+ +x[3],note:true}}
+function lastPoint(){const m=[...fb.value.matchAll(/\[(orig|export|v\d+(?:-[a-z]+)?) (\d+):(\d\d)\]/g)];if(!m.length)return null;const x=m[m.length-1],tk=x[1];return{ver:tk==="orig"?"orig":"exp",v:/^v\d/.test(tk)?tk:LATEST,t:+x[2]*60+ +x[3],note:true}}
 function savedPos(){try{const k=JSON.parse(localStorage.getItem("player:pos")||"null");return k&&typeof k.t==="number"?{ver:k.ver==="exp"?"exp":"orig",v:k.v||curV,t:k.t,note:false}:null}catch(e){return null}}
 function updateLp(){const p=lastPoint();$("lp").textContent=p?"⏮ Last review point: ["+tagOf(p)+" "+fmt(p.t)+"]":"⏮ Last review point: none yet"}
 function gotoLast(){
   const p=lastPoint()||savedPos(); if(!p){show("no review point yet");return}
   const label=(p.note?"note ":"stopped ")+"["+tagOf(p)+" "+fmt(p.t)+"]";
-  if(p.ver==="exp"&&p.v&&p.v!==curV&&EXPS.some(e=>e.v===p.v))useVersion(p.v,false);   // the note belongs to another export version
+  if(p.ver==="exp"&&p.v&&p.v!==curV&&EXPS.some(e=>e.key===p.v))useVersion(p.v,false);   // the note belongs to another export version
   const seek=()=>{v.currentTime=Math.max(0,p.t-LEAD);show("⏮ "+label)};
   if($("cmp").checked){v.currentTime=Math.max(0,(p.ver==="exp"?outToSrc(p.t):p.t)-LEAD);show("⏮ "+label);return}   // side by side: master is the original
   if(p.ver!==ver){setVer(p.ver,false);v.addEventListener("loadedmetadata",function once(){v.removeEventListener("loadedmetadata",once);seek()})}else seek();
@@ -225,7 +228,7 @@ holdBtn("sb",-1);holdBtn("sf",1);
 setVer(ver,false);
 // deep link: player.html?v=exp|orig&t=<seconds on that version's timeline>  (used by the Artifacts page)
 (()=>{const q=new URLSearchParams(location.search),vv=q.get("v"),t=parseFloat(q.get("t"));
-  const mv=/^v(\d+)$/.exec(vv||"");if(mv&&EXPS.some(e=>e.v===+mv[1])){useVersion(+mv[1],false);if(ver!=="exp")setVer("exp",false)}else if(vv==="exp"||vv==="orig"){if(vv!==ver)setVer(vv,false)}
+  const mv=/^(v\d+(?:-[a-z]+)?)$/.exec(vv||"");if(mv&&EXPS.some(e=>e.key===mv[1])){useVersion(mv[1],false);if(ver!=="exp")setVer("exp",false)}else if(vv==="exp"||vv==="orig"){if(vv!==ver)setVer(vv,false)}
   if(!isNaN(t)){const go=()=>{v.currentTime=Math.max(0,t-1);show("↪ "+vtag()+" "+fmt(t))};
     if(v.readyState>=1)go();else v.addEventListener("loadedmetadata",function o(){v.removeEventListener("loadedmetadata",o);go()})}})();
 </script></body></html>

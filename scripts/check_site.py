@@ -4,7 +4,7 @@ Usage: python3 -I scripts/check_site.py        (exit 1 if something is broken)
 Optional media that only exists after rendering (long.mp4, export.mp4, exports/*.mp4, artifacts/*.jpg) is not required."""
 import pathlib, re, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-OPTIONAL = re.compile(r"^(long\.mp4|export\.mp4|exports/.*\.mp4|artifacts/.*\.jpg)$")
+OPTIONAL = re.compile(r"^(long\.mp4|export\.mp4|exports/.*\.mp4|artifacts/.*\.jpg|publish_links\.js)$")
 bad = []
 nav = (ROOT / "nav.js").read_text()
 menu = [m for m in re.findall(r'\["([\w./-]+\.html)"\s*,', nav) if not m.startswith("http")]

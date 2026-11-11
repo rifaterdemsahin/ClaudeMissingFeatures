@@ -1,11 +1,12 @@
 import { AbsoluteFill, Series } from "remotion";
 import overlays from "./overlays.json";
+import { variantCfg } from "./cuts";
 import { SlideBody } from "./Slide";
 import { theme, FPS } from "./theme";
 import project from "./project.json";
 
 type Part = { seconds: number; kind: string; title: string; bullets?: string[]; line?: string; url?: string; note?: string };
-export const outroParts = (): Part[] => ((overlays as { outro?: Part[] }).outro ?? []) as Part[];
+export const outroParts = (): Part[] => ((variantCfg().outro ?? (overlays as { outro?: Part[] }).outro ?? []) as Part[]);
 export const outroFrames = () => outroParts().reduce((n, p) => n + Math.round(p.seconds * FPS), 0);
 
 const Cta = ({ p }: { p: Part }) => (

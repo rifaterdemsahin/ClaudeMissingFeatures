@@ -1,0 +1,23 @@
+{
+ "_doc": "One edit, several platform cuts. keep = source ranges (seconds) in time order (null = the full video until you choose highlights); outro overrides overlays.json outro. Choose highlights along a story spine and snap to caption boundaries.",
+ "youtube": {
+  "label": "YouTube",
+  "target_s": 720,
+  "max_s": null,
+  "note": "full long form"
+ },
+ "linkedin": {
+  "label": "LinkedIn",
+  "target_s": 200,
+  "max_s": 600,
+  "note": "native video up to 10 minutes; 1 to 3 minutes performs best",
+  "keep": null
+ },
+ "x": {
+  "label": "X",
+  "target_s": 120,
+  "max_s": 140,
+  "note": "standard accounts: 2 minutes 20 seconds; check your account's limit",
+  "keep": null
+ }
+}

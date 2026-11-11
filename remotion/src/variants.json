@@ -1,0 +1,16 @@
+{
+ "_doc": "One edit, several platform cuts. keep = source ranges (seconds) to keep, in time order; outro overrides overlays.json outro; inserts false = no cards at cuts. Global cuts.json still applies. Render with --props '{\"variant\":\"x\"}'.",
+ "youtube": {"label": "YouTube", "target_s": 720, "max_s": null, "note": "full long form"},
+ "linkedin": {
+  "label": "LinkedIn", "target_s": 200, "max_s": 600, "note": "native video up to 10 minutes; 1 to 3 minutes performs best",
+  "keep": [[0, 31], [111, 124], [194, 207], [234, 263], [328, 350], [411, 433], [542, 557], [625.2, 650], [695, 710]],
+  "outro": [
+   {"seconds": 8, "kind": "slide", "title": "In short", "bullets": ["The Whiteboard is rolling out gradually: it had not reached my account yet", "No beta switch to flip: update Claude, quit and reopen, update the Mac", "Use the other artifact types meanwhile"]},
+   {"seconds": 6, "kind": "cta", "title": "Learn it in depth", "line": "Join the Delivery Pilot community on Skool", "url": "skool.com/delivery-pilot-8938", "note": "Link in the post"}]},
+ "x": {
+  "label": "X", "target_s": 120, "max_s": 140, "note": "standard accounts: 2 minutes 20 seconds; check your account's limit",
+  "keep": [[0, 31], [111, 124], [234, 263], [542, 557], [695, 710]],
+  "outro": [
+   {"seconds": 6, "kind": "slide", "title": "In short", "bullets": ["Update Claude and your Mac", "There is no beta switch to flip", "Use other artifact types meanwhile"]},
+   {"seconds": 5, "kind": "cta", "title": "Learn it in depth", "line": "Delivery Pilot community on Skool", "url": "skool.com/delivery-pilot-8938", "note": "Link in the post"}]}
+}

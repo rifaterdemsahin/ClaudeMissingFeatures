@@ -18,6 +18,7 @@ import json,sys,re
 t,n,u,pl=sys.argv[1:5]; p=json.load(open('remotion/src/project.json')); p['title']=p['brand']=t; p['slug']=sys.argv[5] if len(sys.argv)>5 else re.sub(r'[^a-z0-9]+','-',t.lower()).strip('-'); p['thumb']['line1']=t; p['community']={'name':n,'platform':pl,'url':u,'display':re.sub(r'^https?://(www\.)?','',u)}
 json.dump(p,open('remotion/src/project.json','w'),indent=1)
 PY
+python3 -c "import json,datetime;d=json.load(open('assets/timings.json'));d['started']=datetime.datetime.now().strftime('%Y-%m-%d %H:%M');json.dump(d,open('assets/timings.json','w'),indent=1,ensure_ascii=False)"
 echo '[]' > remotion/src/subs.json; echo 'window.SUBS = [];' > subs.js
 git init -q 2>/dev/null; scripts/build_all.sh
 echo "Done. Next: MASTER_SPEC.md section 1 (sync clips, render base, transcribe). Run: see run.html"

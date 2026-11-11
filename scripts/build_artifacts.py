@@ -117,27 +117,57 @@ PAGE = r'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
 #mimg{position:relative}#mimg img{width:100%;border-radius:10px;display:block;background:#000}#mimg .box{position:absolute;border:3px dashed #ff7a3d;border-radius:6px;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
 .kv{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;margin:10px 0}.kv b{opacity:.7}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.acts a{background:#ff7a3d;color:#000;border-radius:8px;padding:8px 14px;font-weight:700;text-decoration:none}.acts a.alt{background:#2a2a38;color:#fff}.acts button{background:#2a2a38;color:#fff}
+.nb{display:inline-block;background:#fde047;color:#000;border-radius:999px;padding:0 7px;font-size:11px;font-weight:800;margin-left:6px}
+.note{width:100%;min-height:92px;background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:8px;box-sizing:border-box;padding:8px}
+.saved{display:inline-block;margin-left:10px;color:#4ade80;font-weight:700;font-size:13px;opacity:0}.saved.on{animation:savedpop 1.8s ease-out}.saved.warn{color:#fbbf24}
+@keyframes savedpop{0%{opacity:0;transform:scale(.6)}14%{opacity:1;transform:scale(1.18)}28%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.note.flash{animation:savedglow 1.2s ease-out}@keyframes savedglow{0%{box-shadow:0 0 0 0 rgba(74,222,128,.85);border-color:#4ade80}100%{box-shadow:0 0 0 14px rgba(74,222,128,0);border-color:#2a2a38}}
+#notesbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}#allnotes{background:#14141c;border:1px solid #2a2a38;border-radius:10px;padding:8px 14px;margin:8px 0}#allnotes li{margin:6px 0}
 .q{border-left:3px solid #ff7a3d;padding:2px 10px;margin:6px 0;opacity:.9}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.two figure{margin:0}.two img{width:100%;border-radius:8px}
 </style></head><body><main>
 <h1>🧩 Artifacts: everything added to the video</h1>
 <p>Every element placed on top of the footage, with its timecode on the <b>source</b> (original) and <b>export</b> timelines. Click a card to see it large, how it is used and why, and to open the player at that moment. Previews are frames from the final export.</p>
 <div class="tools"><input id="q" placeholder="Search (title, text, timecode)…"><span id="chips"></span><span id="count" style="opacity:.7"></span></div>
+<div id="notesbar"><button class="chip" id="shownotes">📝 My notes <span id="ncount">0</span></button><button class="chip" id="copynotes">Copy all notes</button><button class="chip" id="sendall">↗ Send all to player feedback</button><button class="chip" id="clearnotes">🗑️ Clear all notes</button><button class="chip" id="undonotes" style="display:none">↩ Undo clear</button><span id="notesaved" class="saved">✔ Saved</span><label style="margin-left:auto;font-size:13px"><input type="checkbox" id="onlynotes"> only artifacts with notes</label></div>
+<div id="allnotes" style="display:none"></div>
 <div id="strip" title="Export timeline: click a marker"></div>
 <div id="grid" class="grid"></div>
 <div id="modal"><div id="mbox"></div></div>
-</main><script src="project.js"></script><script src="nav.js"></script><script>
+</main><script src="project.js"></script><script src="nav.js"></script><script src="exports.js"></script><script>
 const D=__DATA__, TOTAL=__TOTAL__;
 const K={source:["🎞️","Source clip","#7aa7ff"],intro:["🪧","Title card","#ffd166"],slide:["🧾","Slide","#c792ea"],image:["🖼️","Picture card","#06d6a0"],blur:["🔒","Blur region","#8d99ae"],speed:["⏩","Speed-up","#ef476f"],audio:["🔊","Audio fix","#4cc9f0"],caption:["💬","Captions","#f4a261"],outro:["🎬","Ending","#ff7a3d"],lower:["🏷️","Lower third","#e9c46a"],insert:["🧹","Card at a cut","#ff9f1c"],cut:["✂️","Cut","#e63946"]};
 const fmt=s=>{const m=Math.floor(s/60);return m+":"+(s%60).toFixed(1).padStart(4,"0")};
 const $=id=>document.getElementById(id); let filter="all",view=D.slice(),cur=-1;
+// ---- notes: saved in this browser per artifact (stable key: kind + title + source/export time), tagged with the export version
+const EXPS=(window.EXPORTS||[]).filter(e=>e.file),VER=EXPS.length?EXPS[EXPS.length-1].v:null;
+const keyOf=i=>i.kind+"|"+i.title+"|"+(i.src?i.src[0]:i.exp[0]);
+let NOTES={};try{NOTES=JSON.parse(localStorage.getItem("art:notes")||"{}")}catch(e){}
+let lastCleared=null,savedT=null;
+function saveNotes(){let ok=true;try{localStorage.setItem("art:notes",JSON.stringify(NOTES))}catch(e){ok=false}
+  clearTimeout(savedT);savedT=setTimeout(()=>{[$("notesaved"),$("msaved")].forEach(s=>{if(!s)return;s.textContent=ok?"✔ Saved":"⚠ Not saved (private window?)";s.classList.toggle("warn",!ok);s.classList.remove("on");void s.offsetWidth;s.classList.add("on")});
+    const t=$("mnote");if(t&&ok){t.classList.remove("flash");void t.offsetWidth;t.classList.add("flash")}},350);refreshNotes()}
+const noteOf=i=>(NOTES[keyOf(i)]||"").trim();
+function noteLine(i,withTag=true){const t=Math.floor(i.exp[0]),tag="["+(VER?"v"+VER:"export")+" "+Math.floor(t/60)+":"+String(t%60).padStart(2,"0")+"]";return (withTag?tag+" ":"")+"(artifact #"+i.n+" · "+K[i.kind][1]+": "+i.title+") "+noteOf(i)}
+function refreshNotes(){const withN=D.filter(i=>noteOf(i));$("ncount").textContent=withN.length;$("clearnotes").disabled=!withN.length;
+  $("allnotes").innerHTML=withN.length?"<ol>"+withN.map(i=>`<li><a href="#${i.n}" data-n="${i.n}">#${i.n} ${i.title}</a> <span style="opacity:.6">export ${fmt(i.exp[0])}</span><br>${noteOf(i).replace(/</g,"&lt;").replace(/\n/g,"<br>")}</li>`).join("")+"</ol>":"<i>No notes yet. Open an artifact and write one.</i>";
+  document.querySelectorAll(".card").forEach(c=>{const it=D.find(x=>x.n===+c.dataset.n),b=c.querySelector(".nb");if(it&&noteOf(it)){if(!b)c.querySelector(".t").insertAdjacentHTML("beforeend",'<span class="nb">📝</span>')}else if(b)b.remove()})}
+function header(){return "Notes on the artifacts"+(VER?" of export v"+VER:"")+" (tags: [vN m:ss] = export time):\n\n"}
+$("shownotes").onclick=()=>{const a=$("allnotes");a.style.display=a.style.display==="none"?"":"none"};
+$("allnotes").onclick=e=>{const n=e.target.dataset.n;if(n){e.preventDefault();openN(+n)}};
+$("copynotes").onclick=()=>{const t=header()+D.filter(i=>noteOf(i)).map(i=>noteLine(i)).join("\n");navigator.clipboard.writeText(t).then(()=>{$("copynotes").textContent="Copied ✔";setTimeout(()=>$("copynotes").textContent="Copy all notes",1500)})};
+function sendToPlayer(items){let fb="";try{fb=localStorage.getItem("fb:player")||""}catch(e){}const add=items.map(i=>noteLine(i)).join("\n");try{localStorage.setItem("fb:player",(fb&&!fb.endsWith("\n")?fb+"\n":fb)+add+"\n")}catch(e){}}
+$("sendall").onclick=()=>{const w=D.filter(i=>noteOf(i));if(!w.length)return;sendToPlayer(w);$("sendall").textContent="Sent to the player ✔";setTimeout(()=>$("sendall").textContent="↗ Send all to player feedback",1800)};
+$("clearnotes").onclick=()=>{lastCleared=JSON.stringify(NOTES);NOTES={};saveNotes();$("undonotes").style.display=""};
+$("undonotes").onclick=()=>{if(lastCleared){NOTES=JSON.parse(lastCleared);lastCleared=null;saveNotes()}$("undonotes").style.display="none"};
+$("onlynotes").onchange=()=>render();
 const tcs=a=>a?fmt(a[0])+"–"+fmt(a[1]):"–";
 const search=it=>(it.title+" "+it.what+" "+it.how+" "+tcs(it.src)+" "+tcs(it.exp)).toLowerCase();
 function chips(){const c={};D.forEach(i=>c[i.kind]=(c[i.kind]||0)+1);$("chips").innerHTML='<button class="chip on" data-k="all">All '+D.length+'</button>'+Object.keys(K).filter(k=>c[k]).map(k=>`<button class="chip" data-k="${k}">${K[k][0]} ${K[k][1]} ${c[k]}</button>`).join("")}
 $("chips").onclick=e=>{const k=e.target.dataset.k;if(!k)return;filter=k;[...$("chips").children].forEach(b=>b.classList.toggle("on",b.dataset.k===k));render()};
 $("q").oninput=render;
-function render(){const q=$("q").value.toLowerCase().trim();view=D.filter(i=>(filter==="all"||i.kind===filter)&&(!q||search(i).includes(q)));$("count").textContent=view.length+" shown";
-  $("grid").innerHTML=view.map(i=>`<div class="card" data-n="${i.n}">${i.thumb?`<img loading="lazy" src="${i.thumb}" alt="">`:`<div style="aspect-ratio:16/9;display:grid;place-items:center;background:#0b0b0f;font-size:42px">${K[i.kind][0]}</div>`}<div class="b"><span class="kind" style="background:${K[i.kind][2]}">${K[i.kind][0]} ${K[i.kind][1]}</span><div class="t">${i.title}</div><div class="m">export ${tcs(i.exp)}${i.src?"<br>source "+tcs(i.src):""}</div></div></div>`).join("")}
+function render(){const q=$("q").value.toLowerCase().trim();view=D.filter(i=>(filter==="all"||i.kind===filter)&&(!q||search(i).includes(q))&&(!$("onlynotes").checked||noteOf(i)));$("count").textContent=view.length+" shown";
+  $("grid").innerHTML=view.map(i=>`<div class="card" data-n="${i.n}">${i.thumb?`<img loading="lazy" src="${i.thumb}" alt="">`:`<div style="aspect-ratio:16/9;display:grid;place-items:center;background:#0b0b0f;font-size:42px">${K[i.kind][0]}</div>`}<div class="b"><span class="kind" style="background:${K[i.kind][2]}">${K[i.kind][0]} ${K[i.kind][1]}</span><div class="t">${i.title}${noteOf(i)?'<span class="nb">📝</span>':""}</div><div class="m">export ${tcs(i.exp)}${i.src?"<br>source "+tcs(i.src):""}</div></div></div>`).join("")}
 $("grid").onclick=e=>{const c=e.target.closest(".card");if(c)openN(+c.dataset.n)};
 function strip(){$("strip").innerHTML=D.filter(i=>i.kind!=="caption").map(i=>{const l=i.exp[0]/TOTAL*100,w=Math.max((i.exp[1]-i.exp[0])/TOTAL*100,.35);return `<i data-n="${i.n}" class="${i.kind==="blur"||i.kind==="source"?"row2":""}" style="left:${l}%;width:${w}%;background:${K[i.kind][2]}" title="${i.title}"></i>`}).join("")}
 $("strip").onclick=e=>{const n=e.target.dataset.n;if(n)openN(+n)};
@@ -147,16 +177,19 @@ function openN(n){const it=D.find(x=>x.n===n);cur=view.findIndex(x=>x.n===n);con
   $("mbox").innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">${K[it.kind][0]} ${it.title}</h2><div><button id="mp">‹ Prev</button> <button id="mn">Next ›</button> <button id="mx">✕ Close (Esc)</button></div></div>
   ${it.img?`<div id="mimg"><img src="${it.img}" alt="">${bx}</div>`:""}${spec}
   <div class="acts"><a target="_blank" href="${link(it,"exp")}">▶ Open in player (export ${fmt(it.exp[0])})</a>${it.src?`<a class="alt" target="_blank" href="${link(it,"orig")}">▶ Original at source ${fmt(it.src[0])}</a>`:""}</div>
+  <div style="margin:10px 0"><b>📝 My note</b> <span id="msaved" class="saved">✔ Saved</span> <button id="msend" style="float:right">↗ Add to player feedback</button><textarea id="mnote" class="note" placeholder="Write a note about this artifact (saved in this browser, tagged with the export version). Ctrl/⌘+Enter closes the box."></textarea></div>
   <div class="kv"><b>Type</b><span>${K[it.kind][1]}</span><b>Export timecode</b><span>${tcs(it.exp)} (${(it.exp[1]-it.exp[0]).toFixed(1)} s)</span><b>Source timecode</b><span>${it.src?tcs(it.src):"– (added after the footage)"}</span>
   <b>What</b><span>${it.what}</span><b>How it is used</b><span>${it.how}</span>
   <b>Where it lives</b><span>${it.files.map(f=>"<code>"+f+"</code>").join("<br>")}</span>
   ${it.edl.length?`<b>Decision (EDL)</b><span>${it.edl.map(d=>`<div class="q"><i>“${d.said}”</i><br>${d.decision}</div>`).join("")}<a href="edl.html">Open the EDL →</a></span>`:""}</div>`;
-  $("modal").classList.add("on");$("mx").onclick=close;$("mp").onclick=()=>step(-1);$("mn").onclick=()=>step(1)}
+  $("modal").classList.add("on");const mn=$("mnote");mn.value=NOTES[keyOf(it)]||"";mn.oninput=()=>{if(mn.value.trim())NOTES[keyOf(it)]=mn.value;else delete NOTES[keyOf(it)];saveNotes()};
+  mn.onkeydown=ev=>{ev.stopPropagation();if((ev.metaKey||ev.ctrlKey)&&ev.key==="Enter")mn.blur()};$("msend").onclick=()=>{if(noteOf(it)){sendToPlayer([it]);$("msend").textContent="Added ✔";setTimeout(()=>$("msend").textContent="↗ Add to player feedback",1500)}};
+  $("mx").onclick=close;$("mp").onclick=()=>step(-1);$("mn").onclick=()=>step(1)}
 function close(){$("modal").classList.remove("on")}
 function step(d){if(cur<0)return;const n=view[(cur+d+view.length)%view.length];if(n)openN(n.n)}
 $("modal").onclick=e=>{if(e.target.id==="modal")close()};
-addEventListener("keydown",e=>{if(!$("modal").classList.contains("on"))return;if(e.key==="Escape")close();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1)});
-chips();render();strip();const h=location.hash.match(/#(\d+)/);if(h)openN(+h[1]);
+addEventListener("keydown",e=>{if(!$("modal").classList.contains("on")||e.target.tagName==="TEXTAREA")return;if(e.key==="Escape")close();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1)});
+chips();render();strip();refreshNotes();const h=location.hash.match(/#(\d+)/);if(h)openN(+h[1]);
 </script></body></html>'''
 html = PAGE.replace("__TITLE__", P["title"]).replace("__DATA__", json.dumps(items, ensure_ascii=False).replace("</", "<\\/")).replace("__TOTAL__", str(round(tot, 2)))
 (ROOT / "artifacts.html").write_text(html)

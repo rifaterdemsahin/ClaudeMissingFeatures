@@ -1,0 +1,311 @@
+{
+ "_doc": "Time per stage, measured on this project unless marked estimate. rate = seconds of work per second of video (video length, not wall clock). who: machine = MacBook local tools (0 Claude tokens), claude = LLM judgement, owner = you. Edit the numbers when a stage gets faster.",
+ "machine": "10-core Apple-silicon MacBook Pro, 64 GB RAM",
+ "started": "2026-11-11 12:32",
+ "recordings_done": "2026-11-11 12:27",
+ "measured_on": {
+  "raw_minutes": 12.6,
+  "youtube_minutes": 12.0,
+  "linkedin_minutes": 3.3,
+  "x_minutes": 1.9
+ },
+ "stages": [
+  {
+   "n": 0,
+   "phase": "Prep (once)",
+   "stage": "Check and install the machine",
+   "who": "machine",
+   "tool": "scripts/check_env.sh",
+   "fixed_s": 10,
+   "rate": 0,
+   "basis": "measured",
+   "llm": "none",
+   "parallel": "-",
+   "prep": "Run once per machine; the Whisper model (461 MB) downloads on first use, so do it before the first video."
+  },
+  {
+   "n": 1,
+   "phase": "Prep (once)",
+   "stage": "Azure container and Key Vault secrets",
+   "who": "owner",
+   "tool": "scripts/setup_azure_exports.sh",
+   "fixed_s": 60,
+   "rate": 0,
+   "basis": "estimate",
+   "llm": "none",
+   "parallel": "-",
+   "prep": "One command, one time. Do it before the first upload."
+  },
+  {
+   "n": 2,
+   "phase": "Prep (each video)",
+   "stage": "Scaffold the project from the kit",
+   "who": "machine",
+   "tool": "scripts/pull_kit.sh + new-video.sh",
+   "fixed_s": 30,
+   "rate": 0,
+   "basis": "measured",
+   "llm": "none",
+   "parallel": "-",
+   "prep": "Fill project.json and assets/okr.json while the next stage runs."
+  },
+  {
+   "n": 3,
+   "phase": "Ingest",
+   "stage": "Sync clips to the voice recording",
+   "who": "machine",
+   "tool": "scripts/build_base.py (sync)",
+   "fixed_s": 20,
+   "rate": 0.07,
+   "basis": "measured",
+   "llm": "none",
+   "parallel": "starts first",
+   "prep": "Keep clips and the WAV in one folder."
+  },
+  {
+   "n": 4,
+   "phase": "Ingest",
+   "stage": "Render the 1080p base video",
+   "who": "machine",
+   "tool": "scripts/build_base.py (ffmpeg)",
+   "fixed_s": 0,
+   "rate": 0.29,
+   "basis": "measured (3.4x real time)",
+   "llm": "none",
+   "parallel": "with Whisper (starts after sync)",
+   "prep": "Source resolution does not matter much; the blurred side fill keeps the whole screen."
+  },
+  {
+   "n": 5,
+   "phase": "Ingest",
+   "stage": "Transcript with word timings (Whisper small)",
+   "who": "machine",
+   "tool": "whisper --word_timestamps",
+   "fixed_s": 0,
+   "rate": 0.36,
+   "basis": "measured (CPU)",
+   "llm": "none",
+   "parallel": "with the base render",
+   "prep": "Start it the moment the sync is done, it only needs the audio."
+  },
+  {
+   "n": 6,
+   "phase": "Ingest",
+   "stage": "OCR of the screen every 2 s (Apple Vision)",
+   "who": "machine",
+   "tool": "scripts/ocr_all.sh (4 processes)",
+   "fixed_s": 30,
+   "rate": 0.32,
+   "basis": "measured",
+   "llm": "none",
+   "parallel": "after the base render",
+   "prep": "Cached in assets/ocr_frames.json, so a second pass costs nothing."
+  },
+  {
+   "n": 7,
+   "phase": "Analyse",
+   "stage": "Captions, repeats, personal windows, report",
+   "who": "machine",
+   "tool": "build_subs, find_repeats, find_personal_windows, report",
+   "fixed_s": 15,
+   "rate": 0.0,
+   "basis": "measured",
+   "llm": "none",
+   "parallel": "-",
+   "prep": "-"
+  },
+  {
+   "n": 8,
+   "phase": "Decide",
+   "stage": "Read REPORT.md, write slides, cuts, speed-ups, ending, OKRs",
+   "who": "claude",
+   "tool": "overlays.json, cuts.json, okr.json",
+   "fixed_s": 900,
+   "rate": 0,
+   "basis": "estimate (10 to 20 min)",
+   "llm": "medium: reads one page of text, writes JSON",
+   "parallel": "-",
+   "prep": "Have the title, community and sensitive words in project.json first; think about the platform highlights while the transcript exists."
+  },
+  {
+   "n": 9,
+   "phase": "Decide",
+   "stage": "Blur boxes from OCR, noise check",
+   "who": "machine",
+   "tool": "build_blurs.py, denoise_audio.py",
+   "fixed_s": 60,
+   "rate": 0.0,
+   "basis": "measured (denoise about 1 min)",
+   "llm": "none",
+   "parallel": "-",
+   "prep": "-"
+  },
+  {
+   "n": 10,
+   "phase": "Preview",
+   "stage": "Stills and Studio check of the new edits",
+   "who": "claude",
+   "tool": "npx remotion still, Studio",
+   "fixed_s": 300,
+   "rate": 0,
+   "basis": "estimate (5 min, about 15 s per still)",
+   "llm": "low: look at a few stills",
+   "parallel": "-",
+   "prep": "Render a still only for moments that changed; use render --scale=0.5 for a quick look."
+  },
+  {
+   "n": 11,
+   "phase": "Render",
+   "stage": "YouTube export (the full video)",
+   "who": "machine",
+   "tool": "scripts/render_export.sh",
+   "fixed_s": 30,
+   "rate": 2.3,
+   "basis": "measured (about 13 frames/s idle; 21,576 frames took about 28 min)",
+   "llm": "none",
+   "parallel": "keep the machine idle",
+   "prep": "Do not run OCR or other heavy jobs during a render: it dropped to 5 to 9 frames/s when I did."
+  },
+  {
+   "n": 12,
+   "phase": "Render",
+   "stage": "LinkedIn and X cuts",
+   "who": "machine",
+   "tool": "scripts/render_export.sh ... linkedin x",
+   "fixed_s": 60,
+   "rate": 2.3,
+   "basis": "measured (same speed; scales with the cut length)",
+   "llm": "none",
+   "parallel": "queue them right after YouTube in one command",
+   "prep": "Choose the keep ranges before the YouTube render finishes so the queue never waits."
+  },
+  {
+   "n": 13,
+   "phase": "Check",
+   "stage": "Privacy check of every export (OCR)",
+   "who": "machine",
+   "tool": "scripts/verify_export.py",
+   "fixed_s": 30,
+   "rate": 0.33,
+   "basis": "measured (about 4 min for 12 min)",
+   "llm": "none",
+   "parallel": "after the renders (CPU)",
+   "prep": "Run it on the YouTube file while you choose platform ranges."
+  },
+  {
+   "n": 14,
+   "phase": "Check",
+   "stage": "Measure, score, rebuild every page",
+   "who": "machine",
+   "tool": "measure_video.py, build_okr.py, build_all.sh",
+   "fixed_s": 90,
+   "rate": 0.05,
+   "basis": "measured",
+   "llm": "none",
+   "parallel": "-",
+   "prep": "-"
+  },
+  {
+   "n": 15,
+   "phase": "Publish",
+   "stage": "Upload to Azure and make read-only links",
+   "who": "machine",
+   "tool": "scripts/upload_exports.py",
+   "fixed_s": 60,
+   "rate": 0.0,
+   "basis": "estimate (about 130 MB; depends on your upload speed)",
+   "llm": "none",
+   "parallel": "with the review",
+   "prep": "Container and secrets already created (stage 1)."
+  },
+  {
+   "n": 16,
+   "phase": "Review",
+   "stage": "You watch in the player and write notes",
+   "who": "owner",
+   "tool": "player.html, artifacts.html, publish.html",
+   "fixed_s": 0,
+   "rate": 1.5,
+   "basis": "estimate (1.5x the video length per pass)",
+   "llm": "none",
+   "parallel": "upload and checks run meanwhile",
+   "prep": "Notes are tagged with the version, so they can be read any time."
+  },
+  {
+   "n": 17,
+   "phase": "Round",
+   "stage": "Turn the notes into edits (each extra round)",
+   "who": "claude",
+   "tool": "overlays.json, cuts.json, project.json",
+   "fixed_s": 1200,
+   "rate": 0,
+   "basis": "estimate (15 to 30 min for about 8 notes)",
+   "llm": "medium",
+   "parallel": "-",
+   "prep": "Batch all notes into one round: one render, not one per note."
+  },
+  {
+   "n": 18,
+   "phase": "Wrap up",
+   "stage": "Commit, push, merge, backup, fill the post links",
+   "who": "machine",
+   "tool": "git, Drive tool, rclone",
+   "fixed_s": 300,
+   "rate": 0,
+   "basis": "estimate (5 min)",
+   "llm": "low",
+   "parallel": "-",
+   "prep": "-"
+  }
+ ],
+ "prep": [
+  {
+   "do": "Install and check everything first (check_env.sh); download the Whisper model once",
+   "saves": "5 to 10 min on the first video"
+  },
+  {
+   "do": "Create the Azure container and Key Vault secrets once (setup_azure_exports.sh)",
+   "saves": "one blocked step later"
+  },
+  {
+   "do": "Start Whisper as soon as the sync is done; it runs while the base video renders",
+   "saves": "about 4 min"
+  },
+  {
+   "do": "Keep the machine idle while Remotion renders (no OCR, no builds, no tests)",
+   "saves": "10 to 20 min per render: 13 vs 5 to 9 frames/s"
+  },
+  {
+   "do": "Make the base video with the index at the front (faststart)",
+   "saves": "about 35% of render time"
+  },
+  {
+   "do": "Collect all review notes, then render once per round",
+   "saves": "28 min per avoided render"
+  },
+  {
+   "do": "Use quick previews: a still for one moment, or render --scale=0.5 / --frames=a-b for a section",
+   "saves": "most of a full render"
+  },
+  {
+   "do": "Pick the LinkedIn and X highlight ranges while the YouTube render runs, then queue all platforms in one command",
+   "saves": "no idle gaps, one hand-off"
+  },
+  {
+   "do": "Run the privacy check on the YouTube file while choosing platform cuts",
+   "saves": "4 min of waiting"
+  },
+  {
+   "do": "Keep caches: OCR, transcript and the registry are reused, never redone",
+   "saves": "4 to 5 min per round"
+  },
+  {
+   "do": "Fill project.json (title, community, sensitive words) and okr.json before editing",
+   "saves": "re-renders caused by a missed word or name"
+  },
+  {
+   "do": "Keep the recording clean: no notifications, no other windows, quiet room",
+   "saves": "blur work, a hoover cut, apology cards"
+  }
+ ]
+}

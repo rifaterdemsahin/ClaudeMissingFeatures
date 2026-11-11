@@ -4,10 +4,13 @@
   const CTA = C.url ? `Join our ${C.platform || ""} community: ${C.name || ""} ${C.url}` : "";   // from project.json
   // Menu grouped by what you are doing. Edit GROUPS once; every page loads this file.
   const GROUPS = [
-    ["🧭 Start", [["architecture.html", "🏛️ Architecture"], ["environment.html", "🧰 Environment"], ["spec.html", "📘 Master spec (prompt)"]]],
-    ["🎬 Make", [["index.html", "🏠 Project"], ["preprod.html", "📝 Pre-prod"], ["prod.html", "🎬 Prod"], ["postprod.html", "✅ Post-prod"], ["run.html", "🧪 Run & links"]]],
-    ["🔎 Review", [["player.html", "▶️ Player"], ["artifacts.html", "🧩 Artifacts"], ["edl.html", "✂️ EDL"], ["metadata.html", "📺 YouTube metadata"]]],
-    ["🔗 Links", [["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true], ["readme.html", "📄 README"], ...(C.url ? [[C.url, "🚀 Join " + (C.name || "the community"), true]] : [])]],
+    ["🧭 Start", [["architecture.html", "🏛️ Architecture"], ["environment.html", "🧰 Environment"], ["timeline.html", "⏱️ Time & order"], ["spec.html", "📘 Master spec (prompt)"]]],
+    ["🎬 Make", [["index.html", "🏠 Project"], ["preprod.html", "📝 Pre-prod"], ["prod.html", "🎬 Prod"], ["postprod.html", "✅ Post-prod"], ["run.html", "🧪 Run & links"], ["publish.html", "📣 Publish"]]],
+    ["🔎 Review", [["player.html", "▶️ Player"], ["script.html", "📜 Script"], ["artifacts.html", "🧩 Artifacts"], ["edl.html", "✂️ EDL"], ["changelog.html", "🗒️ Changelog"], ["metadata.html", "📺 YouTube metadata"]]],
+    ["🔗 Links", [["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true], ["readme.html", "📄 README"],
+      ...(C.url ? [[C.url, "🚀 Join " + (C.name || "the community"), true]] : []),
+      ...((P.links || []).map((l) => [l.url, l.label, true])),
+      ...[["youtube", "▶️ YouTube post"], ["linkedin", "💼 LinkedIn post"], ["x", "✖️ X post"]].filter(([k]) => (P.publish || {})[k]).map(([k, t]) => [P.publish[k], t, true])]],
   ];
   if (P.title) document.title = P.title + ": " + (document.title.split(":").pop().trim() || "page");   // title from project.json
   const here = location.pathname.split("/").pop() || "index.html";

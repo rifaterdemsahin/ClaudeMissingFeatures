@@ -12,9 +12,16 @@ done
 [ -f assets/whisper_words.json ] && python3 -I scripts/build_subs.py assets/whisper_words.json "$(cat assets/whisper_offset.txt 2>/dev/null || echo 0)" | tail -1
 [ -f assets/chapters.json ] && [ -f export_map.js ] && python3 -I scripts/build_chapters.py | tail -1
 python3 -I scripts/build_edl.py
+[ -f assets/whisper_words.json ] && python3 -I scripts/check_subtitles.py | head -1
+python3 -I scripts/build_script.py
 [ -f assets/metrics.json ] && python3 -I scripts/build_okr.py | tail -1
 python3 -I scripts/build_architecture.py
 python3 -I scripts/build_artifacts.py | tail -1        # works without an export too (cards without pictures)
+python3 -I scripts/build_timeline.py | tail -1
+python3 -I scripts/build_publish.py
+python3 -I scripts/build_changelog.py
+python3 -I scripts/build_toc.py | tail -1
+python3 -I scripts/build_readme.py | tail -1
 # 3. markdown pages (spec, readme, environment, metadata, edl) + project.js, after their sources are final
 python3 -I scripts/build_site.py | tail -1
 # 4. check everything resolves
