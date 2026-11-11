@@ -3,8 +3,9 @@ Usage: python3 -I scripts/verify_export.py [remotion/out/long.mp4]   -> assets/e
 import json, re, subprocess, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 v = sys.argv[1] if len(sys.argv) > 1 else str(ROOT / "remotion/out/long.mp4")
-kw = re.search(r'KEYWORDS = r"([^"]+)"', (ROOT / "scripts/build_blurs.py").read_text()).group(1)
-extra = r"skool|linkedin|rag manager|nda agent|prospecting"          # personal app lists must be covered by slides (2+ lines in one frame)
+P = json.load(open(ROOT / "remotion/src/project.json"))
+kw = "|".join(P["sensitive_keywords"])
+extra = "|".join(P["verify_app_patterns"])          # personal app lists must be covered by slides (2+ lines in one frame)
 subprocess.check_call([str(ROOT / "scripts/ocr_all.sh"), v, str(ROOT / "assets/export_ocr.json")])
 D = json.load(open(ROOT / "assets/export_ocr.json")); leaks = []
 _m = re.search(r"=\s*(\{.*\});", (ROOT / "export_map.js").read_text()) if (ROOT / "export_map.js").exists() else None

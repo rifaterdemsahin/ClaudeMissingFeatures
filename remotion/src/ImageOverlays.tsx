@@ -1,6 +1,6 @@
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import overlays from "./overlays.json";
-import { srcTime } from "./cuts";
+import { isInsertFrame, srcTime } from "./cuts";
 import { Thumb } from "./Thumb";
 import { theme } from "./theme";
 import { Slide, SlideData } from "./Slide";
@@ -8,18 +8,27 @@ import { Slide, SlideData } from "./Slide";
 type Arrow = { x1: number; y1: number; x2: number; y2: number };
 type Img = { from: number; to: number; src: string; w?: number; h?: number; caption?: string; caption2?: string; highlight?: { x: number; y: number; w: number; h: number }; arrow?: Arrow };
 type Blur = { from: number; to: number; x: number; y: number; w: number; h: number };
+type LowerThird = { from: number; to: number; text: string; label?: string };
 
 // intro card (hides the OBS window) -> slides (cover personal screen content) -> blur boxes -> images. All on SOURCE time.
 export const ImageOverlays = () => {
-  const t = srcTime(useCurrentFrame());
+  const frame = useCurrentFrame();
+  if (isInsertFrame(frame)) return null;
+  const t = srcTime(frame);
   const intro = overlays.intro_card;
   return (
     <>
-      {(overlays.blurs as Blur[]).filter((b) => t >= b.from && t < b.to).map((b, i) => (
+      {[...(overlays.blurs as Blur[]), ...(((overlays as { manual_blurs?: Blur[] }).manual_blurs ?? []) as Blur[])].filter((b) => t >= b.from && t < b.to).map((b, i) => (
         <div key={"b" + i} style={{ position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", background: "rgba(18,18,22,.6)", borderRadius: 8 }} />
       ))}
       {(overlays.slides as SlideData[]).filter((s) => t >= s.from && t < s.to).map((s, i) => <Slide key={"s" + i} s={s} />)}
       {(overlays.images as Img[]).filter((o) => t >= o.from && t < o.to).map((o, i) => <ImageCard key={"i" + i} o={o} />)}
+      {(((overlays as { lower_thirds?: LowerThird[] }).lower_thirds ?? []) as LowerThird[]).filter((l) => t >= l.from && t < l.to).map((l, i) => (
+        <div key={"l" + i} style={{ position: "absolute", left: 80, bottom: 215, maxWidth: 1250, padding: "18px 30px", background: "rgba(10,10,16,.88)", borderLeft: `12px solid ${theme.accent}`, borderRadius: 10, fontFamily: theme.font, color: "#fff" }}>
+          {l.label && <div style={{ fontSize: 26, fontWeight: 800, color: theme.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 6 }}>{l.label}</div>}
+          <div style={{ fontSize: 46, fontWeight: 800, lineHeight: 1.2 }}>{l.text}</div>
+        </div>
+      ))}
       {t < intro.to && <AbsoluteFill><Thumb /></AbsoluteFill>}
     </>
   );

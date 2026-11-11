@@ -568,7 +568,7 @@ but I don't think that is the bot
 
 130
 00:06:51,110 --> 00:06:52,590
-clothes on my up to date.
+Claude on my up to date.
 
 131
 00:06:52,590 --> 00:06:57,160
@@ -732,7 +732,7 @@ is make sure that you keep your
 
 166
 00:08:58,750 --> 00:08:59,950
-clothe up
+Claude up
 
 167
 00:08:59,950 --> 00:09:04,150
@@ -772,184 +772,170 @@ that should be able to go on to
 here for you.
 
 175
-00:09:28,510 --> 00:09:33,310
-And let's see the double click
-to edit comment on any part.
-
-176
-00:09:33,310 --> 00:09:39,310
-It is still naming right now with
-the HTML's and putting my work over
-
-177
-00:09:39,310 --> 00:09:39,880
-there.
-
-178
-00:10:18,410 --> 00:10:23,970
+00:09:33,610 --> 00:09:39,170
 Yes, now it's created what I wanted
 to get created. I have right now a
 
-179
-00:10:23,970 --> 00:10:28,930
+176
+00:09:39,170 --> 00:09:44,130
 calendar for myself to be able to do
 this and the class series is also
 
-180
-00:10:28,930 --> 00:10:29,490
+177
+00:09:44,130 --> 00:09:44,690
 coming up.
 
-181
-00:10:29,490 --> 00:10:33,500
+178
+00:09:44,690 --> 00:09:48,700
 This is something more visual
 that I will be able to work on.
 
-182
-00:10:33,610 --> 00:10:37,290
+179
+00:09:48,810 --> 00:09:52,490
 And all these sections can be
-updated and the clothe will have
+updated and the Claude will have
 
-183
-00:10:37,290 --> 00:10:38,570
+180
+00:09:52,490 --> 00:09:53,770
 knowledge of it.
 
-184
-00:10:38,570 --> 00:10:40,190
+181
+00:09:53,770 --> 00:09:55,390
 So this is not just an image.
 
-185
-00:10:40,190 --> 00:10:43,100
+182
+00:09:55,390 --> 00:09:58,300
 This is a design that
 we can work together.
 
-186
-00:10:43,190 --> 00:10:47,490
+183
+00:09:58,390 --> 00:10:02,690
 And most of the tools, including
 Canva, is going to this kind of a
 
-187
-00:10:47,490 --> 00:10:49,320
+184
+00:10:02,690 --> 00:10:04,520
 route to make things work.
 
-188
-00:10:49,470 --> 00:10:54,030
+185
+00:10:04,670 --> 00:10:09,230
 So this is definitely going to help
 me to be able to build the content
 
-189
-00:10:54,030 --> 00:10:58,320
+186
+00:10:09,230 --> 00:10:13,520
 that I'm building and be able
 to manage my time accordingly.
 
-190
-00:10:59,570 --> 00:11:02,920
+187
+00:10:14,770 --> 00:10:18,120
 Let's check if my update is completed.
 
-191
-00:11:02,950 --> 00:11:05,180
+188
+00:10:18,150 --> 00:10:20,380
 This one is completed.
 
-192
-00:11:05,270 --> 00:11:09,580
+189
+00:10:20,470 --> 00:10:24,780
 I can just close this and retry to open.
 
-193
-00:11:09,610 --> 00:11:12,720
+190
+00:10:24,810 --> 00:10:27,920
 I will quit at the button
 with the update button.
 
-194
-00:11:12,810 --> 00:11:15,800
+191
+00:10:28,010 --> 00:10:31,000
 As you guys see, Grok
 bot also gets an update.
 
-195
-00:11:16,070 --> 00:11:19,120
+192
+00:10:31,270 --> 00:10:34,320
 All these agents are
 always getting updated.
 
-196
-00:11:19,210 --> 00:11:21,710
+193
+00:10:34,410 --> 00:10:36,910
 So that is what we are going to see.
 
-197
-00:11:21,710 --> 00:11:26,530
+194
+00:10:36,910 --> 00:10:41,730
 But we can definitely see it is on
 the designs, but we will be able to
 
-198
-00:11:26,530 --> 00:11:28,000
+195
+00:10:41,730 --> 00:10:43,200
 see it is on the artifacts.
 
-199
-00:11:28,310 --> 00:11:32,400
+196
+00:10:43,510 --> 00:10:47,600
 I still don't have them, so don't
 be worried if you can't see them.
 
-200
-00:11:32,610 --> 00:11:34,900
+197
+00:10:47,810 --> 00:10:50,100
 It might not reach out to you directly.
 
-201
-00:11:34,990 --> 00:11:40,330
-It will take time for the clothe to
+198
+00:10:50,190 --> 00:10:55,530
+It will take time for the Claude to
 be able to put them in and for you
 
-202
-00:11:40,330 --> 00:11:43,160
+199
+00:10:55,530 --> 00:10:58,360
 to be able to get this on here.
 
-203
-00:11:43,190 --> 00:11:45,690
+200
+00:10:58,390 --> 00:11:00,890
 If I click help, it might help.
 
-204
-00:11:45,690 --> 00:11:46,760
+201
+00:11:00,890 --> 00:11:01,960
 It might not help.
 
-205
-00:11:46,850 --> 00:11:51,830
+202
+00:11:02,050 --> 00:11:07,030
 Probably the system we are getting
 the help question mark is not
 
-206
-00:11:51,830 --> 00:11:52,960
+203
+00:11:07,030 --> 00:11:08,160
 working that well.
 
-207
-00:11:53,110 --> 00:11:56,170
+204
+00:11:08,310 --> 00:11:11,370
 So don't expect them to
 land directly on here.
 
-208
-00:11:56,170 --> 00:12:01,790
+205
+00:11:11,370 --> 00:11:16,990
 Be ready to be able to use the
 other features on here and other
 
-209
-00:12:01,790 --> 00:12:05,530
+206
+00:11:16,990 --> 00:11:20,730
 artifacts that you are able
 to correct them on here.
 
-210
-00:12:05,530 --> 00:12:09,470
+207
+00:11:20,730 --> 00:11:24,670
 This is not that different than the
 other artifacts that you are going
 
-211
-00:12:09,470 --> 00:12:10,110
+208
+00:11:24,670 --> 00:11:25,310
 to correct.
 
-212
-00:12:10,110 --> 00:12:13,810
+209
+00:11:25,310 --> 00:11:29,010
 The whiteboard has more features,
 but you can definitely ask the
 
-213
-00:12:13,810 --> 00:12:18,490
-clothe on here and update this
+210
+00:11:29,010 --> 00:11:33,690
+Claude on here and update this
 and make this work a bit more
 
-214
-00:12:18,490 --> 00:12:20,620
+211
+00:11:33,690 --> 00:11:35,820
 interesting than the future.

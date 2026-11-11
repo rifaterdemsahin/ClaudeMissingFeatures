@@ -1,22 +1,24 @@
 // Shared menu + notes panel. Edit LINKS once; every page loads this file.
 (function () {
-  const CTA = "Join our Skool community: Delivery Pilot https://www.skool.com/delivery-pilot-8938";
+  const P = window.PROJECT || {}, C = P.community || {};
+  const CTA = C.url ? `Join our ${C.platform || ""} community: ${C.name || ""} ${C.url}` : "";   // from project.json
   // Menu grouped by what you are doing. Edit GROUPS once; every page loads this file.
   const GROUPS = [
     ["🧭 Start", [["architecture.html", "🏛️ Architecture"], ["environment.html", "🧰 Environment"], ["spec.html", "📘 Master spec (prompt)"]]],
     ["🎬 Make", [["index.html", "🏠 Project"], ["preprod.html", "📝 Pre-prod"], ["prod.html", "🎬 Prod"], ["postprod.html", "✅ Post-prod"], ["run.html", "🧪 Run & links"]]],
-    ["🔎 Review", [["player.html", "▶️ Player"], ["edl.html", "✂️ EDL"], ["metadata.html", "📺 YouTube metadata"]]],
-    ["🔗 Links", [["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true], ["readme.html", "📄 README"], ["https://www.skool.com/delivery-pilot-8938", "🚀 Join Delivery Pilot", true]]],
+    ["🔎 Review", [["player.html", "▶️ Player"], ["artifacts.html", "🧩 Artifacts"], ["edl.html", "✂️ EDL"], ["metadata.html", "📺 YouTube metadata"]]],
+    ["🔗 Links", [["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true], ["readme.html", "📄 README"], ...(C.url ? [[C.url, "🚀 Join " + (C.name || "the community"), true]] : [])]],
   ];
+  if (P.title) document.title = P.title + ": " + (document.title.split(":").pop().trim() || "page");   // title from project.json
   const here = location.pathname.split("/").pop() || "index.html";
   const nav = document.createElement("nav");
-  nav.innerHTML = '<b class="brand">🎬 Claude Missing Features</b>' + GROUPS.map(([g, items]) =>
+  nav.innerHTML = '<b class="brand">🎬 ' + (P.brand || document.title.split(":")[0]) + '</b><button id="navtoggle" title="Collapse or expand the menu">▾ Menu</button>' + GROUPS.map(([g, items]) =>
     `<span class="grp"><i>${g}</i>` + items.map(([h, t, ext]) =>
       `<a href="${h}" ${ext ? 'target="_blank" rel="noopener"' : ""} class="${h === here ? "on" : ""}">${t}</a>`).join("") + "</span>").join("");
   const css = document.createElement("style");
   css.textContent = `body{margin:0;background:#0b0b0f;color:#eee;font:16px/1.6 system-ui,sans-serif}
   nav{position:sticky;top:0;z-index:9;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:10px 20px;background:#14141c;border-bottom:1px solid #2a2a38}
-  nav .brand{margin-right:8px}.grp{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;padding:2px 10px;border-left:1px solid #2a2a38}.grp i{font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7a7a92;margin-right:4px}nav a{color:#bbb;text-decoration:none;padding:4px 8px;border-radius:8px}nav a:hover,nav a.on{background:#ff7a3d;color:#000}
+  nav .brand{margin-right:8px}#navtoggle{margin-left:auto;order:2;padding:4px 12px;background:#2a2a38;color:#eee;font-weight:600}nav.collapsed .grp{display:none}nav.collapsed{padding:6px 20px}.grp{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;padding:2px 10px;border-left:1px solid #2a2a38}.grp i{font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7a7a92;margin-right:4px}nav a{color:#bbb;text-decoration:none;padding:4px 8px;border-radius:8px}nav a:hover,nav a.on{background:#ff7a3d;color:#000}
   main{max-width:960px;margin:0 auto;padding:24px 20px 120px}h1,h2,h3{line-height:1.25}a{color:#ff9a66}
   code,pre{background:#1a1a24;border-radius:6px}code{padding:1px 5px}pre{padding:12px;overflow:auto}
   table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #2a2a38;padding:6px 10px;text-align:left;vertical-align:top}
@@ -26,6 +28,11 @@
   .copy{margin-left:8px;font-size:12px;padding:3px 8px}@media(max-width:600px){nav{padding:8px 12px}}`;
   document.head.appendChild(css);
   document.body.prepend(nav);
+  const tg = nav.querySelector("#navtoggle");
+  const setCollapsed = (c) => { nav.classList.toggle("collapsed", c); tg.textContent = c ? "▸ Menu" : "▾ Menu"; tg.setAttribute("aria-expanded", String(!c)); try { localStorage.setItem("nav:collapsed", c ? "1" : "0"); } catch (e) {} };
+  let startCollapsed = false; try { startCollapsed = localStorage.getItem("nav:collapsed") === "1"; } catch (e) {}
+  setCollapsed(startCollapsed);
+  tg.onclick = () => setCollapsed(!nav.classList.contains("collapsed"));
 
   window.copyText = (t) => navigator.clipboard.writeText(t).catch(() => {
     const a = document.createElement("textarea"); a.value = t; document.body.appendChild(a); a.select(); document.execCommand("copy"); a.remove();

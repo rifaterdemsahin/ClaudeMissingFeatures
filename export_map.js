@@ -1,1 +1,1 @@
-window.EXPORT_MAP = {"segs": [[0.0, 68.47, 1, false, 0.0], [68.47, 79.0, 3, true, 68.47], [79.0, 750.033, 1, false, 71.98]], "total": 743.013, "outro": [[743.01, "Summary: what we learned", 11], [754.01, "Learn it in depth", 10]]};
+window.EXPORT_MAP = {"segs": [[0.0, 68.47, 1, false, 0.0], [68.47, 79.0, 3, true, 68.47], [79.0, 574.4, 1, false, 71.98], [625.2, 750.033, 1, false, 573.38]], "total": 698.213, "inserts": [[567.38, 6, 574.4, "Sorry!"]], "outro": [[698.21, "Summary: what we learned", 11], [709.21, "Learn it in depth", 10]]};

@@ -6,7 +6,8 @@
   "said": "have initial 0:00 stay 2 seconds more longer Claude Whiteboard missing",
   "decision": "Intro card (Thumb design) extended from 2.3 s to 4.3 s on the source timeline",
   "how": "overlays.json intro_card.to = 4.3",
-  "check": "still at 10 s; player"
+  "check": "still at 10 s; player",
+  "in": "v1"
  },
  {
   "id": 2,
@@ -15,7 +16,8 @@
   "said": "remove the background where it shows IBM, instead place a slide that explains what we are doing",
   "decision": "Slide 'What we are doing' over 4.3 to 16.0 s; the real recording there showed an IBM chat and a personal Grok Bot window",
   "how": "overlays.json slides[0]",
-  "check": "OCR found the IBM chat title on screen 4 to 16 s; still at 10 s"
+  "check": "OCR found the IBM chat title on screen 4 to 16 s; still at 10 s",
+  "in": "v1"
  },
  {
   "id": 3,
@@ -24,7 +26,8 @@
   "said": "cover up personal stuff with slides",
   "decision": "Found 9 more windows with personal apps (OCR: Skool, LinkedIn, Gmail, Rag Manager lists) and covered each with a short explainer slide written from what is said at that moment. Covered, not cut, so the narration stays intact",
   "how": "scripts/find_personal_windows.py -> overlays.json slides[1..9]",
-  "check": "verify_export.py OCR of the final video"
+  "check": "verify_export.py OCR of the final video",
+  "in": "v1"
  },
  {
   "id": 4,
@@ -33,7 +36,8 @@
   "said": "01:08:14 typing speed up the back footage",
   "decision": "Timecode read as mm:ss:ff at 30 fps = 68.47 s. Typing runs to the send at about 79 s: played at 3x and muted (speech sped up is unusable; the typed text is on screen). Captions hidden inside it",
   "how": "overlays.json speedups[0]; cuts.ts playbackRate",
-  "check": "export is 10.5 s shorter there; time map in export_map.js"
+  "check": "export is 10.5 s shorter there; time map in export_map.js",
+  "in": "v1"
  },
  {
   "id": 5,
@@ -42,7 +46,8 @@
   "said": "blur the parts that say market participant onboarding 04:17:28 and similar places",
   "decision": "04:17:28 = 257.93 s. Blur the chat-title list in the app sidebar whenever it shows (two fixed boxes), sensitive words anywhere, and the mini sidebar inside the pasted screenshot (anchored to the line under it). Boxes are generated from OCR, not placed by hand",
   "how": "scripts/ocr_frames.swift, build_blurs.py -> overlays.json blurs",
-  "check": "real still at 4:17:28; verify_export.py"
+  "check": "real still at 4:17:28; verify_export.py",
+  "in": "v1"
  },
  {
   "id": 6,
@@ -51,7 +56,8 @@
   "said": "verify_export.py found sensitive text still visible at 6:30, 6:58, 8:36 and 12:22",
   "decision": "OCR samples every 2 s, so edges leaked 1 to 2 s. Pad every blur box by 1.5 s and slides by 0.5 s before and 1.8 s after; checker flags app lists only when 2+ lines show together",
   "how": "build_blurs.py PAD; overlays.json slides; verify_export.py",
-  "check": "re-run verify_export.py on the new export"
+  "check": "re-run verify_export.py on the new export",
+  "in": "v2"
  },
  {
   "id": 7,
@@ -60,7 +66,8 @@
   "said": "[export 0:03] in and out transition should not be there",
   "decision": "Removed every in/out effect: intro card and slides cut hard (no fades), slide bullets appear at once, caption phrases appear and disappear without spring or fade (the active word is still highlighted by colour). Audio fades at cuts stay (they prevent clicks)",
   "how": "Slide.tsx, ImageOverlays.tsx, Subtitles.tsx",
-  "check": "stills; ask the owner if a specific effect at 0:03 was meant"
+  "check": "stills; ask the owner if a specific effect at 0:03 was meant",
+  "in": "v2"
  },
  {
   "id": 8,
@@ -69,7 +76,8 @@
   "said": "[export 9:25] the hoover comes in the audio, cut all that part out",
   "decision": "Export 9:25 = source 572 s. Spectrogram and noise-floor analysis: the hoover starts at about 571 s and runs to the end of the recording (haze +12 dB). Cutting all of it would remove the planner canvas demo and the conclusion (about 3 min), so the hoover is removed with noise reduction learned from 592 to 622 s (hoover-only room tone), from 566 s on, with a 1.5 s crossfade. Result: haze back to 0 dB vs the clean part, speech level -0.5 dB",
   "how": "scripts/denoise_audio.py -> *-1080p-clean.mp4 (video stream copied); remotion/public/base.mp4 points to it",
-  "check": "numbers printed by the script (before/after per minute). Owner to listen; a hard cut remains possible if wanted"
+  "check": "numbers printed by the script (before/after per minute). Owner to listen; a hard cut remains possible if wanted",
+  "in": "v2"
  },
  {
   "id": 9,
@@ -78,7 +86,8 @@
   "said": "[export 11:20] remove the family picture part in the back",
   "decision": "Export 11:20 = source 687 s: while the app quits and reopens the desktop shows the wallpaper and a photo widget with people. Covered by the 'Update finished' slide, extended to 672.5 to 689.0 s (narration kept)",
   "how": "overlays.json slides[9]",
-  "check": "still at source 686 s shows the slide"
+  "check": "still at source 686 s shows the slide",
+  "in": "v2"
  },
  {
   "id": 10,
@@ -87,7 +96,8 @@
   "said": "[export 12:23] end the video with a summary part",
   "decision": "Added an ending after the footage: 'Summary: what we learned' slide, 11 s, four points taken from what is said (gradual rollout, no beta switch, update everything, use other artifact types). Silent",
   "how": "overlays.json outro[0]; Outro.tsx",
-  "check": "still at the first outro frame"
+  "check": "still at the first outro frame",
+  "in": "v2"
  },
  {
   "id": 11,
@@ -96,7 +106,8 @@
   "said": "at the end have the CTA to delivery pilot skool community to learn in depth",
   "decision": "Final 10 s card: 'Learn it in depth', 'Join the Delivery Pilot community on Skool', skool.com/delivery-pilot-8938, 'Link in the description and the pinned comment'. No income or result promises",
   "how": "overlays.json outro[1]",
-  "check": "still at the CTA frame"
+  "check": "still at the CTA frame",
+  "in": "v2"
  },
  {
   "id": 12,
@@ -105,7 +116,8 @@
   "said": "player needs speed up and speed down, J K L mapped; space bar to stop",
   "decision": "Space/K pause, L faster (1,2,4,8x), J slower (down to 0.25x), 1 normal, arrows 5 s, comma/period frame step, F fullscreen; ignored while typing",
   "how": "player.html",
-  "check": "simulated key presses in Chrome"
+  "check": "simulated key presses in Chrome",
+  "in": "site"
  },
  {
   "id": 13,
@@ -114,7 +126,8 @@
   "said": "have original and the latest export on the player page",
   "decision": "Original / Latest export buttons, side by side with a time map, export info, version-tagged feedback notes",
   "how": "player.html, export_map.js",
-  "check": "opened in Chrome"
+  "check": "opened in Chrome",
+  "in": "site"
  },
  {
   "id": 14,
@@ -123,7 +136,8 @@
   "said": "have the subtitles done / animated",
   "decision": "Whisper word timings -> animated captions (active word highlighted) and .srt/.vtt for YouTube; product names fixed (Claude, Grok bot, Homebrew)",
   "how": "build_subs.py, Subtitles.tsx",
-  "check": "stills; owner proof-read pending"
+  "check": "stills; owner proof-read pending",
+  "in": "v1"
  },
  {
   "id": 15,
@@ -132,7 +146,8 @@
   "said": "use whiteboard.jpeg from Downloads: mention in the video this was the expected feature to see, and use an arrow to the whiteboard feature",
   "decision": "Image card at 1:51 to 2:03 (source 111 to 123 s), where the narration says the whiteboard is missing: caption 'This is the feature I expected to see: Whiteboard', orange box around the Whiteboard (Beta) tile and an arrow pointing at it. Image stays local (remotion/public/img, not committed)",
   "how": "overlays.json images[0]; ImageOverlays.tsx ImageCard",
-  "check": "real still at source 116 s"
+  "check": "real still at source 116 s",
+  "in": "v3"
  },
  {
   "id": 16,
@@ -141,7 +156,8 @@
   "said": "logically group to menu",
   "decision": "Site menu grouped: Start, Make, Review, Links",
   "how": "nav.js GROUPS",
-  "check": "opened in Chrome"
+  "check": "opened in Chrome",
+  "in": "site"
  },
  {
   "id": 17,
@@ -150,6 +166,117 @@
   "said": "master spec should create a video faster by getting what is needed; include a prompt to execute on top",
   "decision": "Prompt to execute and a 'get what is needed' checklist added at the top of the spec",
   "how": "MASTER_SPEC.md top",
-  "check": "kit test from scratch"
+  "check": "kit test from scratch",
+  "in": "site"
+ },
+ {
+  "id": 18,
+  "when": "round 3",
+  "who": "owner",
+  "said": "add a feature to go to last review point",
+  "decision": "\u23ee Last point button (video + Feedback panel) and the R key jump to the last [orig|export m:ss] note (switching version, 3 s lead-in); without notes they go to where you stopped",
+  "how": "player.html",
+  "check": "tested in Chrome: cross-version jump, fallback, key, typing-safe",
+  "in": "site"
+ },
+ {
+  "id": 19,
+  "when": "round 3",
+  "who": "owner",
+  "said": "always remember that I need to be able to reuse this structure",
+  "decision": "All per-video facts moved into remotion/src/project.json; scripts, components, nav and templates read it; scripts/check_reuse.sh enforces it; 'Reuse first' rules at the top of the spec; kit carries blanks",
+  "how": "project.json, check_reuse.sh, MASTER_SPEC.md",
+  "check": "outputs regenerated byte-identical; kit tested from scratch",
+  "in": "site"
+ },
+ {
+  "id": 20,
+  "when": "round 3",
+  "who": "owner",
+  "said": "create a page for all artifacts used with timecodes, clickable, to see how they are used",
+  "decision": "Artifacts page: 44 elements, source+export timecodes, frames from the export, how used, request and decision, deep links into the player",
+  "how": "scripts/build_artifacts.py -> artifacts.html",
+  "check": "opened in Chrome: filters, search, detail view, spectrograms, next/prev",
+  "in": "site"
+ },
+ {
+  "id": 21,
+  "when": "round 3",
+  "who": "owner",
+  "said": "in preprod add objectives and key results, mention the value recognition and score it",
+  "decision": "OKR block in Pre-prod from assets/okr.json + measured metrics; value-recognition checkpoints with timecodes; weighted score 75.5/100 (B) with evidence and proposed improvements (not applied)",
+  "how": "scripts/measure_video.py, build_okr.py",
+  "check": "numbers measured from the export; page opened in Chrome",
+  "in": "site"
+ },
+ {
+  "id": 22,
+  "when": "round 4",
+  "who": "owner",
+  "said": "[export 4:04] onuralp whatsapp message to be blurred out on right top",
+  "decision": "A WhatsApp notification banner (sender and message) sits top right from source 251 to 256 s (export 4:04 = source 251). OCR missed it because the keyword had no space (the sender shows as \"Onur Alp\"). Blurred by a hand-placed box 250.0 to 256.3 s; \"onur alp\" added to sensitive_keywords so the export check flags it anywhere else",
+  "how": "overlays.json manual_blurs[0]; project.json",
+  "check": "still compared with the original frame: banner text unreadable",
+  "in": "v4"
+ },
+ {
+  "id": 23,
+  "when": "round 4",
+  "who": "owner",
+  "said": "[export 5:36] show the grokbot just to update this part",
+  "decision": "The slide now ends at 336.0 s; the real Grok Bot window shows from 336 to 346 s with its list of personal agent chats blurred (two boxes: menu closed, menu open) while the update chat and the open menu (\"New update available\", \"Weekly usage 76% used\") stay readable",
+  "how": "overlays.json slides + manual_blurs[1..2]",
+  "check": "stills at 337.5 s and 342 s",
+  "in": "v4"
+ },
+ {
+  "id": 24,
+  "when": "round 4",
+  "who": "owner",
+  "said": "[export 8:44] mention we are entering into world of exponentially more updates and deliveries in the lower third",
+  "decision": "Lower third at source 531 to 540 s: label \"Why keep updating\", text \"We are entering a world of exponentially more updates and deliveries\"; sits above the captions",
+  "how": "overlays.json lower_thirds[0]; ImageOverlays.tsx",
+  "check": "still at 535 s",
+  "in": "v4"
+ },
+ {
+  "id": 25,
+  "when": "round 4",
+  "who": "owner",
+  "said": "[export 8:59] claude not clothe, fix the subtitles, check other places as well; [export 11:38] not clothe but Claude",
+  "decision": "Caption fix \"clothe/clothes\" to \"Claude\" added to project.json. Searched the transcript for every look-alike (cloth, clod, claw, clou, clau): 5 slips in total (4 clothe, 1 clothes), all fixed; earlier fixes (cloud, growth bot, Kamba, hdml, homebrief) unchanged; .srt/.vtt regenerated",
+  "how": "project.json caption_fixes; build_subs.py",
+  "check": "no \"clothe\" left in subtitles.srt; searched by regex",
+  "in": "v4"
+ },
+ {
+  "id": 26,
+  "when": "round 4",
+  "who": "owner",
+  "said": "[export 9:29] there is a hover sound it needs to be cutted start; [export 10:20] cut till this timeline hover ends and the design is out. Show a hover gif and apologize",
+  "decision": "Cut source 574.4 to 625.2 s (50.8 s). The note said export 10:20 (= source 627.0) but the next sentence starts at 625.4, so the cut ends just before it instead of chopping \"Yes, now it's created\u2026\"; it starts in the silence before \"And let's see the double click\u2026\". A 6 s card is placed at the cut: \"Sorry! A hoover joined the recording here, so about 50 seconds are cut.\" with an animated cartoon hoover (frame-driven, like a GIF). Everything after moves 45 s earlier",
+  "how": "cuts.json; overlays.json inserts[0]; InsertCard.tsx; cuts.ts",
+  "check": "stills of the card and the frame after the cut; time map checked (card at export 9:27)",
+  "in": "v4"
+ },
+ {
+  "id": 27,
+  "when": "round 4",
+  "who": "owner",
+  "said": "[export 12:01] add the visual expected output that is in downloads folder",
+  "decision": "Owner chose to show whiteboard.jpeg again (the only new file in Downloads; the WhatsApp copy is byte-identical). Picture card at source 726 to 734 s (export 12:01 in v3), caption \"The expected output: Whiteboard\", orange box and arrow on the Whiteboard tile",
+  "how": "overlays.json images[1]",
+  "check": "card geometry reused from the 1:44 card (checked by still)",
+  "in": "v4"
+ },
+ {
+  "id": 28,
+  "when": "round 4",
+  "who": "owner",
+  "said": "name every export with a version number and mention that in the feedback",
+  "decision": "Every export is numbered and never overwritten: exports/<slug>-v<N>.mp4 with a registry (assets/exports.json); the player has a version selector, every note is tagged [vN m:ss] (or [orig m:ss]), copied feedback starts with a header naming the version, Drive and Downloads copies carry the number. v1 (not kept), v2 and v3 registered; this round is v4",
+  "how": "scripts/render_export.sh, register_export.py, player.html, exports.js",
+  "check": "tested in Chrome: selector, tags, jump across versions, legacy [export] tags, header",
+  "in": "site"
  }
 ]

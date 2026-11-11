@@ -12,7 +12,7 @@
 <h2>Chapters</h2><ul id="ch"></ul>
 <h2>Measured specs</h2>
 <table><tr><td>Resolution / fps</td><td>1920×1080, 30 fps</td></tr><tr><td>Length / size</td><td>{{LENGTH}}</td></tr><tr><td>Audio</td><td>{{LUFS}}</td></tr></table>
-</main><script src="nav.js"></script><script src="subs.js"></script><script>
+</main><script src="project.js"></script><script src="nav.js"></script><script src="subs.js"></script><script>
 const v=document.getElementById("v"),st=document.getElementById("st");
 v.onloadedmetadata=()=>{st.textContent="✅ Playing "+(v.src.startsWith("blob:")?"your local file":"long.mp4")+" ("+Math.floor(v.duration/60)+":"+String(Math.floor(v.duration%60)).padStart(2,"0")+")"};
 v.onerror=()=>{st.innerHTML="⚠️ No video found at <code>long.mp4</code>. Run <code>scripts/serve.sh</code> in the repo (it links your render and serves this page with seeking), or choose the file below. See <a href=\"run.html\">Run &amp; links</a>."};

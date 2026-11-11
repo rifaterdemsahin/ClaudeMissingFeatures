@@ -2,6 +2,7 @@ import { AbsoluteFill, Series } from "remotion";
 import overlays from "./overlays.json";
 import { SlideBody } from "./Slide";
 import { theme, FPS } from "./theme";
+import project from "./project.json";
 
 type Part = { seconds: number; kind: string; title: string; bullets?: string[]; line?: string; url?: string; note?: string };
 export const outroParts = (): Part[] => ((overlays as { outro?: Part[] }).outro ?? []) as Part[];
@@ -9,7 +10,7 @@ export const outroFrames = () => outroParts().reduce((n, p) => n + Math.round(p.
 
 const Cta = ({ p }: { p: Part }) => (
   <AbsoluteFill style={{ background: `linear-gradient(135deg, ${theme.bg}, #1d1030)`, fontFamily: theme.font, color: theme.fg, justifyContent: "center", alignItems: "center", textAlign: "center", padding: 120 }}>
-    <div style={{ fontSize: 44, fontWeight: 700, color: theme.accent, letterSpacing: 3, textTransform: "uppercase" }}>Claude Missing Features</div>
+    <div style={{ fontSize: 44, fontWeight: 700, color: theme.accent, letterSpacing: 3, textTransform: "uppercase" }}>{project.brand}</div>
     <div style={{ fontSize: 128, fontWeight: 900, margin: "20px 0 30px" }}>{p.title}</div>
     <div style={{ fontSize: 56, fontWeight: 700, marginBottom: 40 }}>{p.line}</div>
     <div style={{ fontSize: 76, fontWeight: 900, color: "#000", background: theme.accent, borderRadius: 24, padding: "20px 56px" }}>{p.url}</div>

@@ -4,7 +4,8 @@ import json, re, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 D = json.load(open(ROOT / "assets/ocr_frames.json")); subs = json.load(open(ROOT / "remotion/src/subs.json"))
 minl = int(sys.argv[1]) if len(sys.argv) > 1 else 2
-PAT = re.compile(r"skool|linkedin|gmail|rag manager|prospecting|nda agent|pexabo|rifat erdem|kaya|capgemini|gap proof|any ?desk|baby steps|liquidation|lead roles|grokbot|grok bot|outside ir35", re.I)
+P = json.load(open(ROOT / "remotion/src/project.json"))
+PAT = re.compile("|".join(P["personal_app_patterns"]), re.I)   # project.json
 hits = sorted(int(f[:4]) - 1 for f, L in D.items() if sum(1 for l in L if PAT.search(l["t"])) >= minl)
 spans = []
 if hits:

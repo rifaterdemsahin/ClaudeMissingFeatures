@@ -3,6 +3,7 @@ import { FPS, theme } from "./theme";
 import { Subtitles } from "./Subtitles";
 import { getSegments, videoFrames } from "./cuts";
 import { Outro, outroFrames } from "./Outro";
+import { InsertCard } from "./InsertCard";
 import { ImageOverlays } from "./ImageOverlays";
 
 const FADE = 3; // frames of audio fade at each cut
@@ -21,12 +22,16 @@ export const LongForm = () => {
       <Series>
         {segs.map((s, i) => (
           <Series.Sequence key={i} durationInFrames={s.frames}>
-            <OffthreadVideo
-              src={staticFile("base.mp4")}
-              startFrom={Math.round(s.src0 * FPS)}
-              volume={(f) => (s.mute ? 0 : fade(f, s.frames, i > 0, i < segs.length - 1))}
-              playbackRate={s.rate}
-            />
+            {s.insert ? (
+              <InsertCard ins={s.insert} />
+            ) : (
+              <OffthreadVideo
+                src={staticFile("base.mp4")}
+                startFrom={Math.round(s.src0 * FPS)}
+                volume={(f) => (s.mute ? 0 : fade(f, s.frames, i > 0, i < segs.length - 1))}
+                playbackRate={s.rate}
+              />
+            )}
           </Series.Sequence>
         ))}
       </Series>

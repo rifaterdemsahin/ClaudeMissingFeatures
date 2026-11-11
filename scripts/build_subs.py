@@ -5,26 +5,30 @@ import json, re, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 raw, offset = json.load(open(sys.argv[1])), float(sys.argv[2])
 cuts = sorted(json.load(open(ROOT / "remotion/src/cuts.json")))   # [[from,to],...] source seconds
-FIX = [(r"\b[Tt]he cloud\b", "Claude"), (r"\bcloud\b", "Claude"), (r"\b[Cc]louds?\b", "Claude"),
-       (r"\b[Gg]rowth ?bot\b|\bGrogbot\b", "Grok bot"), (r"\bhdml'?s\b", "HTML"), (r"\bKamba\b", "Canva"),
-       (r"\bhomebrief\b", "Homebrew"), (r"\bbrief upgrade\b", "brew upgrade"),
-       (r"\bwhite ?boards?\b", lambda m: m.group(0)[:1] + "hiteboard" + ("s" if m.group(0).endswith("s") else ""))]
+P = json.load(open(ROOT / "remotion/src/project.json"))
+FIX = [(x, y) for x, y in P["caption_fixes"]]   # project.json: ASR slips -> correct names
 def fix(t):
     for a, b in FIX: t = re.sub(a, b, t)
     return re.sub(r"\s+", " ", t).strip()
 OV = json.load(open(ROOT / "remotion/src/overlays.json"))
 SPEED = sorted(OV.get("speedups", []), key=lambda x: x["from"])
 TOTAL = int(re.search(r"DURATION = (\d+)", (ROOT / "remotion/src/theme.ts").read_text()).group(1)) / 30   # source seconds from theme.ts
-def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/src/cuts.ts
+INSERTS_SRC = sorted(OV.get("inserts", []), key=lambda x: x["at"])
+INSERTS = []   # [out0_seconds, seconds, source_point, title] : cards placed on the timeline (e.g. at a cut)
+def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/src/cuts.ts (inserts shift later export times)
     kept, pos = [], 0.0
     for a, b in cuts:
         if a > pos: kept.append((pos, a))
         pos = max(pos, b)
     if pos < TOTAL: kept.append((pos, TOTAL))
-    segs, out = [], 0.0
+    segs, out, pending = [], 0.0, list(INSERTS_SRC)
+    def flush(up_to):
+        nonlocal out
+        while pending and pending[0]["at"] <= up_to + 1e-6:
+            ins = pending.pop(0); INSERTS.append([round(out, 3), ins["seconds"], ins["at"], ins.get("title", "")]); out += ins["seconds"]
     def push(a, b, r, m):
         nonlocal out
-        if b > a: segs.append([a, b, r, m, out]); out += (b - a) / r
+        if b > a: flush(a); segs.append([a, b, r, m, out]); out += (b - a) / r
     for ka, kb in kept:
         p = ka
         for sp in SPEED:
@@ -33,9 +37,10 @@ def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/
             if a > p: push(p, a, 1, False)
             push(a, b, sp["rate"], bool(sp.get("mute"))); p = b
         if p < kb: push(p, kb, 1, False)
+    flush(1e9)
     return segs
 SEGS = segments()
-_t = SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2]; OUTRO = []
+_t = SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2] + sum(i[1] for i in INSERTS if i[0] >= SEGS[-1][4]); OUTRO = []; _t_total = _t
 for _p in OV.get("outro", []): OUTRO.append([round(_t, 2), _p["title"], _p["seconds"]]); _t += _p["seconds"]
 def remap(t):  # source seconds -> final (export) seconds; None inside a cut
     for a, b, r, m, o in SEGS:
@@ -78,5 +83,5 @@ def wrap(c):
     mid = len(c) // 2; i = min((m.start() for m in re.finditer(" ", c)), key=lambda p: abs(p - mid)); return c[:i] + "\n" + c[i + 1:]
 (ROOT / "subtitles.srt").write_text("\n".join(f"{i+1}\n{ts(a,',')} --> {ts(b,',')}\n{wrap(c)}\n" for i, (a, b, c) in enumerate(final)))
 (ROOT / "subtitles.vtt").write_text("WEBVTT\n\n" + "\n".join(f"{ts(a,'.')} --> {ts(b,'.')}\n{wrap(c)}\n" for a, b, c in final))
-(ROOT / "export_map.js").write_text("window.EXPORT_MAP = " + json.dumps({"segs": [[round(a, 3), round(b, 3), r, m, round(o, 3)] for a, b, r, m, o in SEGS], "total": round(SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2], 3), "outro": OUTRO}) + ";")
+(ROOT / "export_map.js").write_text("window.EXPORT_MAP = " + json.dumps({"segs": [[round(a, 3), round(b, 3), r, m, round(o, 3)] for a, b, r, m, o in SEGS], "total": round(_t_total, 3), "inserts": INSERTS, "outro": OUTRO}) + ";")
 print(len(cues), "cues,", len(final), "after cuts,", "word timings" if raw["segments"][0].get("words") else "estimated word timings")

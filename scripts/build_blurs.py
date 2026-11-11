@@ -5,7 +5,8 @@ import json, re, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 D = json.load(open(ROOT / "assets/ocr_frames.json"))
 OV = json.load(open(ROOT / "remotion/src/overlays.json"))
-KEYWORDS = r"market particip|employment gap|capgemini|gap proof|kaya|lacan|incident report|onboarding bot|pexabo"
+P = json.load(open(ROOT / "remotion/src/project.json"))
+KEYWORDS = "|".join(P["sensitive_keywords"])   # project.json
 NAV = re.compile(r"^(New|Search|Projects|Artifacts|Scheduled|Dispatch( Beta)?|Design|Customize|Pinned.*|View all|Recents.*|Show( \d+)? more|Erdem.*|Claude|Docs|Slides|Data)$", re.I)
 covered = [(OV["intro_card"]["from"], OV["intro_card"]["to"])] + [(s["from"], s["to"]) for s in OV["slides"]]
 is_covered = lambda t: any(a <= t < b for a, b in covered)

@@ -54,7 +54,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | Report | the above | `report.py` | `REPORT.md` | **no** |
 | Blur boxes | OCR, slides | `build_blurs.py` | `overlays.json` (`blurs`) | yes |
 | Noise removal | base video | `denoise_audio.py` | `~/Downloads/<slug>-1080p-clean.mp4` | no (video) |
-| Export | base video, `overlays.json`, `cuts.json`, `subs.json` | `npm run render` | `remotion/out/long.mp4` | no (video) |
+| Export | base video, `overlays.json`, `cuts.json`, `subs.json` | `scripts/render_export.sh` | `exports/<slug>-vN.mp4`, `remotion/out/long.mp4` (latest), `assets/exports.json`, `exports.js` | media no; registry yes |
 | Privacy check | export | `verify_export.py` | `assets/export_leaks.json` | **no** |
 | EDL | decisions, overlays | `build_edl.py` | `EDL.md` | yes |
 | Site | `*.md` | `build_site.py` | `spec.html`, `edl.html`, `environment.html`, `metadata.html`, `readme.html` | yes |
@@ -70,6 +70,12 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `scripts/denoise_audio.py` | remove steady noise (hoover, fan) with `noisereduce`; `--scan` finds where it starts |
 | `scripts/build_chapters.py` | chapters on the source and export timelines (`assets/chapters.json`) -> `chapters.js`, `metadata.md` |
 | `scripts/check_env.sh` | verifies this whole page on the machine |
+| `scripts/build_all.sh`, `check_site.py` | build every page of the site in order, then check menu items, links and scripts |
+| `scripts/render_export.sh`, `register_export.py` | numbered exports (`exports/<slug>-vN.mp4`) and their registry `assets/exports.json` |
+| `scripts/check_reuse.sh` | fails if reusable code contains this video's words (from `project.json`) |
+| `scripts/measure_video.py`, `build_okr.py` | measure the export, then write the OKR and value-recognition score into the Pre-prod page (`assets/okr.json`) |
+| `scripts/build_artifacts.py` | the Artifacts page: every added element with timecodes, frames from the export, links into the player |
+| `remotion/src/project.json` | the one per-video config: title, community, sensitive words, caption fixes |
 | `scripts/verify_export.py` | OCR the final video for leaked text |
 | `scripts/build_edl.py`, `build_site.py`, `build_architecture.py` | docs and site pages |
 | `scripts/serve.sh`, `pull_kit.sh`, `build_kit.sh`, `check_env.sh` | serve, kit, environment |

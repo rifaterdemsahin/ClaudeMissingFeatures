@@ -1,0 +1,26 @@
+{
+ "voice": "ZOOM0024.WAV",
+ "voice_dur": 754.83,
+ "voice_start": 4.75,
+ "clips": [
+  {
+   "clip": "2026-11-11 12-13-23.mp4",
+   "offset": 4.75,
+   "dur": 481.34,
+   "conf": 5.5,
+   "keep": 481.34,
+   "gap_to_next": 0.0
+  },
+  {
+   "clip": "2026-11-11 12-21-25.mp4",
+   "offset": 486.09,
+   "dur": 273.85,
+   "conf": 4.0,
+   "keep": 268.74,
+   "gap_to_next": null
+  }
+ ],
+ "total_s": 750.08,
+ "frames": 22501,
+ "_note": "measured by cross-correlation during the first sync (same schema as scripts/build_base.py)"
+}

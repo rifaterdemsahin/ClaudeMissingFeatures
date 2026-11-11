@@ -1,0 +1,63 @@
+{
+ "_doc": "OKRs, value proposition and value-recognition score for ONE video. Numbers in {braces} are filled from assets/metrics.json (scripts/measure_video.py). Re-run scripts/build_okr.py to refresh preprod.html.",
+ "value_proposition": "In under 13 minutes a viewer whose Claude app does not show the new Whiteboard learns exactly what to check (Settings > Capabilities, plan, app and Mac updates, old copies), sees what the missing feature looks like, and knows what to do while it has not reached their account.",
+ "objectives": [
+  {"id": "O1", "title": "A viewer who cannot see the new Whiteboard leaves knowing what to check and what to do next",
+   "krs": [
+    {"id": "KR1.1", "text": "The problem is on screen within 10 s", "metric": "time_to_problem_s", "op": "<=", "target": 10, "unit": "s"},
+    {"id": "KR1.2", "text": "The first concrete action is shown within 30 s", "metric": "time_to_first_action_s", "op": "<=", "target": 30, "unit": "s"},
+    {"id": "KR1.3", "text": "A recap lists at least 4 concrete takeaways at the end", "metric": "summary_points", "op": ">=", "target": 4, "unit": "points"},
+    {"id": "KR1.4", "text": "Average view duration of at least 40% (YouTube Analytics, first 28 days)", "manual": true, "target": "40%"},
+    {"id": "KR1.5", "text": "At least 10 comments saying it helped or that they found the answer (first 28 days)", "manual": true, "target": "10"}]},
+  {"id": "O2", "title": "Turn viewers into Delivery Pilot community members",
+   "krs": [
+    {"id": "KR2.1", "text": "The community card stays on screen at least 8 s with the URL", "metric": "cta_seconds", "op": ">=", "target": 8, "unit": "s"},
+    {"id": "KR2.2", "text": "The URL is in the description and the pinned comment", "metric": "url_in_description_and_pinned", "op": "true"},
+    {"id": "KR2.3", "text": "At least 30 clicks on the Skool link in 14 days", "manual": true, "target": "30"},
+    {"id": "KR2.4", "text": "At least 5 new members say this video brought them (join question), 14 days", "manual": true, "target": "5"}]},
+  {"id": "O3", "title": "Ship a clean, private and reusable video, fast",
+   "krs": [
+    {"id": "KR3.1", "text": "No private text visible in the export (OCR check of every 2 s)", "metric": "privacy_leaks", "op": "<=", "target": 0, "unit": "lines"},
+    {"id": "KR3.2", "text": "Integrated loudness within 1.5 LU of -14 LUFS", "metric": "loudness_lufs", "op": "within", "target": -14, "tol": 1.5, "unit": "LUFS"},
+    {"id": "KR3.3", "text": "True peak at or below -1.5 dBFS", "metric": "true_peak_dbfs", "op": "<=", "target": -1.5, "unit": "dBFS"},
+    {"id": "KR3.4", "text": "Steady background noise at most 5 dB above the clean part after the fix", "metric": "noise_haze_max_db_after_fix", "op": "<=", "target": 5, "unit": "dB"},
+    {"id": "KR3.5", "text": "Dead air (silence over 3 s) at most 5% of the runtime", "metric": "dead_air_percent", "op": "<=", "target": 5, "unit": "%"},
+    {"id": "KR3.6", "text": "At least 8 chapters", "metric": "chapters", "op": ">=", "target": 8, "unit": "chapters"},
+    {"id": "KR3.7", "text": "Every chapter at least 10 s (YouTube rule)", "metric": "chapter_min_len_s", "op": ">=", "target": 10, "unit": "s"}]}
+ ],
+ "score": {
+  "scale": "Each dimension 0 to 10 (0 = absent, 5 = present but weak, 8 = good, 10 = excellent and proven). Weighted to 100. This is the producer's pre-publish estimate from measured evidence; replace it with the real numbers after 28 days.",
+  "rows": [
+   {"dimension": "Promise clarity (title, thumbnail, hook)", "weight": 15, "score": 6,
+    "evidence": "Thumbnail and title card say the problem plainly (\"Claude Whiteboard MISSING?\"). But the title ends with \"(and the Fix)\" while the honest outcome is that the feature had not reached the account yet and the fix is to update and wait.",
+    "improve": "Retitle to promise what is delivered: \"…What to Check While You Wait\". Raises clarity and avoids a trust penalty.", "gain": 3.0},
+   {"dimension": "Time to value", "weight": 15, "score": 9,
+    "evidence": "Problem on screen at {time_to_problem_s} s (title card, then \"What we are doing\" slide); first action (Settings, Capabilities) at {time_to_first_action_s} s.",
+    "improve": "Already inside the targets.", "gain": 0},
+   {"dimension": "Proof on screen", "weight": 10, "score": 9,
+    "evidence": "A picture card shows the expected Whiteboard tile with an arrow, then the live Artifacts page without it; the chat answer is on screen.",
+    "improve": "Optional: repeat the expected-feature card at the summary.", "gain": 0.5},
+   {"dimension": "Actionability", "weight": 15, "score": 7,
+    "evidence": "Summary lists {summary_points} takeaways; steps are shown live (quit and reopen, update the Mac, remove the old copy). The main answer is \"wait\", which limits how much a viewer can do.",
+    "improve": "Add a final checklist slide with the exact menu path and the commands used.", "gain": 1.5},
+   {"dimension": "Pacing", "weight": 15, "score": 6,
+    "evidence": "{dead_air_percent}% dead air ({dead_air_seconds} s while the canvas builds) and {stutter_spots} stutter spots are still in; runtime {export_seconds} s for a mostly negative result; speech pace {words_per_minute} words per minute is fine.",
+    "improve": "Speed up the {longest_silence_s} s silence (3x) and cut the stutters (EDL candidates, owner decides): about 20 s shorter.", "gain": 3.0},
+   {"dimension": "Audio and picture quality", "weight": 10, "score": 8,
+    "evidence": "Loudness {loudness_lufs} LUFS, true peak {true_peak_dbfs} dBFS (0.3 dB over the -1.5 target), hoover noise now {noise_haze_max_db_after_fix} dB above the clean part, animated captions, no transitions, {blur_boxes} blur boxes and {privacy_leaks} private lines left.",
+    "improve": "Lower the limiter ceiling by 0.5 dB at export.", "gain": 1.0},
+   {"dimension": "Trust and honesty", "weight": 10, "score": 9,
+    "evidence": "Shows the negative result openly, makes no income or result promises, states it is one account and one Mac, privacy check passed.",
+    "improve": "Fix the title promise (see above).", "gain": 0.5},
+   {"dimension": "Structure and discoverability", "weight": 5, "score": 7,
+    "evidence": "{chapters} chapters, shortest {chapter_min_len_s} s; recap at the end; description, tags and pinned comment written.",
+    "improve": "Put a 5 s teaser of the answer in the first minute.", "gain": 0.5},
+   {"dimension": "Call-to-action fit", "weight": 5, "score": 8,
+    "evidence": "Community card after the recap for {cta_seconds} s with the URL; URL also in the description and pinned comment; one ask, no promises.",
+    "improve": "Say the community name aloud in a final line.", "gain": 0.5}
+  ]},
+ "after_publish": [
+  "Day 2: check impressions click-through and the first 30 s retention against KR1.1 and KR1.4.",
+  "Day 14: Skool link clicks (KR2.3) and the join question \"Which video brought you here?\" (KR2.4).",
+  "Day 28: average view duration (KR1.4) and helpful comments (KR1.5); then replace the pre-publish scores with real evidence."]
+}

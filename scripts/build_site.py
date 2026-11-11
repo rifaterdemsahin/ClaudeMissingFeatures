@@ -7,8 +7,8 @@ MD = {"MASTER_SPEC.md": ("spec.html", "Master spec v3"),
       "ENVIRONMENT.md": ("environment.html", "Environment"),
       "EDL.md": ("edl.html", "EDL")}
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Claude Missing Features: {title}</title></head><body><main><div id="md"></div><pre id="raw" hidden></pre></main>
-<script src="nav.js"></script>
+<title>{proj}: {title}</title></head><body><main><div id="md"></div><pre id="raw" hidden></pre></main>
+<script src="project.js"></script><script src="nav.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script>
 const SRC = {src};
@@ -22,9 +22,11 @@ if (window.marked) {{
   }});
 }} else {{ raw.hidden = false; raw.textContent = SRC; }}
 </script></body></html>"""
+PROJ = json.load(open(ROOT / "remotion/src/project.json"))
+(ROOT / "project.js").write_text("window.PROJECT = " + json.dumps(PROJ, ensure_ascii=False) + ";")   # read by nav.js (brand, community link, notes footer)
 for src, (out, title) in MD.items():
     if not (ROOT / src).exists(): continue
     text = (ROOT / src).read_text()
     if text.startswith("---\n"): text = text.split("---\n", 2)[2]
-    html = PAGE.format(title=title, src=json.dumps(text).replace("</", "<\\/"), copy="true" if src == "metadata.md" else "false")
+    html = PAGE.format(proj=PROJ["title"], title=title, src=json.dumps(text).replace("</", "<\\/"), copy="true" if src == "metadata.md" else "false")
     (ROOT / out).write_text(html); print("built", out)

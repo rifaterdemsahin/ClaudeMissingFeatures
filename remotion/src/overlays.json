@@ -37,7 +37,7 @@
   },
   {
    "from": 324.5,
-   "to": 348.4,
+   "to": 336.0,
    "title": "Keeping tools up to date",
    "bullets": [
     "Check Claude is installed and current",
@@ -359,6 +359,28 @@
     "y2": 322
    },
    "why": "owner image: the Whiteboard tile that should have appeared in Artifacts"
+  },
+  {
+   "from": 726.0,
+   "to": 734.0,
+   "src": "whiteboard.jpeg",
+   "w": 1600,
+   "h": 1169,
+   "caption": "The expected output:",
+   "caption2": "Whiteboard",
+   "highlight": {
+    "x": 1073,
+    "y": 255,
+    "w": 182,
+    "h": 128
+   },
+   "arrow": {
+    "x1": 1535,
+    "y1": 215,
+    "x2": 1272,
+    "y2": 322
+   },
+   "why": "owner note at export 12:01: the visual of the expected output (whiteboard.jpeg from Downloads) shown again while the closing points are spoken"
   }
  ],
  "outro": [
@@ -380,6 +402,53 @@
    "line": "Join the Delivery Pilot community on Skool",
    "url": "skool.com/delivery-pilot-8938",
    "note": "Link in the description and the pinned comment"
+  }
+ ],
+ "manual_blurs": [
+  {
+   "from": 250.0,
+   "to": 256.3,
+   "x": 1430,
+   "y": 34,
+   "w": 362,
+   "h": 100,
+   "why": "WhatsApp notification banner (sender and message) at the top right"
+  },
+  {
+   "from": 336.0,
+   "to": 339.2,
+   "x": 128,
+   "y": 250,
+   "w": 268,
+   "h": 680,
+   "why": "Grok Bot agent list (personal chats), update chat left visible"
+  },
+  {
+   "from": 339.2,
+   "to": 346.0,
+   "x": 128,
+   "y": 250,
+   "w": 268,
+   "h": 455,
+   "why": "Grok Bot agent list above the open update menu (the menu with the usage figure stays visible)"
+  }
+ ],
+ "lower_thirds": [
+  {
+   "from": 531.0,
+   "to": 540.0,
+   "label": "Why keep updating",
+   "text": "We are entering a world of exponentially more updates and deliveries"
+  }
+ ],
+ "inserts": [
+  {
+   "at": 574.4,
+   "seconds": 6,
+   "kind": "apology",
+   "animation": "hoover",
+   "title": "Sorry!",
+   "text": "A hoover joined the recording here, so about 50 seconds are cut."
   }
  ]
 }

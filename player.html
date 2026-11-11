@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Claude Missing Features: player</title>
+<title>player</title>
 <style>
 .vbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
 button.off{background:#2a2a38;color:#ddd}
@@ -10,7 +10,13 @@ button.off{background:#2a2a38;color:#ddd}
 #pane2{display:none}#vids.cmp #pane2{display:block}
 .box{background:#1a1a24;border-radius:8px;padding:8px 12px;margin:8px 0}
 .grow{flex:1}
-.addnote{position:absolute;right:12px;bottom:58px;z-index:3;opacity:.92;box-shadow:0 2px 10px rgba(0,0,0,.5)}.addnote:hover{opacity:1}.addnote kbd{background:rgba(0,0,0,.25);border-color:rgba(0,0,0,.3);color:#000}
+.seekbar{display:flex;gap:8px;margin:6px 0 2px}.seekbar button{min-width:96px}
+.saved{display:inline-block;margin-left:10px;color:#4ade80;font-weight:700;font-size:13px;opacity:0}
+.saved.on{animation:savedpop 1.8s ease-out}.saved.warn{color:#fbbf24}
+@keyframes savedpop{0%{opacity:0;transform:scale(.6)}14%{opacity:1;transform:scale(1.18)}28%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+#fb.flash{animation:savedglow 1.2s ease-out}
+@keyframes savedglow{0%{box-shadow:0 0 0 0 rgba(74,222,128,.85);border-color:#4ade80}100%{box-shadow:0 0 0 14px rgba(74,222,128,0);border-color:#2a2a38}}
+.vbtns{position:absolute;right:12px;bottom:58px;z-index:3;display:flex;gap:6px}.vbtns button{opacity:.92;box-shadow:0 2px 10px rgba(0,0,0,.5)}.vbtns button:hover{opacity:1}.vbtns .off{background:#3a3a4c;color:#fff}.addnote kbd{background:rgba(0,0,0,.25);border-color:rgba(0,0,0,.3);color:#000}
 .pn{background:#14141c;border:1px solid #2a2a38;border-radius:10px;margin:10px 0}
 .pn>summary{cursor:pointer;padding:10px 14px;font-weight:700;list-style:none;user-select:none}
 .pn>summary::-webkit-details-marker{display:none}
@@ -21,7 +27,7 @@ kbd{background:#2a2a38;border:1px solid #444;border-radius:4px;padding:0 6px;fon
 <h1>▶️ Player &amp; output</h1>
 <div class="vbar">
   <button id="bo">🎞️ Original</button>
-  <button id="be" class="off">✨ Latest export</button>
+  <button id="be" class="off">✨ Latest export</button><select id="vsel" title="Choose an export version" style="display:none"></select>
   <label><input type="checkbox" id="cmp"> Side by side</label>
   <label><input type="checkbox" id="cc" checked> Subtitles (original)</label>
   <label>Speed <select id="s"><option>0.25</option><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option><option>3</option><option>4</option><option>8</option></select></label>
@@ -30,19 +36,21 @@ kbd{background:#2a2a38;border:1px solid #444;border-radius:4px;padding:0 6px;fon
 </div>
 <p id="st" class="box">Loading video…</p>
 <div id="vids">
-  <div class="pane"><span class="tag" id="tag1">Original</span><span class="tag" id="kb" style="left:auto;right:10px;display:none"></span><button id="an" class="addnote" title="Pause and add a note at this moment (M)">📍 Add note <kbd>M</kbd></button><video id="v" controls src="long.mp4"></video></div>
+  <div class="pane"><span class="tag" id="tag1">Original</span><span class="tag" id="kb" style="left:auto;right:10px;display:none"></span><div class="vbtns"><button id="lpv" class="off" title="Jump to the last feedback note, or where you last stopped (R)">⏮ Last point <kbd>R</kbd></button><button id="an" class="addnote" title="Pause and add a note at this moment (M)">📍 Add note <kbd>M</kbd></button></div><video id="v" controls src="long.mp4"></video></div>
   <div class="pane" id="pane2"><span class="tag">Latest export (burned-in subtitles)</span><video id="v2" muted playsinline></video></div>
 </div>
 
-<details class="pn" data-key="fb" open><summary>📝 Feedback (timestamped)</summary><div class="pnb">
-<p><button id="ts">📍 Insert current time</button> <button id="fc">Copy feedback</button> <button id="fx" class="off">🗑️ Clear feedback</button> <button id="fu" style="display:none">↩ Undo clear</button> <span style="opacity:.7">Notes are tagged <code>[orig m:ss]</code> or <code>[export m:ss]</code> by the version you are watching.</span></p>
+<div class="seekbar"><button id="sb" class="off" title="Back 1 second (hold to repeat; Shift+←)">⏪ −1 s</button><span class="grow"></span><button id="sf" class="off" title="Forward 1 second (hold to repeat; Shift+→)">+1 s ⏩</button></div>
+
+<details class="pn" data-key="fb" open><summary>📝 Feedback (timestamped) <span id="saved" class="saved">✔ Saved</span></summary><div class="pnb">
+<p><button id="ts">📍 Insert current time</button> <button id="fc">Copy feedback</button> <button id="fx" class="off">🗑️ Clear feedback</button> <button id="fu" style="display:none">↩ Undo clear</button> <button id="lp" class="off" title="Jump to your last note (R)">⏮ Last review point: none yet</button> <span style="opacity:.7">Notes are tagged with the version you are watching: <code>[v4 m:ss]</code> for export v4, <code>[orig m:ss]</code> for the original. Copy feedback adds a header naming the version.</span></p>
 <p style="opacity:.8;margin:4px 0">Fastest way: press <kbd>M</kbd> (or the 📍 button on the video) to pause and stamp the time, type your note, then <kbd>Ctrl/⌘ + Enter</kbd> to carry on watching.</p>
 <textarea id="fb" style="width:100%;height:180px;background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:8px;box-sizing:border-box" placeholder="Click Insert current time, then type your note. Saved in this browser. Copy and paste it to Claude."></textarea>
 </div></details>
 
 <details class="pn" data-key="ch" open><summary>📑 Chapters</summary><div class="pnb"><ul id="ch"></ul></div></details>
 
-<details class="pn" data-key="keys"><summary>⌨️ Keyboard shortcuts</summary><div class="pnb"><p>Click outside text boxes first. <kbd>Space</kbd>/<kbd>K</kbd> pause · <kbd>L</kbd> faster (1→2→4→8×) · <kbd>J</kbd> slower (÷2 down to 0.25×) · <kbd>1</kbd> normal speed · <kbd>←</kbd>/<kbd>→</kbd> ±5 s · <kbd>,</kbd>/<kbd>.</kbd> one frame back/forward · <kbd>F</kbd> fullscreen · <kbd>M</kbd> add a note at this moment (pauses; <kbd>Ctrl/⌘ + Enter</kbd> in the note box resumes)</p></div></details>
+<details class="pn" data-key="keys"><summary>⌨️ Keyboard shortcuts</summary><div class="pnb"><p>Click outside text boxes first. <kbd>Space</kbd>/<kbd>K</kbd> pause · <kbd>L</kbd> faster (1→2→4→8×) · <kbd>J</kbd> slower (÷2 down to 0.25×) · <kbd>1</kbd> normal speed · <kbd>←</kbd>/<kbd>→</kbd> ±5 s (<kbd>Shift</kbd> = ±1 s, also the ⏪ ⏩ buttons under the video) · <kbd>,</kbd>/<kbd>.</kbd> one frame back/forward · <kbd>F</kbd> fullscreen · <kbd>M</kbd> add a note at this moment (pauses; <kbd>Ctrl/⌘ + Enter</kbd> in the note box resumes) · <kbd>R</kbd> go to the last review point (your last note, or where you stopped watching)</p></div></details>
 
 <details class="pn" data-key="src"><summary>🧰 Sources and tools</summary><div class="pnb">
 <p id="expinfo" class="box"></p>
@@ -59,15 +67,20 @@ kbd{background:#2a2a38;border:1px solid #444;border-radius:4px;padding:0 6px;fon
 <tr><td>Subtitles</td><td>track from <code>subs.js</code> (toggle above)</td><td>burned in, animated word highlight</td></tr>
 <tr><td>Edits</td><td>none</td><td>intro card 0–4.3 s, 10 explainer slides over personal windows, blurred chat titles, Whiteboard picture card with arrow, typing sped up 3x (1:08–1:19, muted), hoover noise removed, summary + community card at the end</td></tr></table>
 </div></details>
-</main><script src="nav.js"></script><script src="subs.js"></script><script src="export_map.js"></script><script src="chapters.js"></script><script>
+</main><script src="project.js"></script><script src="nav.js"></script><script src="subs.js"></script><script src="export_map.js"></script><script src="exports.js"></script><script src="chapters.js"></script><script>
 const $=id=>document.getElementById(id), v=$("v"), v2=$("v2"), st=$("st");
-const SRC={orig:"long.mp4",exp:"export.mp4"}, NAME={orig:"Original",exp:"Latest export"};
+const EXPS=(window.EXPORTS||[]).filter(e=>e.file), LATEST=EXPS.length?EXPS[EXPS.length-1].v:null;
+let curV=LATEST; try{const x=+localStorage.getItem("player:xv");if(EXPS.some(e=>e.v===x))curV=x}catch(e){}
+const entry=()=>EXPS.find(e=>e.v===curV);
+const SRC={orig:"long.mp4",get exp(){const e=entry();return e?e.file:"export.mp4"}}, NAME={orig:"Original",get exp(){return curV?"Export v"+curV+(curV===LATEST?" (latest)":""):"Latest export"}};
+const vtag=()=>ver==="exp"&&curV?"v"+curV:(ver==="exp"?"export":"orig");        // tag written into every feedback note
+const tagOf=p=>p.ver==="orig"?"orig":"v"+(p.v||curV);
 let ver="orig"; try{ver=localStorage.getItem("player:ver")==="exp"?"exp":"orig"}catch(e){}
 const fmt=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
 // source <-> export time maps (from export_map.js: [src0,src1,rate,mute,out0])
-const M=window.EXPORT_MAP;
+let M=(entry()&&entry().map)||window.EXPORT_MAP;
 const srcToOut=t=>{if(!M)return t;for(const [a,b,r,m,o] of M.segs){if(t>=a&&t<b)return o+(t-a)/r;if(t<a)return o;}return M.total};
-const outToSrc=o=>{if(!M)return o;for(const [a,b,r,m,o0] of M.segs){const d=(b-a)/r;if(o>=o0&&o<o0+d)return a+(o-o0)*r;}return M.segs[M.segs.length-1][1]};
+const outToSrc=o=>{if(!M)return o;if(M.inserts)for(const [o0,d,at] of M.inserts)if(o>=o0&&o<o0+d)return at;for(const [a,b,r,m,o0] of M.segs){const d=(b-a)/r;if(o>=o0&&o<o0+d)return a+(o-o0)*r;}return M.segs[M.segs.length-1][1]};
 const map=(t,from,to)=>from===to?t:from==="orig"?srcToOut(t):outToSrc(t);
 
 function msg(){ // status for the main video
@@ -78,7 +91,7 @@ function msg(){ // status for the main video
 }
 function chapters(){
   const C=[[0,"What we are looking for: the new Whiteboard feature"],[22,"No beta toggle? Settings and Capabilities"],[60,"Asking Claude how to find the Whiteboard"],[102,"Artifacts tab: Design, but no Whiteboard"],[207,"Screenshot, pin the chat, ask with the image"],[247,"Claude: your plan qualifies, rollout not reached you"],[253,"Quit, reopen, update the machine"],[351,"Still not there"],[395,"Versions, removing the old copy"],[452,"Planning my week on a canvas"],[494,"Infinite canvas vs classic canvas"],[542,"What we learned"],[608,"The result: calendar and class series"],[667,"Update done, still no Whiteboard"],[726,"Use the other artifact types meanwhile"]]; // source seconds
-  const L=(window.CHAPTERS?(ver==="exp"?window.CHAPTERS.exp:window.CHAPTERS.src):C.map(([s,n])=>[ver==="exp"?srcToOut(s):s,n]));
+  const src=window.CHAPTERS?window.CHAPTERS.src:C, L=ver==="orig"?src:(window.CHAPTERS&&curV===LATEST?window.CHAPTERS.exp:[...src.map(([s,n])=>[srcToOut(s),n]),...((M&&M.outro)||[]).map(o=>[o[0],o[1]])]);
   $("ch").innerHTML=L.map(([t,n])=>`<li><a href="#" data-s="${t}">${fmt(t)}</a> ${n}</li>`).join("");
 }
 function setVer(k,keep=true){
@@ -112,16 +125,27 @@ $("cmp").onchange=e=>{
   }else{clearInterval(sync);v2.pause();v2.removeAttribute("src");v2.load()}
 };
 
-// export info (works over http)
-fetch("export.mp4",{method:"HEAD"}).then(r=>{if(!r.ok)throw 0;const mb=(r.headers.get("content-length")/1048576).toFixed(0),lm=r.headers.get("last-modified");
-  $("expinfo").textContent="✨ export.mp4: "+mb+" MB, rendered "+(lm?new Date(lm).toLocaleString():"?")}).catch(()=>{$("expinfo").innerHTML="✨ No <code>export.mp4</code> yet (render in <code>remotion/</code> with <code>npm run render</code>, then run <code>scripts/serve.sh</code>)."});
+// export info + version list (registry: assets/exports.json via exports.js)
+function infoExp(){const e=entry(),all=(window.EXPORTS||[]).slice().reverse().map(x=>`<li><b>v${x.v}</b>${x.v===LATEST?" (latest)":""} · ${x.rendered} · ${x.seconds} s · ${x.size_mb} MB${x.file?"":" · <i>not kept</i>"}<br><span style="opacity:.75">${x.notes||""}</span></li>`).join("");
+  fetch(SRC.exp,{method:"HEAD"}).then(r=>{if(!r.ok)throw 0;$("expinfo").innerHTML="✨ <b>"+NAME.exp+"</b>: "+(r.headers.get("content-length")/1048576).toFixed(0)+" MB"+(e?", rendered "+e.rendered:"")+(all?"<ul>"+all+"</ul>":"")}).catch(()=>{$("expinfo").innerHTML="✨ No export file yet. Render one with <code>scripts/render_export.sh \"what changed\"</code> (it numbers it v1, v2, …) and restart <code>scripts/serve.sh</code>."+(all?"<ul>"+all+"</ul>":"")})}
+function labels(){$("be").textContent="✨ "+(curV?"Export v"+curV+(curV===LATEST?" (latest)":""):"Latest export");const s=$("vsel");s.innerHTML=EXPS.slice().reverse().map(e=>`<option value="${e.v}">v${e.v}${e.v===LATEST?" (latest)":""} · ${e.rendered}</option>`).join("");s.value=curV;s.style.display=EXPS.length>1?"":"none"}
+function useVersion(n,keepPlace=true){if(n===curV)return;const was=ver==="exp"&&keepPlace,srcT=was?outToSrc(v.currentTime):null;
+  curV=n;M=(entry()&&entry().map)||window.EXPORT_MAP;try{localStorage.setItem("player:xv",n)}catch(e){}labels();
+  if(was){const t=srcToOut(srcT);setVer("exp",false);v.addEventListener("loadedmetadata",function o(){v.removeEventListener("loadedmetadata",o);v.currentTime=t})}else{if(ver==="exp")setVer("exp",false);else chapters()}infoExp()}
+$("vsel").onchange=e=>useVersion(+e.target.value);
+labels();infoExp();
 v2.addEventListener("loadedmetadata",()=>{$("explen").textContent=fmt(v2.duration)+" ("+v2.duration.toFixed(1)+" s)"});
 
 // feedback box, tagged with the version being watched
 const fb=$("fb");try{fb.value=localStorage.getItem("fb:player")||""}catch(e){}
-fb.oninput=()=>{try{localStorage.setItem("fb:player",fb.value)}catch(e){}};
-$("ts").onclick=()=>{const s=Math.floor(v.currentTime);fb.value+=(fb.value&&!fb.value.endsWith("\n")?"\n":"")+"["+(ver==="exp"?"export ":"orig ")+fmt(s)+"] ";fb.focus();fb.oninput()};
-$("fc").onclick=()=>copyText(fb.value);
+let savedT=null;
+function saveFb(){let ok=true;try{localStorage.setItem("fb:player",fb.value)}catch(e){ok=false}
+  clearTimeout(savedT);savedT=setTimeout(()=>{const s=$("saved");s.textContent=ok?"✔ Saved":"⚠ Not saved (private window?)";s.classList.toggle("warn",!ok);
+    s.classList.remove("on");void s.offsetWidth;s.classList.add("on");
+    if(ok){fb.classList.remove("flash");void fb.offsetWidth;fb.classList.add("flash")}},350)}
+fb.oninput=saveFb;
+$("ts").onclick=()=>{const s=Math.floor(v.currentTime);fb.value+=(fb.value&&!fb.value.endsWith("\n")?"\n":"")+"["+vtag()+" "+fmt(s)+"] ";fb.focus();fb.oninput()};
+$("fc").onclick=()=>{const e=entry(),who=ver==="exp"?NAME.exp+(e?" (rendered "+e.rendered+", "+e.seconds+" s)":""):"the original (unedited synced video)";copyText("Feedback on "+document.title.split(":")[0]+", "+who+".\nNotes are tagged [vN m:ss] with the export version they were written on, [orig m:ss] for the original.\n\n"+fb.value)};
 // clear feedback (with undo instead of a confirm popup)
 let cleared=null;
 $("fx").onclick=()=>{if(!fb.value)return;cleared=fb.value;fb.value="";fb.oninput();$("fu").style.display="";$("fx").textContent="🗑️ Cleared"};
@@ -145,8 +169,8 @@ addEventListener("keydown",e=>{
   else if(k==="l"){e.preventDefault();const r=v.paused||rate<1?1:Math.min(rate*2,8);setRate(r,"⏩ "+r+"×");v.play()}
   else if(k==="j"){e.preventDefault();const r=Math.max(rate/2,0.25);setRate(r,"⏪ "+r+"×");v.play()}
   else if(k==="1"){setRate(1,"▶ 1× normal")}
-  else if(k==="arrowleft"){e.preventDefault();v.currentTime=Math.max(0,v.currentTime-5);show("−5 s")}
-  else if(k==="arrowright"){e.preventDefault();v.currentTime=Math.min(v.duration||1e9,v.currentTime+5);show("+5 s")}
+  else if(k==="arrowleft"){e.preventDefault();const d=e.shiftKey?1:5;v.currentTime=Math.max(0,v.currentTime-d);show("−"+d+" s")}
+  else if(k==="arrowright"){e.preventDefault();const d=e.shiftKey?1:5;v.currentTime=Math.min(v.duration||1e9,v.currentTime+d);show("+"+d+" s")}
   else if(k===","&&v.paused){v.currentTime=Math.max(0,v.currentTime-1/30);show("◀ frame")}
   else if(k==="."&&v.paused){v.currentTime+=1/30;show("frame ▶")}
   else if(k==="f"){(v.requestFullscreen||v.webkitRequestFullscreen).call(v)}
@@ -162,7 +186,7 @@ $("pa").onclick=()=>{const open=panels.every(d=>!d.open);panels.forEach(d=>d.ope
 // practical note button: pause, stamp the time, open the Feedback panel, focus; Ctrl/Cmd+Enter resumes
 let resumeAfter=false;
 function addNote(){
-  const s=Math.floor(v.currentTime), tag="["+(ver==="exp"?"export ":"orig ")+fmt(s)+"] ";
+  const s=Math.floor(v.currentTime), tag="["+vtag()+" "+fmt(s)+"] ";
   resumeAfter=!v.paused; v.pause();
   const d=document.querySelector('details[data-key="fb"]'); if(d) d.open=true;
   fb.value+=(fb.value&&!fb.value.endsWith("\n")?"\n":"")+tag; fb.oninput();
@@ -172,5 +196,36 @@ function addNote(){
 $("an").onclick=addNote;
 addEventListener("keydown",e=>{const tag=e.target.tagName; if(e.key.toLowerCase()==="m"&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&tag!=="TEXTAREA"&&tag!=="SELECT"&&!(tag==="INPUT"&&(e.target.type||"text")==="text")){e.preventDefault();if(!e.repeat)addNote()}});
 fb.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){e.preventDefault();fb.blur();if(resumeAfter){v.play();resumeAfter=false}}});
+
+// go to the last review point: the last [orig|export m:ss] note in the feedback box, else where you last stopped watching
+const LEAD=3;   // seconds of lead-in before the point
+function lastPoint(){const m=[...fb.value.matchAll(/\[(orig|export|v\d+) (\d+):(\d\d)\]/g)];if(!m.length)return null;const x=m[m.length-1],tk=x[1];return{ver:tk==="orig"?"orig":"exp",v:/^v\d+$/.test(tk)?+tk.slice(1):LATEST,t:+x[2]*60+ +x[3],note:true}}
+function savedPos(){try{const k=JSON.parse(localStorage.getItem("player:pos")||"null");return k&&typeof k.t==="number"?{ver:k.ver==="exp"?"exp":"orig",v:k.v||curV,t:k.t,note:false}:null}catch(e){return null}}
+function updateLp(){const p=lastPoint();$("lp").textContent=p?"⏮ Last review point: ["+tagOf(p)+" "+fmt(p.t)+"]":"⏮ Last review point: none yet"}
+function gotoLast(){
+  const p=lastPoint()||savedPos(); if(!p){show("no review point yet");return}
+  const label=(p.note?"note ":"stopped ")+"["+tagOf(p)+" "+fmt(p.t)+"]";
+  if(p.ver==="exp"&&p.v&&p.v!==curV&&EXPS.some(e=>e.v===p.v))useVersion(p.v,false);   // the note belongs to another export version
+  const seek=()=>{v.currentTime=Math.max(0,p.t-LEAD);show("⏮ "+label)};
+  if($("cmp").checked){v.currentTime=Math.max(0,(p.ver==="exp"?outToSrc(p.t):p.t)-LEAD);show("⏮ "+label);return}   // side by side: master is the original
+  if(p.ver!==ver){setVer(p.ver,false);v.addEventListener("loadedmetadata",function once(){v.removeEventListener("loadedmetadata",once);seek()})}else seek();
+}
+$("lp").onclick=$("lpv").onclick=gotoLast;
+fb.addEventListener("input",updateLp);updateLp();
+let posT=0;v.addEventListener("timeupdate",()=>{const n=Date.now();if(n-posT>3000&&v.currentTime>1&&v.src.indexOf("blob:")<0){posT=n;try{localStorage.setItem("player:pos",JSON.stringify({ver,v:curV,t:Math.floor(v.currentTime)}))}catch(e){}}});
+addEventListener("keydown",e=>{const tag=e.target.tagName;if(e.key.toLowerCase()==="r"&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&tag!=="TEXTAREA"&&tag!=="SELECT"&&!(tag==="INPUT"&&(e.target.type||"text")==="text")){e.preventDefault();if(!e.repeat)gotoLast()}});
+
+// one-second rewind / fast-forward buttons (hold to repeat)
+function seekBy(d){v.currentTime=Math.max(0,Math.min(v.duration||1e9,v.currentTime+d));show((d<0?"⏪ −":"⏩ +")+Math.abs(d)+" s")}
+function holdBtn(id,d){const b=$(id);let t=null,rep=null,held=false;
+  const stop=()=>{clearTimeout(t);clearInterval(rep)};
+  b.addEventListener("pointerdown",()=>{held=false;seekBy(d);t=setTimeout(()=>{held=true;rep=setInterval(()=>seekBy(d),160)},450)});
+  ["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,stop))}
+holdBtn("sb",-1);holdBtn("sf",1);
 setVer(ver,false);
+// deep link: player.html?v=exp|orig&t=<seconds on that version's timeline>  (used by the Artifacts page)
+(()=>{const q=new URLSearchParams(location.search),vv=q.get("v"),t=parseFloat(q.get("t"));
+  const mv=/^v(\d+)$/.exec(vv||"");if(mv&&EXPS.some(e=>e.v===+mv[1])){useVersion(+mv[1],false);if(ver!=="exp")setVer("exp",false)}else if(vv==="exp"||vv==="orig"){if(vv!==ver)setVer(vv,false)}
+  if(!isNaN(t)){const go=()=>{v.currentTime=Math.max(0,t-1);show("↪ "+vtag()+" "+fmt(t))};
+    if(v.readyState>=1)go();else v.addEventListener("loadedmetadata",function o(){v.removeEventListener("loadedmetadata",o);go()})}})();
 </script></body></html>

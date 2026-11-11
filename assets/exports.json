@@ -1,0 +1,106 @@
+[
+ {
+  "v": 1,
+  "file": null,
+  "rendered": "2026-11-11 14:15",
+  "seconds": 743.1,
+  "size_mb": 150.4,
+  "sha12": null,
+  "notes": "First full export (not kept): OCR check found private text at 6:30, 6:58, 8:36 and 12:22 at box edges; no summary or call-to-action yet",
+  "map": null
+ },
+ {
+  "v": 2,
+  "file": "exports/claude-missing-features-v2.mp4",
+  "rendered": "2026-11-11 15:22",
+  "seconds": 764.1,
+  "size_mb": 97.2,
+  "sha12": "242f2640fa1e",
+  "notes": "Leaks fixed (blur and slide edges padded), no transitions, hoover noise reduced, summary slide and Skool call-to-action added, family-photo moment covered",
+  "map": {
+   "segs": [
+    [
+     0.0,
+     68.47,
+     1,
+     false,
+     0.0
+    ],
+    [
+     68.47,
+     79.0,
+     3,
+     true,
+     68.47
+    ],
+    [
+     79.0,
+     750.033,
+     1,
+     false,
+     71.98
+    ]
+   ],
+   "total": 743.013,
+   "outro": [
+    [
+     743.01,
+     "Summary: what we learned",
+     11
+    ],
+    [
+     754.01,
+     "Learn it in depth",
+     10
+    ]
+   ]
+  }
+ },
+ {
+  "v": 3,
+  "file": "exports/claude-missing-features-v3.mp4",
+  "rendered": "2026-11-11 15:51",
+  "seconds": 764.1,
+  "size_mb": 97.0,
+  "sha12": "eb1a666c9e2b",
+  "notes": "Whiteboard picture card with arrow added (expected feature), caption box clear of the picture",
+  "map": {
+   "segs": [
+    [
+     0.0,
+     68.47,
+     1,
+     false,
+     0.0
+    ],
+    [
+     68.47,
+     79.0,
+     3,
+     true,
+     68.47
+    ],
+    [
+     79.0,
+     750.033,
+     1,
+     false,
+     71.98
+    ]
+   ],
+   "total": 743.013,
+   "outro": [
+    [
+     743.01,
+     "Summary: what we learned",
+     11
+    ],
+    [
+     754.01,
+     "Learn it in depth",
+     10
+    ]
+   ]
+  }
+ }
+]

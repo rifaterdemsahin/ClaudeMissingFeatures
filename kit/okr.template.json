@@ -1,0 +1,225 @@
+{
+ "_doc": "Starter OKRs and rubric for a new video. Edit the objectives and targets BEFORE producing, run scripts/measure_video.py after the export, score each rubric row 0-10 with evidence, then run scripts/build_okr.py. {braces} are filled from assets/metrics.json.",
+ "value_proposition": "<One sentence: who the viewer is, what they will be able to do after this video, in how many minutes.>",
+ "objectives": [
+  {
+   "id": "O1",
+   "title": "<A viewer with problem X leaves knowing what to check and what to do next>",
+   "krs": [
+    {
+     "id": "KR1.1",
+     "text": "The problem is on screen within 10 s",
+     "metric": "time_to_problem_s",
+     "op": "<=",
+     "target": 10,
+     "unit": "s"
+    },
+    {
+     "id": "KR1.2",
+     "text": "The first concrete action is shown within 30 s",
+     "metric": "time_to_first_action_s",
+     "op": "<=",
+     "target": 30,
+     "unit": "s"
+    },
+    {
+     "id": "KR1.3",
+     "text": "A recap lists at least 4 concrete takeaways at the end",
+     "metric": "summary_points",
+     "op": ">=",
+     "target": 4,
+     "unit": "points"
+    },
+    {
+     "id": "KR1.4",
+     "text": "Average view duration of at least 40% (YouTube Analytics, first 28 days)",
+     "manual": true,
+     "target": "40%"
+    },
+    {
+     "id": "KR1.5",
+     "text": "At least 10 comments saying it helped or that they found the answer (first 28 days)",
+     "manual": true,
+     "target": "10"
+    }
+   ]
+  },
+  {
+   "id": "O2",
+   "title": "<Turn viewers into community members>",
+   "krs": [
+    {
+     "id": "KR2.1",
+     "text": "The community card stays on screen at least 8 s with the URL",
+     "metric": "cta_seconds",
+     "op": ">=",
+     "target": 8,
+     "unit": "s"
+    },
+    {
+     "id": "KR2.2",
+     "text": "The URL is in the description and the pinned comment",
+     "metric": "url_in_description_and_pinned",
+     "op": "true"
+    },
+    {
+     "id": "KR2.3",
+     "text": "At least 30 clicks on the community link in 14 days",
+     "manual": true,
+     "target": "30"
+    },
+    {
+     "id": "KR2.4",
+     "text": "At least 5 new members say this video brought them (join question), 14 days",
+     "manual": true,
+     "target": "5"
+    }
+   ]
+  },
+  {
+   "id": "O3",
+   "title": "Ship a clean, private and reusable video, fast",
+   "krs": [
+    {
+     "id": "KR3.1",
+     "text": "No private text visible in the export (OCR check of every 2 s)",
+     "metric": "privacy_leaks",
+     "op": "<=",
+     "target": 0,
+     "unit": "lines"
+    },
+    {
+     "id": "KR3.2",
+     "text": "Integrated loudness within 1.5 LU of -14 LUFS",
+     "metric": "loudness_lufs",
+     "op": "within",
+     "target": -14,
+     "tol": 1.5,
+     "unit": "LUFS"
+    },
+    {
+     "id": "KR3.3",
+     "text": "True peak at or below -1.5 dBFS",
+     "metric": "true_peak_dbfs",
+     "op": "<=",
+     "target": -1.5,
+     "unit": "dBFS"
+    },
+    {
+     "id": "KR3.4",
+     "text": "Steady background noise at most 5 dB above the clean part after the fix",
+     "metric": "noise_haze_max_db_after_fix",
+     "op": "<=",
+     "target": 5,
+     "unit": "dB"
+    },
+    {
+     "id": "KR3.5",
+     "text": "Dead air (silence over 3 s) at most 5% of the runtime",
+     "metric": "dead_air_percent",
+     "op": "<=",
+     "target": 5,
+     "unit": "%"
+    },
+    {
+     "id": "KR3.6",
+     "text": "At least 8 chapters",
+     "metric": "chapters",
+     "op": ">=",
+     "target": 8,
+     "unit": "chapters"
+    },
+    {
+     "id": "KR3.7",
+     "text": "Every chapter at least 10 s (YouTube rule)",
+     "metric": "chapter_min_len_s",
+     "op": ">=",
+     "target": 10,
+     "unit": "s"
+    }
+   ]
+  }
+ ],
+ "score": {
+  "scale": "Each dimension 0 to 10 (0 = absent, 5 = present but weak, 8 = good, 10 = excellent and proven). Weighted to 100. This is the producer's pre-publish estimate from measured evidence; replace it with the real numbers after 28 days.",
+  "rows": [
+   {
+    "dimension": "Promise clarity (title, thumbnail, hook)",
+    "weight": 15,
+    "score": null,
+    "evidence": "<what you measured or saw>",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Time to value",
+    "weight": 15,
+    "score": null,
+    "evidence": "Problem on screen at {time_to_problem_s} s (title card, then \"What we are doing\" slide); first action (Settings, Capabilities) at {time_to_first_action_s} s.",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Proof on screen",
+    "weight": 10,
+    "score": null,
+    "evidence": "<what you measured or saw>",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Actionability",
+    "weight": 15,
+    "score": null,
+    "evidence": "Summary lists {summary_points} takeaways; steps are shown live (quit and reopen, update the Mac, remove the old copy). The main answer is \"wait\", which limits how much a viewer can do.",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Pacing",
+    "weight": 15,
+    "score": null,
+    "evidence": "{dead_air_percent}% dead air ({dead_air_seconds} s while the canvas builds) and {stutter_spots} stutter spots are still in; runtime {export_seconds} s for a mostly negative result; speech pace {words_per_minute} words per minute is fine.",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Audio and picture quality",
+    "weight": 10,
+    "score": null,
+    "evidence": "Loudness {loudness_lufs} LUFS, true peak {true_peak_dbfs} dBFS (0.3 dB over the -1.5 target), hoover noise now {noise_haze_max_db_after_fix} dB above the clean part, animated captions, no transitions, {blur_boxes} blur boxes and {privacy_leaks} private lines left.",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Trust and honesty",
+    "weight": 10,
+    "score": null,
+    "evidence": "<what you measured or saw>",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Structure and discoverability",
+    "weight": 5,
+    "score": null,
+    "evidence": "{chapters} chapters, shortest {chapter_min_len_s} s; recap at the end; description, tags and pinned comment written.",
+    "improve": "<what would raise it>",
+    "gain": 0
+   },
+   {
+    "dimension": "Call-to-action fit",
+    "weight": 5,
+    "score": null,
+    "evidence": "Community card after the recap for {cta_seconds} s with the URL; URL also in the description and pinned comment; one ask, no promises.",
+    "improve": "<what would raise it>",
+    "gain": 0
+   }
+  ]
+ },
+ "after_publish": [
+  "Day 2: impressions click-through and first-30-s retention.",
+  "Day 14: community link clicks and the join question \"Which video brought you here?\".",
+  "Day 28: average view duration and helpful comments; replace pre-publish scores with real evidence."
+ ]
+}

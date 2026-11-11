@@ -31,5 +31,8 @@ svg.append('</svg>')
 page=(ROOT/"architecture.html").read_text(); a=page.index("<svg"); b=page.index("</svg>")+6
 page=page[:a]+"".join(svg)+page[b:]
 (ROOT/"architecture.html").write_text(page)
-(ROOT/"kit/templates/architecture.html").write_text(page.replace("Claude Missing Features: architecture","{{TITLE}}: architecture"))
+import json as _j
+_t = _j.load(open(ROOT / "remotion/src/project.json"))["title"]
+if (ROOT / "kit/templates").exists():   # only in the main repo (the kit builder source); a project made from the kit has no kit/ folder
+    (ROOT/"kit/templates/architecture.html").write_text(page.replace(_t + ": architecture", "{{TITLE}}: architecture"))
 print("architecture.html regenerated")

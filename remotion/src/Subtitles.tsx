@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import subs from "./subs.json";
-import { isMuted, srcTime } from "./cuts";
+import { isInsertFrame, isMuted, srcTime } from "./cuts";
 import { theme } from "./theme";
 
 type Word = { t: string; from: number; to: number };
@@ -10,6 +10,7 @@ type Cue = { from: number; to: number; text: string; words: Word[] };
 // upcoming words are dimmed, the phrase fades out.
 export const Subtitles = () => {
   const frame = useCurrentFrame();
+  if (isInsertFrame(frame)) return null;
   const t = srcTime(frame);
   if (isMuted(t)) return null;
   const cue = (subs as Cue[]).find((c) => t >= c.from && t < c.to);

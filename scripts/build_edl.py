@@ -4,6 +4,7 @@ import json, pathlib, re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 J = lambda p: json.load(open(ROOT / p))
 ov, cuts, dec = J("remotion/src/overlays.json"), J("remotion/src/cuts.json"), J("assets/edl_decisions.json")
+P = J("remotion/src/project.json")
 base = J("assets/base_info.json") if (ROOT / "assets/base_info.json").exists() else None
 _m = re.search(r"=\s*(\{.*\});", (ROOT / "export_map.js").read_text()) if (ROOT / "export_map.js").exists() else None
 M = json.loads(_m.group(1)) if _m else None
@@ -18,21 +19,25 @@ def add(kind, a, b, what, why, status="done", src=True):
     global n; n += 1; oa, ob = (out(a), out(b - 0.001)) if src else (a, b)
     rows.append(f"| {n} | {kind} | {tc(a) if src else '–'} | {tc(b) if src else '–'} | {tc(oa)} | {tc(ob)} | {b - a:.1f} | {what} | {why} | {status} |")
 ic = ov["intro_card"]
-if ic["to"] > ic["from"]: add("INTRO", ic["from"], ic["to"], "Title card (Claude Whiteboard MISSING?)", "hides the OBS Studio window at the start; extended by 2 s on request")
-for s in ov["slides"]: add("SLIDE", s["from"], s["to"], f"“{s['title']}”: " + "; ".join(s["bullets"])[:110], "covers a personal or distracting window (IBM chat, Grok Bot, family photo widget); narration kept")
+if ic["to"] > ic["from"]: add("INTRO", ic["from"], ic["to"], f"Title card ({P['thumb']['line1']} {P['thumb']['line2']})", "hides the OBS Studio window at the start; extended by 2 s on request")
+for s in ov["slides"]: add("SLIDE", s["from"], s["to"], f"“{s['title']}”: " + "; ".join(s["bullets"])[:110], "covers a personal or distracting window; narration kept")
 rule = {"A": "chat-title list in the app sidebar", "B": "sensitive words", "C": "mini sidebar inside the pasted screenshot"}
 for r in "ABC":
     bs = [b for b in ov["blurs"] if b["rule"] == r]
     if bs: add("BLUR", min(b["from"] for b in bs), max(b["to"] for b in bs), f"{len(bs)} frosted boxes: {rule[r]}", "private titles and names; boxes generated from OCR (build_blurs.py)")
 for im in ov.get("images", []): add("IMAGE", im["from"], im["to"], f"Picture {im['src']}: \"{im.get('caption', '')} {im.get('caption2', '')}\" with a box and an arrow", im.get("why", "owner image"))
+for b in ov.get("manual_blurs", []): add("BLUR", b["from"], b["to"], f"Manual blur ({b['w']}x{b['h']} px at {b['x']},{b['y']}): {b['why']}", "owner note; placed by hand where OCR cannot see (notification banner) or must keep part of a window visible")
+for l in ov.get("lower_thirds", []): add("LOWER THIRD", l["from"], l["to"], f"“{l.get('label', '')}”: {l['text']}", "owner request: say it on screen without covering the footage")
 for s in ov["speedups"]: add("SPEED", s["from"], s["to"], f"{s['rate']}x" + (", muted, captions hidden" if s.get("mute") else ""), s.get("why", ""))
 for af in (J("assets/audio_fixes.json") if (ROOT / "assets/audio_fixes.json").exists() else []): add("AUDIO", af["from"], af["to"], af["what"], af["why"])
-for c in cuts: add("CUT", c[0], c[1], "Removed", "see decisions")
+for c in cuts: add("CUT", c[0], c[1], f"Removed {c[1] - c[0]:.1f} s (export timeline continues after the apology card)", "hoover noise (owner note); cut at sentence boundaries")
+for i, ins in enumerate(ov.get("inserts", [])):
+    mi = (M or {}).get("inserts", [[0, 0, 0]])[i]; add("INSERT", mi[0], mi[0] + ins["seconds"], f"Card at the cut: “{ins.get('title', '')}” {ins.get('text', '')} (animated {ins.get('animation', 'card')})", "owner request: show a hoover animation and apologise", src=False)
 if not cuts: rows.append("| – | CUT | – | – | – | – | 0 | none applied | candidates below; nothing is cut until the owner decides | open |")
 tot = M["total"] if M else 0; t = tot
 for p in ov.get("outro", []):
-    add("OUTRO", t, t + p["seconds"], f"{p['title']}" + (" (Delivery Pilot on Skool)" if p["kind"] == "cta" else ""), "owner request: end with a summary, then the community call to action", src=False); rows[-1] = rows[-1].replace("| – | – | " + tc(t), f"| – | – | {tc(t)}", 1); t += p["seconds"]
-log = "\n".join(f"| {d['id']} | {d['when']} | {d['who']} | {d['said']} | {d['decision']} | `{d['how']}` | {d['check']} |" for d in dec)
+    add("OUTRO", t, t + p["seconds"], f"{p['title']}" + (f" ({P['community']['name']} on {P['community']['platform']})" if p["kind"] == "cta" else ""), "owner request: end with a summary, then the community call to action", src=False); rows[-1] = rows[-1].replace("| – | – | " + tc(t), f"| – | – | {tc(t)}", 1); t += p["seconds"]
+log = "\n".join(f"| {d['id']} | {d['when']} | {d['who']} | {d['said']} | {d['decision']} | {d.get('in', '')} | `{d['how']}` | {d['check']} |" for d in dec)
 cand = (ROOT / "assets/repeats.txt")
 cand_txt = "\n".join("- " + x for x in cand.read_text().splitlines() if x and not x.startswith("#"))[:1800] if cand.exists() else "- run `scripts/find_repeats.py`"
 src = ""
@@ -64,8 +69,8 @@ published: false
 
 ## 3. Decision log (requests and how each was handled)
 
-| # | When | Who | Said | Decision | Implemented in | Checked by |
-|---|---|---|---|---|---|---|
+| # | When | Who | Said | Decision | In export | Implemented in | Checked by |
+|---|---|---|---|---|---|---|---|
 {log}
 
 ## 4. Cut candidates (nothing applied yet)

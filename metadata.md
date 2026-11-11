@@ -1,6 +1,6 @@
 # YouTube metadata: Claude Missing Features (long form, 1080p)
 
-Video: `~/Downloads/claude-missing-features-1080p.mp4` (1920x1080, 30 fps, 12:30, about -14.5 LUFS)
+Video: `~/Downloads/claude-missing-features-v3.mp4` (export v3, 764.1 s, 1920x1080, 30 fps)
 
 ## Title (87 chars)
 
@@ -35,11 +35,11 @@ Chapters (export timeline, first at 0:00, each at least 10 s):
 7:25 Planning my week on a canvas
 8:07 Infinite canvas vs classic canvas
 8:55 What we learned
-10:01 The result: calendar and class series
-11:00 Update done, still no Whiteboard
-11:59 Use the other artifact types meanwhile
-12:23 Summary: what we learned
-12:34 Join the Delivery Pilot community
+9:33 The result: calendar and class series
+10:15 Update done, still no Whiteboard
+11:14 Use the other artifact types meanwhile
+11:38 Summary: what we learned
+11:49 Join the Delivery Pilot community
 
 Takeaways:
 1. Keep Claude and your machine up to date.

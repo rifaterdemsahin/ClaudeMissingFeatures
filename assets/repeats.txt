@@ -1,0 +1,27 @@
+# repeated phrases (same 4-word run again within 25 s, or an identical short cue)
+0:12  repeats 'what we are going' (first at 0:00): And what we are going to do is, we are going to create a whiteboard
+0:47  repeats 'to be able to' (first at 0:34): I might need to ask this question to Claude to be able to find where
+1:27  repeats 'so it should be' (first at 1:20): So it should be able to see and do the stuff.
+1:40  repeats 'on the desktop app' (first at 1:37): We are on the desktop app.
+1:42  repeats 'it should be able' (first at 1:20): So on the artifacts tab, it should be able to come on here.
+1:46  repeats 'we are on the' (first at 1:40): We are on the artifacts tab, but I'm unable to see the design.
+2:16  repeats 'how do i enable' (first at 2:14): How do I enable beta?
+2:18  repeats 'how do i enable' (first at 2:14): How do I enable beta?
+3:27  repeats 'i dont see the' (first at 3:13): So maybe I did not update my thing though, because I don't see the
+4:51  repeats 'to be able to' (first at 4:44): If I can use the Grok bot to be able to create this update, update my
+7:28  repeats 'these actions on here' (first at 7:23): to be able to use these actions on here.
+9:06  repeats 'make sure that you' (first at 9:02): to date and make sure that you are using the designs, not get stuck
+9:23  repeats 'coming up on here' (first at 9:12): artifacts coming up on here, you should be able to see them on here.
+11:33  repeats 'see it is on' (first at 11:28): see it is on the artifacts.
+11:47  repeats 'to be able to' (first at 11:42): to be able to get this on here.
+12:03  repeats 'to be able to' (first at 11:42): Be ready to be able to use the other features on here and other
+12:12  repeats 'artifacts that you are' (first at 12:08): This is not that different than the other artifacts that you are going
+
+# stutters (a word repeated back to back)
+4:51  'update, update': If I can use the Grok bot to be able to create this update, update my
+6:26  'version version': Update, close and check version version.
+7:32  'whiteboard whiteboard': I can just show the prompt without the whiteboard whiteboard is coming
+7:45  'for for': I need to I need to create classes for for my AI Cambridge meetup
+
+# gaps over 3 s between cues (silence / screen-only)
+9:46 -> 10:25  (38.5s)
