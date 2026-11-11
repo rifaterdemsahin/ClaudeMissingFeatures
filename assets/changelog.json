@@ -379,6 +379,11 @@
     "🧩",
     "Publish & Spec stats",
     "Disallowed angled brackets in publish.html placeholders and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html; added document stats banner (lines, words, chars, sections, read time) to the bottom of spec.html"
+   ],
+   [
+    "☁️",
+    "Published & Analytics",
+    "Recorded live published URLs for YouTube (youtu.be/fnKeTQYBHN8), LinkedIn (lnkd.in/p/eZreMED5), and X (status/2120640398091804833); status updated to shared in assets/publish.json and linked in top menu; created analytics.html to track Day 2, Day 14, Day 28 performance horizons and OKR reconciliation"
    ]
   ]
  }

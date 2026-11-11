@@ -76,6 +76,7 @@ Run `scripts/check_env.sh` first. It prints ✅ / ❌ for everything below and t
 | `scripts/build_chapters.py` | chapters on the source and export timelines (`assets/chapters.json`) -> `chapters.js`, `metadata.md` |
 | `scripts/check_env.sh` | verifies this whole page on the machine |
 | `scripts/build_publish.py` | the Publish page (YouTube, LinkedIn, X) from `assets/publish.json` and the export registry |
+| `scripts/build_analytics.py` | the Analytics tracking page (Day 2, Day 14, Day 28) and post-publish OKR reconciliation |
 | `scripts/setup_azure_exports.sh`, `upload_exports.py` | one-time private Azure container + Key Vault secrets (run by the owner), then upload of the exports and read-only links (local, git-ignored) |
 | `scripts/upload_source.py` | save raw footage and source artifacts to per-video Azure Storage container (`<slug>-source`) |
 | `remotion/src/variants.json` | per-platform cuts (keep ranges, shorter ending) |

@@ -25,6 +25,7 @@ A repeatable way to turn **screen recordings + your own voice** into a finished 
 | 🔎 Review | [✂️ EDL](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/edl.html) | edit decision list and decision log |
 | 🔎 Review | [🗒️ Changelog](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/changelog.html) | everything that happened |
 | 🔎 Review | [📺 YouTube metadata](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/metadata.html) | title, description, chapters |
+| 🔎 Review | [📈 Analytics](https://rifaterdemsahin.github.io/ClaudeMissingFeatures/analytics.html) | post-publish tracking (Day 2, 14, 28) and OKR reconciliation |
 
 ## 🗺️ Master spec at a glance
 
@@ -68,14 +69,15 @@ A repeatable way to turn **screen recordings + your own voice** into a finished 
 34. [6s. Completion time: stages, order, who, and how to prepare](MASTER_SPEC.md#6s-completion-time-stages-order-who-and-how-to-prepare)
 35. [6t. The pipeline drawn with tldraw](MASTER_SPEC.md#6t-the-pipeline-drawn-with-tldraw)
 36. [6u. Evals: can the spec recreate this project?](MASTER_SPEC.md#6u-evals-can-the-spec-recreate-this-project)
-37. [7. Website (GitHub Pages)](MASTER_SPEC.md#7-website-github-pages)
-38. [7a. Publish: GitHub Pages (do this for every project, do not forget)](MASTER_SPEC.md#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
-39. [7b. Always back up to Google Drive](MASTER_SPEC.md#7b-always-back-up-to-google-drive)
-40. [7c. Build the whole website (every page, from the kit)](MASTER_SPEC.md#7c-build-the-whole-website-every-page-from-the-kit)
-41. [8. Sanity check (before publishing)](MASTER_SPEC.md#8-sanity-check-before-publishing)
-42. [9. Delivery checklist](MASTER_SPEC.md#9-delivery-checklist)
-43. [10. Lessons learned (this project)](MASTER_SPEC.md#10-lessons-learned-this-project)
-44. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](MASTER_SPEC.md#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
+37. [6v. Post-publish performance analytics and value reconciliation](MASTER_SPEC.md#6v-post-publish-performance-analytics-and-value-reconciliation)
+38. [7. Website (GitHub Pages)](MASTER_SPEC.md#7-website-github-pages)
+39. [7a. Publish: GitHub Pages (do this for every project, do not forget)](MASTER_SPEC.md#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
+40. [7b. Always back up to Google Drive](MASTER_SPEC.md#7b-always-back-up-to-google-drive)
+41. [7c. Build the whole website (every page, from the kit)](MASTER_SPEC.md#7c-build-the-whole-website-every-page-from-the-kit)
+42. [8. Sanity check (before publishing)](MASTER_SPEC.md#8-sanity-check-before-publishing)
+43. [9. Delivery checklist](MASTER_SPEC.md#9-delivery-checklist)
+44. [10. Lessons learned (this project)](MASTER_SPEC.md#10-lessons-learned-this-project)
+45. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](MASTER_SPEC.md#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
 
 ### ▶ Prompt to execute (paste into Claude Code, fill the `<…>`)
 

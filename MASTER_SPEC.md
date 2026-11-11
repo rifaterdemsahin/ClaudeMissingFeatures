@@ -39,14 +39,15 @@
 34. [6s. Completion time: stages, order, who, and how to prepare](#6s-completion-time-stages-order-who-and-how-to-prepare)
 35. [6t. The pipeline drawn with tldraw](#6t-the-pipeline-drawn-with-tldraw)
 36. [6u. Evals: can the spec recreate this project?](#6u-evals-can-the-spec-recreate-this-project)
-37. [7. Website (GitHub Pages)](#7-website-github-pages)
-38. [7a. Publish: GitHub Pages (do this for every project, do not forget)](#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
-39. [7b. Always back up to Google Drive](#7b-always-back-up-to-google-drive)
-40. [7c. Build the whole website (every page, from the kit)](#7c-build-the-whole-website-every-page-from-the-kit)
-41. [8. Sanity check (before publishing)](#8-sanity-check-before-publishing)
-42. [9. Delivery checklist](#9-delivery-checklist)
-43. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
-44. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
+37. [6v. Post-publish performance analytics and value reconciliation](#6v-post-publish-performance-analytics-and-value-reconciliation)
+38. [7. Website (GitHub Pages)](#7-website-github-pages)
+39. [7a. Publish: GitHub Pages (do this for every project, do not forget)](#7a-publish-github-pages-do-this-for-every-project-do-not-forget)
+40. [7b. Always back up to Google Drive](#7b-always-back-up-to-google-drive)
+41. [7c. Build the whole website (every page, from the kit)](#7c-build-the-whole-website-every-page-from-the-kit)
+42. [8. Sanity check (before publishing)](#8-sanity-check-before-publishing)
+43. [9. Delivery checklist](#9-delivery-checklist)
+44. [10. Lessons learned (this project)](#10-lessons-learned-this-project)
+45. [11. Start prompt for a new Claude session (short form; the full prompt is at the top of this file)](#11-start-prompt-for-a-new-claude-session-short-form-the-full-prompt-is-at-the-top-of-this-file)
 <!--/TOC-->
 
 
@@ -536,11 +537,26 @@ Page: [evals.html](evals.html) (menu 🧪 Evals, group Start), built from `asset
 
 The page shows the score and grade, every check with its detail and a fix hint, the unanswered questions, the history of runs, and a **ready-to-paste prompt for an LLM eval**: give a fresh Claude session only `MASTER_SPEC.md` and the questions, then compare its answers with the expected facts. Deterministic evals prove the spec is *complete*; the LLM eval shows whether it is *clear*.
 
+## 6v. Post-publish performance analytics and value reconciliation
+
+Page: [analytics.html](analytics.html) (menu 📈 Analytics, group Review), built by `python3 -I scripts/build_analytics.py` from `assets/publish.json` and `assets/okr.json`.
+
+- **Live published post links:**
+  - ▶️ **YouTube:** https://youtu.be/fnKeTQYBHN8 (direct Studio analytics: `https://studio.youtube.com/video/fnKeTQYBHN8/analytics`)
+  - 💼 **LinkedIn:** https://lnkd.in/p/eZreMED5
+  - ✖️ **X:** https://x.com/rifaterdemsahin/status/2120640398091804833 (direct post analytics: `https://x.com/i/status/2120640398091804833/analytics`)
+  - 🚀 **Community:** https://www.skool.com/delivery-pilot-8938
+- **Review horizons:**
+  - **Day 2 (48h velocity):** early click-through rate (CTR), thumbnail/title appeal, initial subscriber notification reach.
+  - **Day 14 (mid-tail):** browse and suggested video recommendation velocity, audience retention drop-off check, community link clicks (KR target: 30+).
+  - **Day 28 (maturity):** search indexing, final OKR evaluation (KR target: 40%+ retention, 10+ helpful comments, 5+ community joins), and value-recognition score reconciliation.
+- **Interactive scorecard:** auto-saves in browser `localStorage`, with "📋 Copy Analytics Report" for rapid status reporting, JSON export, and actuals reconciliation against the pre-production value score.
+
 ## 7. Website (GitHub Pages)
 
 | Page | File | Built by | Purpose |
 |---|---|---|---|
-| Menu groups | `nav.js` `GROUPS` | by hand | **🧭 Start** (Architecture, Environment, Time & order, Pipeline, Evals, Master spec) · **🎬 Make** (Project, Pre-prod with OKRs, Prod, Post-prod, Run & links, Publish) · **🔎 Review** (Player, Artifacts, Script, EDL, Changelog, YouTube metadata) · **🔗 Links** (Remotion Studio, README, community, Azure portal links from `project.json › links`, and the platform post links once shared). Put a new page in the group that matches what the reader is doing; every item keeps its emoji |
+| Menu groups | `nav.js` `GROUPS` | by hand | **🧭 Start** (Architecture, Environment, Time & order, Pipeline, Evals, Master spec) · **🎬 Make** (Project, Pre-prod with OKRs, Prod, Post-prod, Run & links, Publish) · **🔎 Review** (Player, Artifacts, Script, EDL, Changelog, YouTube metadata, Analytics) · **🔗 Links** (Remotion Studio, README, community, Azure portal links from `project.json › links`, and the platform post links once shared). Put a new page in the group that matches what the reader is doing; every item keeps its emoji |
 | Project hub | `index.html` | by hand | links to the stage pages |
 | Pre / Prod / Post | `preprod.html`, `prod.html`, `postprod.html` | by hand | one page per stage with a status table |
 | Run & links | `run.html` | by hand | Studio and player links, run commands, troubleshooting |
@@ -614,11 +630,12 @@ Ways to do it: (a) `scripts/backup_drive.sh` does all of the above with `rclone`
 | Shorts recipe (legacy) | `shortsflow.html` | `build_site.py` from `docs/SHORTS_FLOW.md` | |
 | EDL | `edl.html` | `build_site.py` from `EDL.md`, which `build_edl.py` generates | `overlays.json`, `cuts.json`, `assets/edl_decisions.json`, `assets/exports.json` |
 | YouTube metadata | `metadata.html` | `build_site.py` from `metadata.md` | `metadata.md`, chapters |
+| Analytics and post-publish OKRs | `analytics.html` | `build_analytics.py` | `assets/publish.json`, `assets/okr.json` |
 | README (navigation hub) | `readme.html` | `build_site.py` from `README.md`, which `build_readme.py` generates | `project.json`, the spec, exports, score |
 
 Support files every page loads: `project.js` (from `project.json`), `nav.js` (menu and notes panel), and for the player `subs.js`, `chapters.js`, `export_map.js`, `exports.js` (all generated).
 
-**Build order** (what `build_all.sh` does; each stage is skipped when its input does not exist yet): create missing hand-written pages from `templates/` -> `build_subs.py` (captions, `export_map.js`) -> `build_chapters.py` -> `build_edl.py` -> `check_subtitles.py` -> `build_script.py` -> `build_okr.py` -> `build_architecture.py` -> `build_artifacts.py` (works without an export: cards without pictures) -> `build_changelog.py` -> `build_toc.py` -> `build_readme.py` -> `build_site.py` (markdown pages and `project.js`, last, after their sources are final) -> `check_site.py`.
+**Build order** (what `build_all.sh` does; each stage is skipped when its input does not exist yet): create missing hand-written pages from `templates/` -> `build_subs.py` (captions, `export_map.js`) -> `build_chapters.py` -> `build_edl.py` -> `check_subtitles.py` -> `build_script.py` -> `build_okr.py` -> `build_architecture.py` -> `build_artifacts.py` (works without an export: cards without pictures) -> `build_timeline.py` -> `build_pipeline_diagram.py` -> `build_publish.py` -> `build_analytics.py` -> `build_changelog.py` -> `build_toc.py` -> `build_readme.py` -> `build_site.py` (markdown pages and `project.js`, last, after their sources are final) -> `check_site.py`.
 
 **Menu:** `nav.js` `GROUPS` (Start, Make, Review, Links). The menu is **collapsible**: the ▾ Menu button folds it to the brand bar and the choice is remembered in the browser.
 

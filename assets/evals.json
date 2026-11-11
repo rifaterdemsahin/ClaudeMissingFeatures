@@ -1,5 +1,5 @@
 {
- "timestamp": "2026-11-11 22:25",
+ "timestamp": "2026-11-11 22:32",
  "score": 100.0,
  "grade": "A (excellent)",
  "quick": false,
@@ -13,13 +13,13 @@
     {
      "name": "Kit builds cleanly and produces valid zip",
      "pass": true,
-     "detail": "Kit zip size 892 KB, 121 files",
+     "detail": "Kit zip size 898 KB, 122 files",
      "hint": "Check scripts/build_kit.sh"
     },
     {
      "name": "Every python script compiles cleanly",
      "pass": true,
-     "detail": "29/29 python scripts compiled cleanly",
+     "detail": "30/30 python scripts compiled cleanly",
      "hint": "Fix syntax errors in scripts/*.py"
     },
     {
@@ -37,7 +37,7 @@
     {
      "name": "Full site builds and check_site passes in scaffolded project",
      "pass": true,
-     "detail": "19 pages, 19 menu items checked\n\u2705 site check passed: every menu item, link and script resolves",
+     "detail": "20 pages, 20 menu items checked\n\u2705 site check passed: every menu item, link and script resolves",
      "hint": "Check build_all.sh and check_site.py in the scaffolded kit"
     },
     {
@@ -69,13 +69,13 @@
     {
      "name": "Every script documented in spec or environment",
      "pass": true,
-     "detail": "42/42 scripts documented",
+     "detail": "43/43 scripts documented",
      "hint": "Add missing scripts to ENVIRONMENT.md code table"
     },
     {
      "name": "Every website page documented in spec or environment",
      "pass": true,
-     "detail": "20/20 pages documented",
+     "detail": "21/21 pages documented",
      "hint": "Add missing pages to MASTER_SPEC.md section 7 or ENVIRONMENT.md"
     },
     {
@@ -87,13 +87,13 @@
     {
      "name": "Every scripts/... path in spec exists on disk",
      "pass": true,
-     "detail": "35/35 referenced scripts exist",
+     "detail": "36/36 referenced scripts exist",
      "hint": "Fix obsolete script paths in MASTER_SPEC.md"
     },
     {
      "name": "Every contents anchor link in spec resolves to a heading",
      "pass": true,
-     "detail": "44/44 links resolve",
+     "detail": "45/45 links resolve",
      "hint": "Run scripts/build_toc.py to regenerate TOC table"
     },
     {
@@ -337,7 +337,7 @@
     {
      "name": "All project scripts shipped in kit zip",
      "pass": true,
-     "detail": "42/42 scripts present in kit",
+     "detail": "43/43 scripts present in kit",
      "hint": "Add missing scripts to scripts/build_kit.sh"
     },
     {
@@ -425,6 +425,12 @@
   },
   {
    "timestamp": "2026-11-11 22:25",
+   "score": 100.0,
+   "grade": "A (excellent)",
+   "quick": false
+  },
+  {
+   "timestamp": "2026-11-11 22:32",
    "score": 100.0,
    "grade": "A (excellent)",
    "quick": false

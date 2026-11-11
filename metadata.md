@@ -68,7 +68,13 @@ Which artifact type do you use most?
 - Altered or synthetic content: No (own voice, real screen recording)
 - Category: Science & Technology
 - Visibility: Private first, then Public after the check below
-- Thumbnail: 1920x1080 (not yet made; this video has none)
+- Thumbnail: 1920x1080 (rendered with `cd remotion && npm run still` -> `assets/thumbnail.jpg`)
+
+## Published Links
+
+- YouTube: https://youtu.be/fnKeTQYBHN8
+- LinkedIn: https://lnkd.in/p/eZreMED5
+- X: https://x.com/rifaterdemsahin/status/2120640398091804833
 
 ## Check before upload
 

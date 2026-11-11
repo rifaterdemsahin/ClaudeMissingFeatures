@@ -6,7 +6,7 @@
   const GROUPS = [
     ["🧭 Start", [["architecture.html", "🏛️ Architecture"], ["environment.html", "🧰 Environment"], ["timeline.html", "⏱️ Time & order"], ["pipeline.html", "🗺️ Pipeline"], ["evals.html", "🧪 Evals"], ["spec.html", "📘 Master spec (prompt)"]]],
     ["🎬 Make", [["index.html", "🏠 Project"], ["preprod.html", "📝 Pre-prod"], ["prod.html", "🎬 Prod"], ["postprod.html", "✅ Post-prod"], ["run.html", "🧪 Run & links"], ["publish.html", "📣 Publish"]]],
-    ["🔎 Review", [["player.html", "▶️ Player"], ["script.html", "📜 Script"], ["artifacts.html", "🧩 Artifacts"], ["edl.html", "✂️ EDL"], ["changelog.html", "🗒️ Changelog"], ["metadata.html", "📺 YouTube metadata"]]],
+    ["🔎 Review", [["player.html", "▶️ Player"], ["script.html", "📜 Script"], ["artifacts.html", "🧩 Artifacts"], ["edl.html", "✂️ EDL"], ["changelog.html", "🗒️ Changelog"], ["metadata.html", "📺 YouTube metadata"], ["analytics.html", "📈 Analytics"]]],
     ["🔗 Links", [["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true], ["readme.html", "📄 README"],
       ...(C.url ? [[C.url, "🚀 Join " + (C.name || "the community"), true]] : []),
       ...((P.links || []).map((l) => [l.url, l.label, true])),

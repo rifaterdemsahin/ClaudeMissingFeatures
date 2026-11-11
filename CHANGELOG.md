@@ -30,6 +30,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 - ♻️ **Kit completeness**: Updated build_kit.sh to bundle pipeline app, evals, questions and Azure player support; passes reuse and idempotence checks
 - 🧩 **Export naming**: Standardized export naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x); updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented the unified naming rule in MASTER_SPEC.md
 - 🧩 **Publish & Spec stats**: Disallowed angled brackets in publish.html placeholders and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html; added document stats banner (lines, words, chars, sections, read time) to the bottom of spec.html
+- ☁️ **Published & Analytics**: Recorded live published URLs for YouTube (youtu.be/fnKeTQYBHN8), LinkedIn (lnkd.in/p/eZreMED5), and X (status/2120640398091804833); status updated to shared in assets/publish.json and linked in top menu; created analytics.html to track Day 2, Day 14, Day 28 performance horizons and OKR reconciliation
 
 ## Round 6 · 📣 Publishing: three platforms, Azure, script and changelog
 *2026-11-11 night*
@@ -124,6 +125,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | # | In | Said | Decision |
 |---|---|---|---|
+| 38 | site | linkedin published to https://lnkd.in/p/eZreMED5 / youtube published to https://youtu.be/fnKeTQYBHN8 / x.com https://x.com/rifaterdemsahin/status/2120640398091804833 > document as output > and create analytics pages. | Recorded live published URLs in assets/publish.json (status: shared) and metadata.md; nav.js Links menu now shows all 3 post links; created analytics.html via scripts/build_analytics.py tracking Day 2, Day 14, Day 28 performance horizons and OKR reconciliation; documented in MASTER_SPEC.md (Section 6v) |
 | 37 | site | publish.html angled brackets not allowed, thumbnail on publish page, document stats at bottom of spec.html | Disallowed angled brackets in publish.html placeholders/hints and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html and export zip; added live document stats banner (lines, words, chars, sections, read time) to spec.html |
 | 36 | site | rename exports properly x youtube linkedin > update master spec | Standardized export file naming across all platforms to exports/<slug>-<platform>-v<N>.mp4 (youtube, linkedin, x). Updated render_export.sh, register_export.py, Azure storage uploads, azure_links.js, and documented in MASTER_SPEC.md |
 | 35 | site | add a page for the completion time and how long each stage takes with the llm, give the order and what can be done to prep up | Time and order page: 19 stages in order with who does them, measured or estimated time, LLM involvement, parallelism, prep tips, a planning calculator and the elapsed time |
@@ -166,6 +168,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `55b8dd5` | 2026-11-11 22:26 | Remove angled brackets from publish page, add video thumbnail preview, and add document stats to spec.html |
 | `ae3f066` | 2026-11-11 22:13 | Standardize export naming across x, youtube, linkedin and update master spec |
 | `45a3727` | 2026-11-11 21:23 | Notes copy formatting: output 'task N: [url]: [note]' for single and multiple notes |
 | `cc6dad9` | 2026-11-11 21:20 | Notes copy formatting: output '[url] : [ note ]' for all copied notes |

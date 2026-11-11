@@ -14,8 +14,8 @@
    "title_max": 100,
    "text_from_metadata": true,
    "text_max": 5000,
-   "post_url": "",
-   "status": "draft",
+   "post_url": "https://youtu.be/fnKeTQYBHN8",
+   "status": "shared",
    "post_url_hint": "Paste the YouTube post link when shared"
   },
   {
@@ -28,8 +28,8 @@
    "limit_note": "native video: 3 seconds to 10 minutes",
    "file_limit": "5 GB",
    "text_max": 3000,
-   "post_url": "",
-   "status": "draft",
+   "post_url": "https://lnkd.in/p/eZreMED5",
+   "status": "shared",
    "post_url_hint": "Paste the LinkedIn post link when shared",
    "text": "Claude just added new artifact types, including an infinite-canvas Whiteboard. On my Pro account it was not there.\n\nWhat I checked, in about three minutes:\n• Settings → Capabilities: there is no beta switch for it\n• Asked Claude: my plan qualifies, the rollout had not reached my account yet\n• Quit and reopen the app, update the Mac, remove the old copy\n• Meanwhile: Docs, Slides, Design and Data work fine\n\nHonest result: the Whiteboard had not reached me yet. The checklist is worth keeping for the next feature that goes missing.\n\nWant it in depth? Join the Delivery Pilot community on Skool: https://www.skool.com/delivery-pilot-8938\n\n#Claude #ClaudeAI #AITools #Artifacts"
   },
@@ -43,8 +43,8 @@
    "limit_note": "standard accounts: 2 minutes 20 seconds (Premium accounts can post longer videos)",
    "file_limit": "512 MB",
    "text_max": 280,
-   "post_url": "",
-   "status": "draft",
+   "post_url": "https://x.com/rifaterdemsahin/status/2120640398091804833",
+   "status": "shared",
    "post_url_hint": "Paste the X post link when shared",
    "text": "Claude's new Whiteboard did not show up on my account. What I checked: Settings → Capabilities (no beta switch), my plan, quit and reopen, update the Mac. Result: the rollout has not reached me yet. Walkthrough ↓ skool.com/delivery-pilot-8938 #Claude"
   }

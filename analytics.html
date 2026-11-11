@@ -1,0 +1,283 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>analytics</title>
+<style>
+.pn{background:#14141c;border:1px solid #2a2a38;border-radius:12px;margin:16px 0;padding:16px 20px}
+.pn h2{margin:0 0 12px;font-size:20px}
+.chip{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:8px;color:#000}
+.s-shared{background:#4ade80}.s-draft{background:#9ca3af}.s-open{background:#facc15}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:16px 0}
+.card{background:#0b0b0f;border:1px solid #2a2a38;border-radius:10px;padding:14px 16px}
+.card h3{margin:0 0 8px;font-size:17px;display:flex;align-items:center;justify-content:space-between}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+button.off,a.btn-off{background:#2a2a38;color:#eee;text-decoration:none;border-radius:8px;padding:6px 12px;font-weight:700;font-size:13px;display:inline-block;border:0;cursor:pointer}
+button.primary{background:#ff7a3d;color:#000;border:0;border-radius:8px;padding:8px 16px;font-weight:800;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin:10px 0}
+th,td{border:1px solid #2a2a38;padding:8px 12px;text-align:left;font-size:14px}
+th{background:#1a1a26;color:#ccc}
+input.stat{background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:6px;padding:4px 8px;width:100%;box-sizing:border-box;font-family:inherit;font-size:13px}
+input.stat:focus{border-color:#ff7a3d;outline:none}
+.saved{display:inline-block;margin-left:10px;color:#4ade80;font-weight:700;font-size:13px;opacity:0}
+.saved.on{animation:savedpop 1.8s ease-out}
+@keyframes savedpop{0%{opacity:0;transform:scale(.6)}14%{opacity:1;transform:scale(1.18)}28%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.timeline-milestones{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.milestone{background:#0b0b0f;border:1px solid #2a2a38;border-radius:8px;padding:12px}
+.milestone.active{border-color:#ff7a3d;background:rgba(255,122,61,0.06)}
+.milestone h4{margin:0 0 6px;color:#ff7a3d;font-size:15px}
+.milestone p{margin:2px 0;font-size:13px;opacity:.8}
+textarea.notes{width:100%;background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:8px;padding:8px;min-height:90px;box-sizing:border-box;font-family:inherit;font-size:13px}
+</style>
+</head><body><main>
+<h1>📈 Performance Analytics & Value Reconciliation</h1>
+<p>Track post-publish view velocity, audience retention, and community conversion across <b>Day 2 (48h)</b>, <b>Day 14</b>, and <b>Day 28</b> review horizons. Compare live results with pre-production OKR targets and reconcile value recognition.</p>
+
+<div class="tools">
+  <button id="copyreport" class="primary">📋 Copy Analytics Report</button>
+  <button id="exportjson" class="off">⬇️ Export JSON</button>
+  <button id="resetstats" class="off">🗑️ Reset to Defaults</button>
+  <span id="saved" class="saved">✔ Saved</span>
+</div>
+
+<div class="pn">
+  <h2>🌐 Published Content & Studio Direct Links</h2>
+  <div class="grid" id="platformcards"></div>
+</div>
+
+<div class="pn">
+  <h2>⏱️ Review Cadence & Tracking Horizons</h2>
+  <div class="timeline-milestones" id="milestones"></div>
+</div>
+
+<div class="pn">
+  <h2>📊 Multi-Platform Performance Tracker</h2>
+  <p style="opacity:.75;font-size:13px">Values are auto-saved in this browser. Enter counts as they appear on your platform dashboards.</p>
+  <div style="overflow-x:auto">
+    <table id="trackertable">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Metric</th>
+          <th>Target</th>
+          <th>Day 2 (48h)</th>
+          <th>Day 14</th>
+          <th>Day 28 (Maturity)</th>
+          <th>Status / Trend</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="pn">
+  <h2>🎯 Post-Publish OKR Reconciliation</h2>
+  <p style="opacity:.75;font-size:13px">Evaluate the four post-publish Key Results once real distribution numbers mature.</p>
+  <table id="okrtable">
+    <thead>
+      <tr>
+        <th>KR ID</th>
+        <th>Key Result Goal</th>
+        <th>Target</th>
+        <th>Actual Recorded</th>
+        <th>Outcome</th>
+      </tr>
+    </thead>
+    <tbody id="okrbody"></tbody>
+  </table>
+</div>
+
+<div class="pn">
+  <h2>📝 Qualitative Takeaways & Algorithm Observations</h2>
+  <textarea id="analnotes" class="notes" placeholder="Write key takeaways here (e.g. drop-off moments in retention graph, top comments, what drove clicks to community, algorithm distribution velocity). Saved automatically."></textarea>
+</div>
+
+</main>
+<script src="project.js"></script><script src="nav.js"></script>
+<script>
+const LINKS_DATA = [{"id": "youtube", "label": "YouTube", "emoji": "▶️", "url": "https://youtu.be/fnKeTQYBHN8", "analytics_url": "https://studio.youtube.com/video/fnKeTQYBHN8/analytics", "status": "shared"}, {"id": "linkedin", "label": "LinkedIn", "emoji": "💼", "url": "https://lnkd.in/p/eZreMED5", "analytics_url": "https://www.linkedin.com/analytics/creator/content/", "status": "shared"}, {"id": "x", "label": "X", "emoji": "✖️", "url": "https://x.com/rifaterdemsahin/status/2120640398091804833", "analytics_url": "https://x.com/i/status/2120640398091804833/analytics", "status": "shared"}];
+const MANUAL_KRS = [{"id": "KR1.4", "obj": "O1", "text": "Average view duration of at least 40% (YouTube Analytics, first 28 days)", "target": "40%"}, {"id": "KR1.5", "obj": "O1", "text": "At least 10 comments saying it helped or that they found the answer (first 28 days)", "target": "10"}, {"id": "KR2.3", "obj": "O2", "text": "At least 30 clicks on the Skool link in 14 days", "target": "30"}, {"id": "KR2.4", "obj": "O2", "text": "At least 5 new members say this video brought them (join question), 14 days", "target": "5"}];
+const PUB_DATE = "2026-11-11";
+
+// Milestones
+const MS = [
+  { day: 2, label: "Day 2 (48h Velocity)", date: "2026-11-13", focus: "First 48 hours CTR, thumbnail test, initial notification reach" },
+  { day: 14, label: "Day 14 (Mid-Tail)", date: "2026-11-25", focus: "Browse/suggested traffic takeover, retention graph drop-offs, community link clicks" },
+  { day: 28, label: "Day 28 (Maturity)", date: "2026-12-09", focus: "Final OKR evaluation, search indexing, community join conversion rate" }
+];
+
+// Tracker metrics schema
+const METRICS = [
+  { platform: "YouTube", id: "yt_views", name: "Video Views", target: "500+" },
+  { platform: "YouTube", id: "yt_watch_hours", name: "Watch Time (Hours)", target: "40+ hrs" },
+  { platform: "YouTube", id: "yt_retention", name: "Avg View Duration (%)", target: "40%+" },
+  { platform: "YouTube", id: "yt_ctr", name: "Impressions CTR (%)", target: "6%+" },
+  { platform: "YouTube", id: "yt_likes", name: "Likes", target: "30+" },
+  { platform: "YouTube", id: "yt_comments", name: "Helpful Comments", target: "10+" },
+  { platform: "LinkedIn", id: "li_impressions", name: "Impressions", target: "1,500+" },
+  { platform: "LinkedIn", id: "li_views", name: "Video Views (3s+)", target: "400+" },
+  { platform: "LinkedIn", id: "li_eng", name: "Reactions & Comments", target: "25+" },
+  { platform: "X", id: "x_impressions", name: "Impressions", target: "1,000+" },
+  { platform: "X", id: "x_views", name: "Video Views", target: "300+" },
+  { platform: "X", id: "x_eng", name: "Engagements / Bookmarks", target: "20+" },
+  { platform: "Community", id: "comm_clicks", name: "Community Link Clicks", target: "30+" },
+  { platform: "Community", id: "comm_joins", name: "New Community Members", target: "5+" }
+];
+
+let STATS = {};
+try { STATS = JSON.parse(localStorage.getItem("analytics:stats") || "{}"); } catch(e) {}
+let NOTES_VAL = "";
+try { NOTES_VAL = localStorage.getItem("analytics:notes") || ""; } catch(e) {}
+
+const $ = id => document.getElementById(id);
+const esc = t => String(t || "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const COMM = (window.PROJECT || {}).community || {};
+
+function renderCards() {
+  $("platformcards").innerHTML = LINKS_DATA.map(p => `
+    <div class="card">
+      <h3><span>${p.emoji} ${esc(p.label)}</span> <span class="chip s-${p.status}">${p.status}</span></h3>
+      <p style="margin:6px 0;font-size:13px"><a href="${p.url}" target="_blank" rel="noopener">${p.url ? "🔗 View Published Post" : "–"}</a></p>
+      ${p.analytics_url ? `<p style="margin:4px 0;font-size:13px"><a href="${p.analytics_url}" target="_blank" rel="noopener" class="btn-off">📊 Open Analytics Studio</a></p>` : ""}
+    </div>
+  `).join("") + (COMM.url ? `
+    <div class="card">
+      <h3><span>🚀 ${esc(COMM.name || 'Community')}</span> <span class="chip s-shared">active</span></h3>
+      <p style="margin:6px 0;font-size:13px"><a href="${COMM.url}" target="_blank" rel="noopener">🔗 ${esc(COMM.name || 'Community')}</a></p>
+      <p style="margin:4px 0;font-size:13px"><span style="opacity:.7">Target: 30 clicks / 5 joins</span></p>
+    </div>
+  ` : "");
+}
+
+function renderMilestones() {
+  const today = new Date().toISOString().slice(0, 10);
+  $("milestones").innerHTML = MS.map(m => {
+    const isPast = today >= m.date;
+    return `
+      <div class="milestone ${isPast ? 'active' : ''}">
+        <h4>${esc(m.label)}</h4>
+        <p><b>Target Date:</b> ${m.date}</p>
+        <p>${esc(m.focus)}</p>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderTable() {
+  $("tbody").innerHTML = METRICS.map(m => `
+    <tr>
+      <td><b>${esc(m.platform)}</b></td>
+      <td>${esc(m.name)}</td>
+      <td><span style="opacity:.8">${esc(m.target)}</span></td>
+      <td><input class="stat" data-key="${m.id}_d2" value="${esc(STATS[m.id + '_d2'] || '')}" placeholder="—"></td>
+      <td><input class="stat" data-key="${m.id}_d14" value="${esc(STATS[m.id + '_d14'] || '')}" placeholder="—"></td>
+      <td><input class="stat" data-key="${m.id}_d28" value="${esc(STATS[m.id + '_d28'] || '')}" placeholder="—"></td>
+      <td id="status_${m.id}"><span style="opacity:.75">${STATS[m.id + '_d28'] ? '✅ Recorded' : (STATS[m.id + '_d2'] ? '⏳ Tracking' : '⏳ Pending')}</span></td>
+    </tr>
+  `).join("");
+
+  document.querySelectorAll("input.stat").forEach(input => {
+    input.oninput = () => {
+      STATS[input.dataset.key] = input.value.trim();
+      save();
+    };
+  });
+}
+
+function renderOKRs() {
+  $("okrbody").innerHTML = MANUAL_KRS.map(kr => {
+    let key = "";
+    if (kr.id === "KR1.4") key = "yt_retention_d28";
+    else if (kr.id === "KR1.5") key = "yt_comments_d28";
+    else if (kr.id === "KR2.3") key = "comm_clicks_d14";
+    else if (kr.id === "KR2.4") key = "comm_joins_d28";
+    const val = STATS[key] || "";
+    return `
+      <tr>
+        <td><b>${esc(kr.id)}</b></td>
+        <td>${esc(kr.text)}</td>
+        <td><b>${esc(kr.target)}</b></td>
+        <td><input class="stat" data-key="${key}" value="${esc(val)}" placeholder="Enter measured actual"></td>
+        <td><span>${val ? '✅ Evaluated' : '⏳ Open (waiting for horizon)'}</span></td>
+      </tr>
+    `;
+  }).join("");
+
+  $("okrbody").querySelectorAll("input.stat").forEach(input => {
+    input.oninput = () => {
+      STATS[input.dataset.key] = input.value.trim();
+      save();
+    };
+  });
+}
+
+let saveTimer = null;
+function save() {
+  try {
+    localStorage.setItem("analytics:stats", JSON.stringify(STATS));
+    localStorage.setItem("analytics:notes", $("analnotes").value);
+  } catch(e) {}
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const s = $("saved");
+    s.classList.remove("on");
+    void s.offsetWidth;
+    s.classList.add("on");
+  }, 300);
+}
+
+$("analnotes").value = NOTES_VAL;
+$("analnotes").oninput = save;
+
+$("copyreport").onclick = () => {
+  const proj = window.PROJECT || {};
+  let lines = [
+    `# 📈 Performance Analytics Report: ${proj.title || "Video"}`,
+    `Published Date: ${PUB_DATE}`,
+    "",
+    "## 🔗 Published Posts",
+  ];
+  LINKS_DATA.forEach(p => {
+    if (p.url) lines.push(`- ${p.label}: ${p.url}`);
+  });
+  if (COMM.url) lines.push(`- Community: ${COMM.url}`);
+  lines.push("", "## 📊 Tracked Numbers");
+  METRICS.forEach(m => {
+    const d2 = STATS[m.id + "_d2"] || "—";
+    const d14 = STATS[m.id + "_d14"] || "—";
+    const d28 = STATS[m.id + "_d28"] || "—";
+    lines.push(`- [${m.platform}] ${m.name} (Target: ${m.target}): Day 2: ${d2} | Day 14: ${d14} | Day 28: ${d28}`);
+  });
+  const n = $("analnotes").value.trim();
+  if (n) {
+    lines.push("", "## 📝 Observations & Takeaways", n);
+  }
+  navigator.clipboard.writeText(lines.join("\n")).then(() => {
+    $("copyreport").textContent = "Report Copied ✔";
+    setTimeout(() => $("copyreport").textContent = "📋 Copy Analytics Report", 2000);
+  });
+};
+
+$("exportjson").onclick = () => {
+  const blob = new Blob([JSON.stringify({ stats: STATS, notes: $("analnotes").value, updated: new Date().toISOString() }, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "video-analytics.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+
+$("resetstats").onclick = () => {
+  if (confirm("Reset local analytics inputs to blank?")) {
+    STATS = {};
+    localStorage.removeItem("analytics:stats");
+    renderTable();
+    renderOKRs();
+  }
+};
+
+renderCards();
+renderMilestones();
+renderTable();
+renderOKRs();
+</script>
+</body></html>

@@ -20,6 +20,7 @@ python3 -I scripts/build_artifacts.py | tail -1        # works without an export
 python3 -I scripts/build_timeline.py | tail -1
 python3 -I scripts/build_pipeline_diagram.py | tail -1
 python3 -I scripts/build_publish.py
+python3 -I scripts/build_analytics.py
 python3 -I scripts/build_changelog.py
 python3 -I scripts/build_toc.py | tail -1
 python3 -I scripts/build_readme.py | tail -1
