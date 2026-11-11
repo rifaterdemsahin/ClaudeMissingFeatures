@@ -7,6 +7,8 @@
     ["prod.html", "🎬 Prod"],
     ["postprod.html", "✅ Post-prod"],
     ["player.html", "▶️ Player & output"],
+    ["run.html", "🧪 Run & links"],
+    ["http://localhost:3000/LongForm", "🎞️ Remotion Studio", true],
     ["metadata.html", "📺 YouTube metadata"],
     ["spec.html", "📘 Master spec v3"],
     ["readme.html", "📄 README (Shorts flow)"],

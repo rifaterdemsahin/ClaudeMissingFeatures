@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{TITLE}}: production</title></head><body><main>
+<h1>🎬 Production</h1>
+<table><tr><th>Step</th><th>Result</th><th>Tool</th></tr>
+<tr><td>Sync clips to voice</td><td>{{SYNC}}</td><td><code>scripts/sync_clips.py</code></td></tr>
+<tr><td>Base render 1080p30</td><td></td><td><code>scripts/render_base.sh</code></td></tr>
+<tr><td>Transcript + animated subtitles</td><td></td><td><code>scripts/build_subs.py</code></td></tr>
+<tr><td>Cuts</td><td></td><td><code>remotion/src/cuts.json</code></td></tr>
+<tr><td>Intro card / image overlays</td><td></td><td><code>remotion/src/overlays.json</code></td></tr></table>
+<p>← <a href="preprod.html">Pre-production</a> · <a href="postprod.html">Post-production →</a></p>
+</main><script src="nav.js"></script></body></html>

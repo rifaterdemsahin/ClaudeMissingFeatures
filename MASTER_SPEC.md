@@ -1,4 +1,4 @@
-# MASTER SPEC v3.1: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.2: long-form 1080p screen-recording video (YouTube)
 
 Generic recipe for turning **screen recordings + your own voice recording** into a finished 16:9 YouTube long-form video: sync, render, Remotion overlays, title, description, chapters, site. Proven on "Claude Missing Features" (12:30, 1920x1080). It replaces the Shorts-only flow in `README.md` for long form; the Shorts rules there still apply to 9:16 videos.
 
@@ -18,6 +18,32 @@ Generic recipe for turning **screen recordings + your own voice recording** into
 | Thumbnail | 1920x1080 (not 1080x1920) |
 | CTA | community name + URL, one ask |
 | Privacy risks | names, chats, file paths, tokens visible on screen |
+
+---
+
+## 0a. Fast start: the kit on Google Drive
+
+Everything reusable (this spec, scripts, the Remotion project, page and metadata templates) is packaged as one zip so the next video starts in minutes, not hours.
+
+| Where | What |
+|---|---|
+| Google Drive (My Drive) folder **"Claude Missing Features Kit"** | `claude-missing-features-kit.zip`, `MASTER_SPEC.md`, `KIT_README.md` |
+| Azure Key Vault **`dp-kv-deliverypilot`** (uksouth) | secrets `cmf-kit-drive-folder-id` and `cmf-kit-drive-folder-url` (the link lives here, not in the repo) |
+| Repo | `kit/` (README, templates, `new-video.sh`), `scripts/pull_kit.sh`, `scripts/build_kit.sh` |
+
+```bash
+# new video in 3 commands (needs: az login, rclone remote "gdrive-shared")
+mkdir -p ~/projects/<new-video> && cd ~/projects/<new-video>
+~/projects/ClaudeMissingFeatures/scripts/pull_kit.sh .        # folder id comes from Key Vault, zip from Drive
+./new-video.sh "<Title>" <duration_seconds>                   # fills page/metadata/brief templates, sets Remotion duration
+# then section 1 of this spec; run it with the commands in section 6d
+```
+
+Templates in the kit (`templates/`): `BRIEF`, `metadata`, `SANITY_CHECK`, and the pages `index`, `preprod`, `prod`, `postprod`, `player`, `run` with `{{TITLE}}`-style placeholders.
+
+**Keep the kit fresh:** after improving scripts, Remotion or this spec, run `scripts/build_kit.sh`, then upload the new `claude-missing-features-kit.zip` (and `MASTER_SPEC.md`) to the same Drive folder, replacing the old files. Test the kit from scratch every time: unzip into a temp folder, `./new-video.sh "T" 60`, `npm install`, `npx tsc --noEmit`.
+
+**Rules:** the Drive link and any key go in Key Vault, never in the repo or chat. Do not put media in the kit. Reuse the existing vault; add new secrets with a `cmf-kit-` prefix.
 
 ---
 
@@ -123,12 +149,36 @@ Cuts are data, not edits to the video: `remotion/src/cuts.json` = `[[from,to],..
 - `overlays.json` -> `images: [{from,to,src}]` shows an image full-frame (files in `remotion/public/img/`, not committed) on source time, with 0.2 s fades. Use it wherever private or distracting screen content must be replaced.
 - Tooltips that flash while the cursor crosses the dock (iTerm, OBS) are small; cover them only if the owner asks.
 
+## 6d. Run it (links and commands)
+
+| What | Link | Start it with |
+|---|---|---|
+| Remotion Studio (edit, preview, cuts, subtitles) | http://localhost:3000/LongForm | `cd remotion && npm run studio` |
+| Thumbnail still | http://localhost:3000/Thumb | same Studio |
+| Site + player (video seeking works) | http://localhost:8000/player.html | `scripts/serve.sh` |
+
+```bash
+cd ~/projects/<project>/remotion
+npm install                                                  # first time
+ln ~/Downloads/<slug>-1080p.mp4 public/base.mp4             # HARD link, once (a symlink breaks render)
+npm run studio                                               # http://localhost:3000/LongForm
+npm run render                                               # -> remotion/out/long.mp4
+npm run still                                                # thumbnail -> remotion/out/thumbnail.png
+npx tsc --noEmit                                             # typecheck
+cd .. && scripts/serve.sh                                    # http://localhost:8000/player.html (new terminal)
+open -a "Google Chrome" http://localhost:3000/LongForm       # always open in Chrome
+```
+The same table and a troubleshooting list are on the site page `run.html` (menu: 🧪 Run & links). Both links only work while the command is running.
+
+**Player rule:** the player needs the video next to it as `long.mp4` (git-ignored). `scripts/serve.sh` hard-links your render to `long.mp4` and serves the folder with HTTP Range support (plain `python -m http.server` has none, so seeking and chapters break). The player shows a status line: green "Playing long.mp4 (12:30)" or a warning with the fix. Verified in Chrome: loads 1920x1080, seeks to 20 s, caption cue active.
+
 ## 7. Website (GitHub Pages)
 
 | Page | File | Built by | Purpose |
 |---|---|---|---|
 | Project hub | `index.html` | by hand | links to the stage pages |
 | Pre / Prod / Post | `preprod.html`, `prod.html`, `postprod.html` | by hand | one page per stage with a status table |
+| Run & links | `run.html` | by hand | Studio and player links, run commands, troubleshooting |
 | Player | `player.html` | by hand | plays `long.mp4` if hosted, otherwise a local file picker (never committed); subtitle track from `subs.js`; **timestamped feedback box** (Insert current time, Copy) whose text the owner pastes back to Claude |
 | Metadata | `metadata.html` | `build_site.py` | title, description, tags with copy buttons |
 | Master spec | `spec.html` | `build_site.py` | this file, rendered |
@@ -188,6 +238,9 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 | `interpolate` threw "inputRange must be strictly monotonically increasing" | A volume fade with 0-frame edges made `[0,0,n,n]`. Use a `fade()` helper that only adds the edges that touch a cut. |
 | Animated captions: words touched | The active-word scale ate the 14 px gap. Gap 26 px, scale 1.07. |
 | Whole transcript flagged as repeats | 3-word runs match everywhere ("be able to"). Use 4-word runs from a different cue. |
+| **A scaffold test run from the repo root overwrote real pages** (`new-video.sh` used relative paths) | Scaffold scripts must `cd` to their own folder, check `templates/` exists and refuse in a git folder with uncommitted changes. **Only ever test them in a temp dir** (`T=$(mktemp -d); unzip kit.zip -d $T; (cd /tmp && $T/new-video.sh ...)`), then confirm `git status` shows nothing new. Recovery was `git checkout -- <files>` because work was committed: commit before experimenting. |
+| HTML player showed no video | `long.mp4` was never in git (404, media error 4). Hard-link the render as `long.mp4` and serve with `scripts/serve.sh` (Range support); the player now shows a status message. |
+| `file://` pages can't be driven by the browser tool | Serve the folder over http://localhost:8000 for testing. |
 | Recording opened on the OBS window | Intro card over 0-2.3 s instead of cutting the first spoken words. |
 | Feature missing on screen | Title says so; do not promise the feature. |
 

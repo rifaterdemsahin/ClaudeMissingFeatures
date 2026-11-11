@@ -7,3 +7,5 @@ remotion/public/*
 *.mp4
 *.wav
 *.WAV
+kit-dist/
+*.zip
