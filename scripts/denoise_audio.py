@@ -30,7 +30,7 @@ y, sr = sf.read(str(tmp / "a.wav"), dtype="float32"); noise = y[int(a.noise[0] *
 out = nr.reduce_noise(y=y[t0:].T, sr=sr, y_noise=noise.T, stationary=True, prop_decrease=a.strength, n_fft=2048, freq_mask_smooth_hz=300, time_mask_smooth_ms=60).T
 fade = int(1.5 * sr); w = np.linspace(0, 1, fade)[:, None]; res = y.copy(); res[t0:] = out; res[t0:t0 + fade] = y[t0:t0 + fade] * (1 - w) + out[:fade] * w
 sf.write(str(tmp / "c.wav"), res, sr, subtype="FLOAT")
-subprocess.check_call(["ffmpeg", "-v", "error", "-y", "-i", a.inp, "-i", str(tmp / "c.wav"), "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", a.out]   # faststart: moov at the front, else Remotion frame lookups are slow)
+subprocess.check_call(["ffmpeg", "-v", "error", "-y", "-i", a.inp, "-i", str(tmp / "c.wav"), "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", a.out])   # faststart: moov at the front, else Remotion frame lookups are slow
 H1, L1 = haze(a.out); base = np.median(H0[:max(60, int(a.frm) - 10)]); n = min(len(L0), len(L1)); sp = L0 > np.percentile(L0, 60); sp[:int(a.frm)] = False
 print("haze vs clean baseline, per 60 s after --from:", " ".join(f"{t}: {H0[t:t+60].mean()-base:+.0f}->{H1[t:t+60].mean()-base:+.0f}" for t in range(int(a.frm), min(len(H0), len(H1)), 60)))
 print("speech level change %.1f dB" % float((L1[:n][sp[:n]] - L0[:n][sp[:n]]).mean()), "->", a.out)
