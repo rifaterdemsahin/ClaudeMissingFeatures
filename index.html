@@ -1,27 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Claude Missing Features: project</title></head><body><main>
 <h1>🎬 Claude Missing Features</h1>
-<p>Long-form YouTube video (1920×1080, 12:30): the new Claude Whiteboard / artifact types did not appear on my account. Screen recordings + my own voice, synced, rendered and packaged with Remotion.</p>
-<p><a class="btn" href="player.html">▶️ Player &amp; output</a> <a class="btn" href="metadata.html">📺 Title &amp; description</a> <a class="btn" href="spec.html">📘 Master spec v3</a></p>
-
-<h2 id="preprod">📝 Pre-production</h2>
-<table><tr><th>Item</th><th>Status</th></tr>
-<tr><td>Source: 2 screen recordings (8:01, 4:34, 3456×2234 @ 60) + Zoom WAV (12:35)</td><td>✅ in ~/Downloads/Claude Missing Features</td></tr>
-<tr><td>Brief, title, CTA</td><td>✅ <a href="metadata.html">metadata</a></td></tr>
-<tr><td>Privacy review of the first minute (chat names, Drive paths)</td><td>⬜ before upload</td></tr></table>
-
-<h2 id="prod">🎬 Production</h2>
-<table><tr><th>Step</th><th>Result</th></tr>
-<tr><td>Sync clips to the voice (cross-correlation)</td><td>✅ clip 1 at +4.75 s (conf 5.5), clip 2 at +486.09 s (conf 4.0), contiguous</td></tr>
-<tr><td>Base render 1080p30, blurred side fill, voice -14 LUFS</td><td>✅ 750.07 s, 105 MB, -14.5 LUFS</td></tr>
-<tr><td>Transcript (Whisper small)</td><td>✅ chapters derived from it</td></tr>
-<tr><td>Remotion project (<code>remotion/</code>, <code>npm run studio</code>)</td><td>✅ typechecks, Studio on :3000</td></tr>
-<tr><td>Overlays, callouts, end card</td><td>⬜ waiting for directions</td></tr></table>
-
-<h2 id="postprod">✅ Post-production</h2>
-<table><tr><th>Item</th><th>Status</th></tr>
-<tr><td>Thumbnail 1920×1080 (<code>npm run still</code>)</td><td>⬜ placeholder only</td></tr>
-<tr><td>Captions (fix "cloud" → "Claude")</td><td>⬜</td></tr>
-<tr><td>Upload private, check, publish</td><td>⬜</td></tr></table>
+<p>Long-form YouTube video (1920×1080, 12:30): the new Claude Whiteboard / artifact types did not appear on my account. Screen recordings + my own voice, synced, subtitled and packaged with Remotion.</p>
+<table><tr><th>Stage</th><th>Page</th></tr>
+<tr><td>📝 Pre-production</td><td><a href="preprod.html">preprod.html</a></td></tr>
+<tr><td>🎬 Production</td><td><a href="prod.html">prod.html</a></td></tr>
+<tr><td>✅ Post-production</td><td><a href="postprod.html">postprod.html</a></td></tr>
+<tr><td>▶️ Player (feedback + subtitles)</td><td><a href="player.html">player.html</a></td></tr>
+<tr><td>📺 Title &amp; description</td><td><a href="metadata.html">metadata.html</a></td></tr>
+<tr><td>📘 Master spec v3</td><td><a href="spec.html">spec.html</a></td></tr></table>
 <p>Video files are never committed; they stay in <code>~/Downloads</code>.</p>
 </main><script src="nav.js"></script></body></html>

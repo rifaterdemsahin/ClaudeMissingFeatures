@@ -4,13 +4,16 @@
 <p>The video is not stored in git. It plays from <code>long.mp4</code> next to this page if you host it, otherwise choose the local file.</p>
 <video id="v" controls style="width:100%;background:#000;border-radius:12px" src="long.mp4"></video>
 <p><label>Local file: <input type="file" id="f" accept="video/mp4"></label> Speed: <select id="s"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select></p>
+<h2>📝 Feedback (timestamped)</h2>
+<p><button id="ts">📍 Insert current time</button> <button id="fc">Copy feedback</button> <label><input type="checkbox" id="cc" checked> Subtitles</label></p>
+<textarea id="fb" style="width:100%;height:180px;background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:8px;box-sizing:border-box" placeholder="Click Insert current time, then type your note. Saved in this browser. Copy and paste it to Claude."></textarea>
 <h2>Chapters</h2><ul id="ch"></ul>
 <h2>Measured specs</h2>
 <table><tr><td>Resolution / fps</td><td>1920×1080, 30 fps, H.264 CRF 18</td></tr>
 <tr><td>Length / size</td><td>12:30 (750.07 s), 105 MB</td></tr>
 <tr><td>Audio</td><td>AAC 192k, -14.5 LUFS integrated</td></tr>
 <tr><td>Local file</td><td><code>~/Downloads/claude-missing-features-1080p.mp4</code></td></tr></table>
-</main><script src="nav.js"></script><script>
+</main><script src="nav.js"></script><script src="subs.js"></script><script>
 const v=document.getElementById("v");
 document.getElementById("f").onchange=e=>{const f=e.target.files[0];if(f){v.src=URL.createObjectURL(f);v.play();}};
 document.getElementById("s").onchange=e=>v.playbackRate=+e.target.value;
@@ -18,4 +21,15 @@ const C=[[0,"What we are looking for: the new Whiteboard feature"],[22,"No beta 
 const t=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 document.getElementById("ch").innerHTML=C.map(([s,n])=>`<li><a href="#" data-s="${s}">${t(s)}</a> ${n}</li>`).join("");
 document.getElementById("ch").onclick=e=>{const s=e.target.dataset.s;if(s){e.preventDefault();v.currentTime=+s;v.play();}};
+
+// subtitles as a blob VTT track (works from file:// too)
+const T=(x,s)=>{const h=Math.floor(x/3600),m=Math.floor(x%3600/60),q=x%60;return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(Math.floor(q)).padStart(2,"0")+"."+String(Math.round((q%1)*1000)).padStart(3,"0")};
+if(window.SUBS){const vtt="WEBVTT\n\n"+SUBS.map(c=>T(c.from)+" --> "+T(c.to)+"\n"+c.text+"\n").join("\n");
+const tr=document.createElement("track");tr.kind="subtitles";tr.label="English";tr.srclang="en";tr.default=true;tr.src=URL.createObjectURL(new Blob([vtt],{type:"text/vtt"}));v.appendChild(tr);
+document.getElementById("cc").onchange=e=>{tr.track.mode=e.target.checked?"showing":"hidden"};setTimeout(()=>tr.track.mode="showing",300);}
+// feedback box
+const fb=document.getElementById("fb");try{fb.value=localStorage.getItem("fb:player")||""}catch(e){}
+fb.oninput=()=>{try{localStorage.setItem("fb:player",fb.value)}catch(e){}};
+document.getElementById("ts").onclick=()=>{const s=Math.floor(v.currentTime);fb.value+=(fb.value&&!fb.value.endsWith("\n")?"\n":"")+"["+Math.floor(s/60)+":"+String(s%60).padStart(2,"0")+"] ";fb.focus()};
+document.getElementById("fc").onclick=()=>copyText(fb.value);
 </script></body></html>

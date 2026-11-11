@@ -3,6 +3,9 @@
   const CTA = "Join our Skool community: Delivery Pilot https://www.skool.com/delivery-pilot-8938";
   const LINKS = [
     ["index.html", "🏠 Project"],
+    ["preprod.html", "📝 Pre-prod"],
+    ["prod.html", "🎬 Prod"],
+    ["postprod.html", "✅ Post-prod"],
     ["player.html", "▶️ Player & output"],
     ["metadata.html", "📺 YouTube metadata"],
     ["spec.html", "📘 Master spec v3"],
