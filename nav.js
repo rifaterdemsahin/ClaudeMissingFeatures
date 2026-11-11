@@ -2,6 +2,7 @@
 (function () {
   const CTA = "Join our Skool community: Delivery Pilot https://www.skool.com/delivery-pilot-8938";
   const LINKS = [
+    ["architecture.html", "🏛️ Architecture"],
     ["index.html", "🏠 Project"],
     ["preprod.html", "📝 Pre-prod"],
     ["prod.html", "🎬 Prod"],

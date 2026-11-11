@@ -9,3 +9,14 @@ remotion/public/*
 *.WAV
 kit-dist/
 *.zip
+
+# OCR output contains the private text we blur (chat titles, contacts): local only, never commit
+assets/ocr_frames.json
+assets/export_ocr.json
+assets/export_leaks.json
+assets/personal_windows.json
+REPORT.md
+assets/*.json.bak
+remotion/out/
+export.mp4
+long.mp4

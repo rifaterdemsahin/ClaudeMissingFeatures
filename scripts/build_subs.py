@@ -4,7 +4,7 @@ Cuts live in remotion/src/cuts.json as [[from,to],...] seconds on the source (ba
 import json, re, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 raw, offset = json.load(open(sys.argv[1])), float(sys.argv[2])
-cuts = sorted(json.load(open(ROOT / "remotion/src/cuts.json")))
+cuts = sorted(json.load(open(ROOT / "remotion/src/cuts.json")))   # [[from,to],...] source seconds
 FIX = [(r"\b[Tt]he cloud\b", "Claude"), (r"\bcloud\b", "Claude"), (r"\b[Cc]louds?\b", "Claude"),
        (r"\b[Gg]rowth ?bot\b|\bGrogbot\b", "Grok bot"), (r"\bhdml'?s\b", "HTML"), (r"\bKamba\b", "Canva"),
        (r"\bhomebrief\b", "Homebrew"), (r"\bbrief upgrade\b", "brew upgrade"),
@@ -12,12 +12,34 @@ FIX = [(r"\b[Tt]he cloud\b", "Claude"), (r"\bcloud\b", "Claude"), (r"\b[Cc]louds
 def fix(t):
     for a, b in FIX: t = re.sub(a, b, t)
     return re.sub(r"\s+", " ", t).strip()
-def remap(t):  # source seconds -> final seconds (None if inside a cut)
-    removed = 0.0
+OV = json.load(open(ROOT / "remotion/src/overlays.json"))
+SPEED = sorted(OV.get("speedups", []), key=lambda x: x["from"])
+TOTAL = int(re.search(r"DURATION = (\d+)", (ROOT / "remotion/src/theme.ts").read_text()).group(1)) / 30   # source seconds from theme.ts
+def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/src/cuts.ts
+    kept, pos = [], 0.0
     for a, b in cuts:
-        if t >= b: removed += b - a
-        elif t > a: return None
-    return t - removed
+        if a > pos: kept.append((pos, a))
+        pos = max(pos, b)
+    if pos < TOTAL: kept.append((pos, TOTAL))
+    segs, out = [], 0.0
+    def push(a, b, r, m):
+        nonlocal out
+        if b > a: segs.append([a, b, r, m, out]); out += (b - a) / r
+    for ka, kb in kept:
+        p = ka
+        for sp in SPEED:
+            a, b = max(sp["from"], ka), min(sp["to"], kb)
+            if b <= a: continue
+            if a > p: push(p, a, 1, False)
+            push(a, b, sp["rate"], bool(sp.get("mute"))); p = b
+        if p < kb: push(p, kb, 1, False)
+    return segs
+SEGS = segments()
+def remap(t):  # source seconds -> final (export) seconds; None inside a cut
+    for a, b, r, m, o in SEGS:
+        if a <= t < b + 1e-9: return o + (t - a) / r
+    return None
+def muted(c): return any(sp.get("mute") and c["from"] < sp["to"] and c["to"] > sp["from"] for sp in SPEED)
 cues = []
 for s in raw["segments"]:
     text = fix(s["text"]); st = s["start"] - offset; en = s["end"] - offset
@@ -43,6 +65,7 @@ cues = [c for c in cues if c["to"] > c["from"]]
 (ROOT / "subs.js").write_text("window.SUBS = " + json.dumps(cues) + ";")
 final = []
 for c in cues:
+    if muted(c): continue   # speech inside a muted speed-up is not shown
     a, b = remap(c["from"]), remap(c["to"] - 0.001)
     if a is not None and b is not None: final.append((a, b + 0.001, c["text"]))
 def ts(x, sep):
@@ -53,4 +76,5 @@ def wrap(c):
     mid = len(c) // 2; i = min((m.start() for m in re.finditer(" ", c)), key=lambda p: abs(p - mid)); return c[:i] + "\n" + c[i + 1:]
 (ROOT / "subtitles.srt").write_text("\n".join(f"{i+1}\n{ts(a,',')} --> {ts(b,',')}\n{wrap(c)}\n" for i, (a, b, c) in enumerate(final)))
 (ROOT / "subtitles.vtt").write_text("WEBVTT\n\n" + "\n".join(f"{ts(a,'.')} --> {ts(b,'.')}\n{wrap(c)}\n" for a, b, c in final))
+(ROOT / "export_map.js").write_text("window.EXPORT_MAP = " + json.dumps({"segs": [[round(a, 3), round(b, 3), r, m, round(o, 3)] for a, b, r, m, o in SEGS], "total": round(SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2], 3)}) + ";")
 print(len(cues), "cues,", len(final), "after cuts,", "word timings" if raw["segments"][0].get("words") else "estimated word timings")

@@ -9,6 +9,10 @@
 <tr><td>Animated subtitles (word highlight, spring in)</td><td>✅ <code>remotion/src/Subtitles.tsx</code>; word timings from Whisper <code>--word_timestamps</code></td><td><code>scripts/build_subs.py</code></td></tr>
 <tr><td>Cuts (repetitive parts)</td><td>✅ ready: edit <code>remotion/src/cuts.json</code>; candidates from <code>scripts/find_repeats.py</code></td><td>Remotion <code>Series</code></td></tr>
 <tr><td>OBS window at 0-2 s</td><td>✅ covered by an intro card; image overlays via <code>overlays.json</code></td><td>Remotion</td></tr>
+<tr><td>Intro card extended to 4.3 s, 10 explainer slides over personal windows</td><td>✅ <code>overlays.json</code> <code>slides</code></td><td>Remotion <code>Slide.tsx</code></td></tr>
+<tr><td>Blur: chat titles in the sidebar, sensitive words, screenshot sidebar</td><td>✅ generated from OCR (Apple Vision): 30 boxes</td><td><code>scripts/ocr_frames.swift</code>, <code>scripts/build_blurs.py</code></td></tr>
+<tr><td>Typing sped up 3x (1:08–1:19, muted)</td><td>✅ <code>overlays.json</code> <code>speedups</code></td><td>Remotion <code>playbackRate</code></td></tr>
+<tr><td>Export render</td><td>⏳ 22,291 frames, about 25 min → <code>remotion/out/long.mp4</code></td><td><code>npm run render</code></td></tr>
 <tr><td>End card, more overlays</td><td>waiting for your feedback from the <a href="player.html">player</a></td><td>Remotion</td></tr></table>
 <p>← <a href="preprod.html">Pre-production</a> · <a href="postprod.html">Post-production →</a></p>
 </main><script src="nav.js"></script></body></html>

@@ -1,5 +1,341 @@
 {
-  "_doc": "Image overlays on the SOURCE timeline (seconds). src = file in remotion/public/img/ (not committed). Empty list = none. Example: {\"from\": 120, \"to\": 128, \"src\": \"whiteboard.png\"}",
-  "intro_card": { "from": 0, "to": 2.3, "why": "hides the OBS Studio window visible at 0-2 s of the recording" },
-  "images": []
+ "_doc": "All times are seconds on the SOURCE (base.mp4) timeline. x,y,w,h are pixels in the 1920x1080 frame.",
+ "intro_card": {
+  "from": 0,
+  "to": 4.3
+ },
+ "slides": [
+  {
+   "from": 4.3,
+   "to": 16.0,
+   "title": "What we are doing",
+   "bullets": [
+    "Claude added new artifact types, including a Whiteboard (infinite canvas)",
+    "It has not shown up on my account: Pro plan, Mac desktop app",
+    "So we hunt for it: Settings, Capabilities, ask Claude, update the app and the Mac",
+    "Then we plan a week on a canvas with the tools that are already there"
+   ]
+  },
+  {
+   "from": 258.5,
+   "to": 264.4,
+   "title": "Next: update",
+   "bullets": [
+    "Quit and reopen Claude, then update the Mac"
+   ]
+  },
+  {
+   "from": 282.5,
+   "to": 312.4,
+   "title": "One AI updating another",
+   "bullets": [
+    "Update the system so new features can arrive",
+    "A script or a bot can run the Claude update",
+    "I use my own bot to update Claude on the MacBook Pro",
+    "One AI updates my other AI"
+   ]
+  },
+  {
+   "from": 324.5,
+   "to": 348.4,
+   "title": "Keeping tools up to date",
+   "bullets": [
+    "Check Claude is installed and current",
+    "My chief-of-staff bot, plus my own bots for repeat jobs",
+    "Watching my usage limit while the updates run"
+   ]
+  },
+  {
+   "from": 352.5,
+   "to": 360.4,
+   "title": "Checking again",
+   "bullets": [
+    "Artifacts: the Design tab and the Whiteboard are still not there"
+   ]
+  },
+  {
+   "from": 398.5,
+   "to": 426.4,
+   "title": "Version check",
+   "bullets": [
+    "Claude Desktop is up to date",
+    "Found an old broken copy and removed it",
+    "Updating the computer regularly helps"
+   ]
+  },
+  {
+   "from": 436.5,
+   "to": 450.4,
+   "title": "Upgrade the system too",
+   "bullets": [
+    "The upgrade also covers the system",
+    "Old copy removed: all good",
+    "Why: I want these new actions available"
+   ]
+  },
+  {
+   "from": 516.5,
+   "to": 524.4,
+   "title": "While it updates",
+   "bullets": [
+    "The update runs in the background",
+    "Claude keeps working meanwhile"
+   ]
+  },
+  {
+   "from": 586.5,
+   "to": 602.4,
+   "title": "Claude builds the canvas",
+   "bullets": [
+    "Claude names and fills in the sections",
+    "Double click any part to edit or comment"
+   ]
+  },
+  {
+   "from": 672.5,
+   "to": 686.4,
+   "title": "Update finished",
+   "bullets": [
+    "Close and reopen Claude",
+    "My bots get updates too: all agents keep updating"
+   ]
+  }
+ ],
+ "blurs": [
+  {
+   "from": 13.5,
+   "to": 80.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 77.5,
+   "to": 88.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 101.5,
+   "to": 106.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 103.5,
+   "to": 114.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 121.5,
+   "to": 152.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 149.5,
+   "to": 218.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 215.5,
+   "to": 224.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 221.5,
+   "to": 260.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 223.5,
+   "to": 234.5,
+   "x": 1065,
+   "y": 90,
+   "w": 185,
+   "h": 270,
+   "rule": "C"
+  },
+  {
+   "from": 231.5,
+   "to": 236.5,
+   "x": 1065,
+   "y": 210,
+   "w": 185,
+   "h": 232,
+   "rule": "C"
+  },
+  {
+   "from": 231.5,
+   "to": 236.5,
+   "x": 1065,
+   "y": 90,
+   "w": 185,
+   "h": 270,
+   "rule": "C"
+  },
+  {
+   "from": 233.5,
+   "to": 260.5,
+   "x": 1065,
+   "y": 82,
+   "w": 185,
+   "h": 232,
+   "rule": "C"
+  },
+  {
+   "from": 359.5,
+   "to": 398.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 367.5,
+   "to": 384.5,
+   "x": 1065,
+   "y": 82,
+   "w": 185,
+   "h": 232,
+   "rule": "C"
+  },
+  {
+   "from": 383.5,
+   "to": 394.5,
+   "x": 1065,
+   "y": 82,
+   "w": 185,
+   "h": 232,
+   "rule": "C"
+  },
+  {
+   "from": 425.5,
+   "to": 438.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 449.5,
+   "to": 490.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 487.5,
+   "to": 502.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 555.5,
+   "to": 560.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 557.5,
+   "to": 570.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 567.5,
+   "to": 574.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 669.5,
+   "to": 674.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  },
+  {
+   "from": 687.5,
+   "to": 730.5,
+   "x": 128,
+   "y": 462,
+   "w": 484,
+   "h": 568,
+   "rule": "A"
+  },
+  {
+   "from": 723.5,
+   "to": 728.5,
+   "x": 1065,
+   "y": 0,
+   "w": 185,
+   "h": 232,
+   "rule": "C"
+  },
+  {
+   "from": 727.5,
+   "to": 750.5,
+   "x": 128,
+   "y": 95,
+   "w": 484,
+   "h": 935,
+   "rule": "A"
+  }
+ ],
+ "speedups": [
+  {
+   "from": 68.47,
+   "to": 79.0,
+   "rate": 3,
+   "mute": true,
+   "why": "typing the prompt (01:08:14 onwards)"
+  }
+ ],
+ "images": []
 }

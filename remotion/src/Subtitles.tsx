@@ -1,6 +1,6 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import subs from "./subs.json";
-import { srcTime } from "./cuts";
+import { isMuted, srcTime } from "./cuts";
 import { theme } from "./theme";
 
 type Word = { t: string; from: number; to: number };
@@ -12,6 +12,7 @@ export const Subtitles = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = srcTime(frame);
+  if (isMuted(t)) return null;
   const cue = (subs as Cue[]).find((c) => t >= c.from && t < c.to);
   if (!cue) return null;
   const inF = (t - cue.from) * fps;

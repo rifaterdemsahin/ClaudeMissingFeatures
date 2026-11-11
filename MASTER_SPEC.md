@@ -1,4 +1,4 @@
-# MASTER SPEC v3.2: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.5: long-form 1080p screen-recording video (YouTube)
 
 Generic recipe for turning **screen recordings + your own voice recording** into a finished 16:9 YouTube long-form video: sync, render, Remotion overlays, title, description, chapters, site. Proven on "Claude Missing Features" (12:30, 1920x1080). It replaces the Shorts-only flow in `README.md` for long form; the Shorts rules there still apply to 9:16 videos.
 
@@ -18,6 +18,39 @@ Generic recipe for turning **screen recordings + your own voice recording** into
 | Thumbnail | 1920x1080 (not 1080x1920) |
 | CTA | community name + URL, one ask |
 | Privacy risks | names, chats, file paths, tokens visible on screen |
+
+---
+
+## 0. Architecture and token budget (read first)
+
+Picture: [architecture.html](architecture.html) (top page of the site; regenerate with `python3 -I scripts/build_architecture.py`).
+
+**Principle:** the MacBook Pro does the heavy work with local libraries; Claude only makes judgement calls from a one-page text report. This keeps token use low, makes every step repeatable by the owner without Claude, and keeps video and private screens off the cloud.
+
+| Lane | What | Tools |
+|---|---|---|
+| 🖥️ MacBook (0 tokens) | sync clips, 1080p base, transcript with word timings, OCR of the screen, subtitles, cut candidates, personal-window finder, blur boxes, report, Remotion preview and render, privacy check of the export | ffmpeg, scipy, Whisper, Apple Vision, Python, Remotion + Chrome |
+| 🤖 Claude (few thousand tokens) | read `REPORT.md`; write slide text; choose cuts and speed-ups; edit `overlays.json` / `cuts.json`; read the owner's timestamped notes | text in, text out |
+| ☁️ Cloud (reuse) | kit zip + spec on Google Drive; folder id and link in Azure Key Vault; code, docs and the site on GitHub Pages (no media) | `pull_kit.sh`, `az`, `rclone`, `git` |
+
+**Token rules (every video):**
+1. **Do not have Claude look at frames to find things.** OCR returns text and pixel positions locally; Claude reads that. View a still only to confirm a final look (a few per video).
+2. **One hand-off file:** `REPORT.md` (sync offsets and confidence, cut candidates, personal windows with what is said, edit counts, export privacy result). Read it instead of many outputs.
+3. **Verify with a script:** `verify_export.py` OCRs the finished export and lists sensitive text still visible (pass/fail, exit code 1 on leaks). Fix `overlays.json`, re-render, re-run. No re-watching.
+4. **Batch and background:** long jobs (Whisper, OCR, render) run in the background with one wait, not a poll every minute. Print counts and `head`, not whole files.
+5. **OCR output is private.** `assets/ocr_frames.json`, `export_ocr.json`, `export_leaks.json`, `personal_windows.json` and `REPORT.md` contain the text you are hiding (chat titles, contact names). They are gitignored; never commit or paste them anywhere public (the repo and Pages site are public).
+6. **Pull, do not rediscover:** the kit carries scripts and this spec. Start a session with the start prompt in section 11.
+
+**One command prepares everything locally, then Claude reads one page:**
+```bash
+scripts/pipeline.sh "~/Downloads/<folder>" <slug>   # build_base.py (sync + 1080p base), Whisper, build_subs.py, ocr_all.sh, find_repeats.py, find_personal_windows.py, report.py
+cat REPORT.md                                       # the only thing Claude needs to read
+# edit remotion/src/overlays.json (slides, speedups) and cuts.json
+python3 -I scripts/build_blurs.py                   # blur boxes from the OCR
+cd remotion && npm run render && cd ..              # export
+python3 -I scripts/verify_export.py                 # privacy check; then scripts/serve.sh and review in the player
+```
+Stages skip when their output exists, so a re-run only redoes what changed. `build_base.py` handles N clips (not just two): it finds offsets by cross-correlation, warns when confidence is under 3, checks clips tile, renders the base and sets `DURATION` in `theme.ts`.
 
 ---
 
@@ -145,7 +178,7 @@ Cuts are data, not edits to the video: `remotion/src/cuts.json` = `[[from,to],..
 ## 6c. Recorder UI and image overlays
 
 - Screen recordings often **start (and end) on the recorder itself** (OBS Studio window, dock tooltip "OBS"). Check frames at 0-3 s and the last 3 s, and sweep the whole video with a 10 s contact sheet.
-- Do not cut the opening if the voice already speaks: cover it. `overlays.json` -> `intro_card` shows the `Thumb` design over `0 to 2.3 s`, fading out over 0.3 s.
+- Do not cut the opening if the voice already speaks: cover it. `overlays.json` -> `intro_card` shows the `Thumb` design over `0 to 4.3 s` (2 s longer on request, so the title lands), fading out over 0.3 s.
 - `overlays.json` -> `images: [{from,to,src}]` shows an image full-frame (files in `remotion/public/img/`, not committed) on source time, with 0.2 s fades. Use it wherever private or distracting screen content must be replaced.
 - Tooltips that flash while the cursor crosses the dock (iTerm, OBS) are small; cover them only if the owner asks.
 
@@ -172,6 +205,35 @@ The same table and a troubleshooting list are on the site page `run.html` (menu:
 
 **Player rule:** the player needs the video next to it as `long.mp4` (git-ignored). `scripts/serve.sh` hard-links your render to `long.mp4` and serves the folder with HTTP Range support (plain `python -m http.server` has none, so seeking and chapters break). The player shows a status line: green "Playing long.mp4 (12:30)" or a warning with the fix. Verified in Chrome: loads 1920x1080, seeks to 20 s, caption cue active.
 
+## 6e. Speed-ups, slides, blur boxes (editing personal or slow parts)
+
+All three are data in `remotion/src/overlays.json`, times are **source seconds** (user timecodes like `04:17:28` are `mm:ss:ff` at 30 fps, so 257.93 s; `01:08:14` is 68.47 s).
+
+**Speed-ups** `speedups: [{from,to,rate,mute}]`: `cuts.ts` splits the timeline there and plays that range with Remotion `playbackRate`. Speech sped up is unusable, so `mute: true` silences it and `Subtitles.tsx` hides captions inside it (`build_subs.py` drops those cues from the `.srt`). Example: typing the prompt, 68.47 to 79.0 s at 3x (10.5 s -> 3.5 s, muted). `build_subs.py` also writes `export_map.js` (source <-> export time map) so the player can switch versions at the same moment.
+
+**Slides** `slides: [{from,to,title,bullets[]}]`: full-frame explainer (`Slide.tsx`, bullets spring in). Use one to replace a whole personal window (here: the opening IBM/Grok Bot scene, 4.3 to 16 s, and nine short Grok Bot windows later). Write the bullets from what is said at that moment (transcript), never invent claims. Keep short slides to 1-2 bullets.
+
+**Blur boxes** `blurs: [{from,to,x,y,w,h}]` (pixels in the 1920x1080 frame; frosted `backdrop-filter` plus tint, unreadable). Generate them, do not place by hand:
+```bash
+mkdir frames && ffmpeg -i long.mp4 -vf fps=1 -q:v 4 frames/%04d.jpg            # frame NNNN = second NNNN-1
+swiftc -O scripts/ocr_frames.swift -o ocr_frames                                # Apple Vision, no cloud
+# every 2 s is enough (static sidebars): split odd frames into 4 folders and run 4 processes in parallel (~2 min for 375 frames)
+./ocr_frames frames_part0 ocr/part0.json  (x4) ; merge into assets/ocr_frames.json
+python3 -I scripts/build_blurs.py                                               # rewrites "blurs" in overlays.json
+```
+`build_blurs.py` rules: **A** chat-title list in the Claude sidebar, two fixed boxes (nav visible: y 462-1030; list scrolled to top: y 95-1030, x 128-612); **B** sensitive words anywhere (`KEYWORDS`: market participant, employment gap, capgemini, gap proof, kaya, lacan, incident report, onboarding bot, pexabo); **C** the mini sidebar inside a pasted screenshot, anchored to the line below it ("Checking which Artifacts…") because OCR cannot read tiny text. Frames covered by the intro card or a slide are skipped. Do not blur words the speaker says on purpose (the "IBM" 9-to-5 block in the planner canvas stays).
+
+**Find personal windows (for slides):** scan the OCR for contact/agent names (Skool, LinkedIn, Gmail, Rag Manager, your own name) on 2+ lines; merge hits closer than 6 s; pad -1/+2 s; read the narration in each span (from `subs.json`) and write the slide from it.
+
+**Verify with real stills, not just numbers:** render frames at the user's timecodes and at one frame per distinct layout (`npx remotion still src/index.ts LongForm out/x.png --frame=<n>`; output frame = source seconds minus the time saved by earlier speed-ups, times 30). Montage them with ffmpeg and read every tile.
+
+## 6f. Export render and the player's version switch
+
+- `cd remotion && npm run render` -> `remotion/out/long.mp4`. 22,291 frames (12:23) took about 25 min at about 13 fps (10-core Apple silicon, concurrency 5). **The ETA printed in the first minutes is far too high (it said 2 h); measure frames per 30 s.** Do not run other heavy jobs (OCR, still renders) meanwhile.
+- `scripts/serve.sh` links `long.mp4` (hard link to the original) and `export.mp4` (symlink to `remotion/out/long.mp4`, always the newest render, git-ignored).
+- **Keyboard (YouTube/editor style, on the player):** `Space` or `K` pause/play; `L` faster (1 -> 2 -> 4 -> 8x); `J` slower (halves down to 0.25x); `1` normal speed; `<-` / `->` skip 5 s; `,` / `.` step one frame while paused; `F` fullscreen. Keys are ignored while typing in the feedback box. The speed menu follows the keys (options 0.25x to 8x). Reference for the behaviour: https://www.youtube.com/shorts/H-KoWWXG5OI
+- `player.html` has **Original / Latest export** buttons, **Side by side** (the export follows the original through speed-ups and cuts via `export_map.js`, muted, re-synced every 250 ms), live export info (size, render time from a HEAD request), chapters re-timed per version, subtitles track on the original only (the export has them burned in), and feedback notes tagged `[orig m:ss]` / `[export m:ss]`.
+
 ## 7. Website (GitHub Pages)
 
 | Page | File | Built by | Purpose |
@@ -196,6 +258,21 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 
 ---
 
+## 7a. Publish: GitHub Pages (do this for every project, do not forget)
+
+1. `python3 -I scripts/build_site.py` (renders the `.md` pages), check no private data or media is staged: `git add -n . | grep -Ei "\.(mp4|wav|zip)$|ocr_|REPORT.md"` must print nothing.
+2. **Commit and push** to the feature branch (never `main` directly): `git add -A && git commit -m "…" && git push -u origin <branch>`. Commit and push after every change, not only at the end.
+3. **Enable GitHub Pages** (once per repo; the repo must be public or on a paid plan; everything committed becomes public):
+```bash
+gh api -X POST repos/<user>/<repo>/pages -f "source[branch]=<branch>" -f "source[path]=/"
+gh api repos/<user>/<repo>/pages -q '.status+" "+.html_url'          # built? -> https://<user>.github.io/<repo>/
+until [ "$(curl -s -o /dev/null -w '%{http_code}' https://<user>.github.io/<repo>/)" = 200 ]; do sleep 10; done
+```
+   Keep an empty `.nojekyll` at the repo root so Pages serves the files as they are. Later pushes to the branch redeploy automatically (about 1 minute; add `?x=$RANDOM` to bypass the cache when checking).
+4. **Put the live link at the top of `README.md`** (first line): `> 🌐 **Live site (GitHub Pages):** https://<user>.github.io/<repo>/ · [Architecture](…/architecture.html) · [Player](…/player.html) · [Master spec](…/spec.html)`. Commit and push again.
+5. Open it in Chrome (`open -a "Google Chrome" https://<user>.github.io/<repo>/`) and click through the menu. The hosted player has no video (media is never committed): it shows the file-picker warning. To share the video itself, upload to YouTube (unlisted first).
+6. If the assistant's permission system blocks the push or the Pages call, run them yourself in the session with `! git push` and `! gh api -X POST …`, or allow them in settings.
+
 ## 8. Sanity check (before publishing)
 
 - [ ] Hook in the first 10 s says what the video is about
@@ -217,7 +294,7 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 - [ ] `~/Downloads/<slug>-1080p.mp4` rendered and verified
 - [ ] `metadata.md` written and copied to `~/Downloads`
 - [ ] Remotion project typechecks (`npx tsc --noEmit`), a test still renders (no error output) and Studio opens
-- [ ] Site built and opened in Chrome (`open -a "Google Chrome" <url>`)
+- [ ] Site built, committed, pushed, **GitHub Pages enabled** (section 7a), live link at the top of `README.md`, opened in Chrome
 - [ ] Work on a branch (`<slug>-v1`), commit and push after each change, never commit media
 - [ ] Show every file as a clickable URL; use emojis in summaries
 
@@ -241,6 +318,11 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 | **A scaffold test run from the repo root overwrote real pages** (`new-video.sh` used relative paths) | Scaffold scripts must `cd` to their own folder, check `templates/` exists and refuse in a git folder with uncommitted changes. **Only ever test them in a temp dir** (`T=$(mktemp -d); unzip kit.zip -d $T; (cd /tmp && $T/new-video.sh ...)`), then confirm `git status` shows nothing new. Recovery was `git checkout -- <files>` because work was committed: commit before experimenting. |
 | HTML player showed no video | `long.mp4` was never in git (404, media error 4). Hard-link the render as `long.mp4` and serve with `scripts/serve.sh` (Range support); the player now shows a status message. |
 | `file://` pages can't be driven by the browser tool | Serve the folder over http://localhost:8000 for testing. |
+| Many small polls and image reads inflated token use | Local scripts produce one `REPORT.md`; wait once for background jobs; verify the export by OCR (`verify_export.py`), not by viewing. |
+| Remotion ETA said 2 h, real time 25 min | The first ETA is meaningless. Measure frames per 30 s (about 13 fps here). |
+| OCR could not read the tiny sidebar inside a pasted screenshot | Anchor a box to a line OCR can read (the sentence below the image) plus a fixed box for the first seconds. |
+| Per-frame OCR union boxes jittered and hid nav items | Use two fixed canonical sidebar boxes chosen by layout. |
+| Blurring the keyword "IBM" hid the planner canvas the speaker talks about | Keep keyword lists to what is private; check stills for words said aloud. |
 | Recording opened on the OBS window | Intro card over 0-2.3 s instead of cutting the first spoken words. |
 | Feature missing on screen | Title says so; do not promise the feature. |
 
