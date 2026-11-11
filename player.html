@@ -10,6 +10,7 @@ button.off{background:#2a2a38;color:#ddd}
 #pane2{display:none}#vids.cmp #pane2{display:block}
 .box{background:#1a1a24;border-radius:8px;padding:8px 12px;margin:8px 0}
 .grow{flex:1}
+.addnote{position:absolute;right:12px;bottom:58px;z-index:3;opacity:.92;box-shadow:0 2px 10px rgba(0,0,0,.5)}.addnote:hover{opacity:1}.addnote kbd{background:rgba(0,0,0,.25);border-color:rgba(0,0,0,.3);color:#000}
 .pn{background:#14141c;border:1px solid #2a2a38;border-radius:10px;margin:10px 0}
 .pn>summary{cursor:pointer;padding:10px 14px;font-weight:700;list-style:none;user-select:none}
 .pn>summary::-webkit-details-marker{display:none}
@@ -29,18 +30,19 @@ kbd{background:#2a2a38;border:1px solid #444;border-radius:4px;padding:0 6px;fon
 </div>
 <p id="st" class="box">Loading video…</p>
 <div id="vids">
-  <div class="pane"><span class="tag" id="tag1">Original</span><span class="tag" id="kb" style="left:auto;right:10px;display:none"></span><video id="v" controls src="long.mp4"></video></div>
+  <div class="pane"><span class="tag" id="tag1">Original</span><span class="tag" id="kb" style="left:auto;right:10px;display:none"></span><button id="an" class="addnote" title="Pause and add a note at this moment (M)">📍 Add note <kbd>M</kbd></button><video id="v" controls src="long.mp4"></video></div>
   <div class="pane" id="pane2"><span class="tag">Latest export (burned-in subtitles)</span><video id="v2" muted playsinline></video></div>
 </div>
 
 <details class="pn" data-key="fb" open><summary>📝 Feedback (timestamped)</summary><div class="pnb">
 <p><button id="ts">📍 Insert current time</button> <button id="fc">Copy feedback</button> <button id="fx" class="off">🗑️ Clear feedback</button> <button id="fu" style="display:none">↩ Undo clear</button> <span style="opacity:.7">Notes are tagged <code>[orig m:ss]</code> or <code>[export m:ss]</code> by the version you are watching.</span></p>
+<p style="opacity:.8;margin:4px 0">Fastest way: press <kbd>M</kbd> (or the 📍 button on the video) to pause and stamp the time, type your note, then <kbd>Ctrl/⌘ + Enter</kbd> to carry on watching.</p>
 <textarea id="fb" style="width:100%;height:180px;background:#0b0b0f;color:#eee;border:1px solid #2a2a38;border-radius:8px;box-sizing:border-box" placeholder="Click Insert current time, then type your note. Saved in this browser. Copy and paste it to Claude."></textarea>
 </div></details>
 
 <details class="pn" data-key="ch" open><summary>📑 Chapters</summary><div class="pnb"><ul id="ch"></ul></div></details>
 
-<details class="pn" data-key="keys"><summary>⌨️ Keyboard shortcuts</summary><div class="pnb"><p>Click outside text boxes first. <kbd>Space</kbd>/<kbd>K</kbd> pause · <kbd>L</kbd> faster (1→2→4→8×) · <kbd>J</kbd> slower (÷2 down to 0.25×) · <kbd>1</kbd> normal speed · <kbd>←</kbd>/<kbd>→</kbd> ±5 s · <kbd>,</kbd>/<kbd>.</kbd> one frame back/forward · <kbd>F</kbd> fullscreen</p></div></details>
+<details class="pn" data-key="keys"><summary>⌨️ Keyboard shortcuts</summary><div class="pnb"><p>Click outside text boxes first. <kbd>Space</kbd>/<kbd>K</kbd> pause · <kbd>L</kbd> faster (1→2→4→8×) · <kbd>J</kbd> slower (÷2 down to 0.25×) · <kbd>1</kbd> normal speed · <kbd>←</kbd>/<kbd>→</kbd> ±5 s · <kbd>,</kbd>/<kbd>.</kbd> one frame back/forward · <kbd>F</kbd> fullscreen · <kbd>M</kbd> add a note at this moment (pauses; <kbd>Ctrl/⌘ + Enter</kbd> in the note box resumes)</p></div></details>
 
 <details class="pn" data-key="src"><summary>🧰 Sources and tools</summary><div class="pnb">
 <p id="expinfo" class="box"></p>
@@ -156,5 +158,19 @@ panels.forEach(d=>{try{const s=localStorage.getItem("pn:"+d.dataset.key);if(s!==
   d.addEventListener("toggle",()=>{try{localStorage.setItem("pn:"+d.dataset.key,d.open?"1":"0")}catch(e){};panelBtn()})});
 function panelBtn(){$("pa").textContent=panels.every(d=>!d.open)?"▸ Expand all":"▾ Collapse all"}
 $("pa").onclick=()=>{const open=panels.every(d=>!d.open);panels.forEach(d=>d.open=open);panelBtn()};panelBtn();
+
+// practical note button: pause, stamp the time, open the Feedback panel, focus; Ctrl/Cmd+Enter resumes
+let resumeAfter=false;
+function addNote(){
+  const s=Math.floor(v.currentTime), tag="["+(ver==="exp"?"export ":"orig ")+fmt(s)+"] ";
+  resumeAfter=!v.paused; v.pause();
+  const d=document.querySelector('details[data-key="fb"]'); if(d) d.open=true;
+  fb.value+=(fb.value&&!fb.value.endsWith("\n")?"\n":"")+tag; fb.oninput();
+  fb.scrollIntoView({block:"nearest"}); fb.focus(); fb.setSelectionRange(fb.value.length,fb.value.length);
+  show("📍 note "+tag.trim());
+}
+$("an").onclick=addNote;
+addEventListener("keydown",e=>{const tag=e.target.tagName; if(e.key.toLowerCase()==="m"&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&tag!=="TEXTAREA"&&tag!=="SELECT"&&!(tag==="INPUT"&&(e.target.type||"text")==="text")){e.preventDefault();if(!e.repeat)addNote()}});
+fb.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){e.preventDefault();fb.blur();if(resumeAfter){v.play();resumeAfter=false}}});
 setVer(ver,false);
 </script></body></html>

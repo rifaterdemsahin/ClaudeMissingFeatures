@@ -1,4 +1,4 @@
-# MASTER SPEC v3.9: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.10: long-form 1080p screen-recording video (YouTube)
 
 ## ▶ Prompt to execute (paste into Claude Code, fill the `<…>`)
 
@@ -293,7 +293,8 @@ python3 -I scripts/build_blurs.py                                               
 - `cd remotion && npm run render` -> `remotion/out/long.mp4`. 22,291 frames (12:23) took about 25 min at about 13 fps (10-core Apple silicon, concurrency 5). **The ETA printed in the first minutes is far too high (it said 2 h); measure frames per 30 s.** Do not run other heavy jobs (OCR, still renders) meanwhile.
 - `scripts/serve.sh` links `long.mp4` (hard link to the original) and `export.mp4` (symlink to `remotion/out/long.mp4`, always the newest render, git-ignored).
 - Chapters in the player and in `metadata.md` come from `assets/chapters.json` through `build_chapters.py` (source and export timelines).
-- **Keyboard (YouTube/editor style, on the player):** `Space` or `K` pause/play; `L` faster (1 -> 2 -> 4 -> 8x); `J` slower (halves down to 0.25x); `1` normal speed; `<-` / `->` skip 5 s; `,` / `.` step one frame while paused; `F` fullscreen. Keys are ignored while typing in the feedback box. The speed menu follows the keys (options 0.25x to 8x). Reference for the behaviour: https://www.youtube.com/shorts/H-KoWWXG5OI
+- **Keyboard (YouTube/editor style, on the player):** `Space` or `K` pause/play; `L` faster (1 -> 2 -> 4 -> 8x); `J` slower (halves down to 0.25x); `1` normal speed; `<-` / `->` skip 5 s; `,` / `.` step one frame while paused; `F` fullscreen; `M` add a note at this moment. Keys are ignored while typing in the feedback box. The speed menu follows the keys (options 0.25x to 8x). Reference for the behaviour: https://www.youtube.com/shorts/H-KoWWXG5OI
+- **Add-note button (fastest feedback):** a 📍 **Add note** button sits on the video (bottom-right, above the controls) and `M` does the same: it pauses, opens the Feedback panel if collapsed, stamps `[orig m:ss]` or `[export m:ss]` by the version being watched and puts the cursor at the end; type the note, then `Ctrl/⌘ + Enter` to carry on watching. Typing the letter m in the box is safe. "Insert current time" (no pause) and "Clear feedback" (with Undo) stay in the panel.
 - **Layout:** the video, then the **Feedback** panel directly under it (so notes are typed without scrolling), then collapsible panels: Chapters, Keyboard shortcuts, Sources and tools, Measured specs. Each panel is a `<details class="pn" data-key="…">`; open/closed state is remembered per panel in the browser, and **Collapse all / Expand all** sits in the control bar. Keep new panels in this pattern.
 - `player.html` has **Original / Latest export** buttons, **Side by side** (the export follows the original through speed-ups and cuts via `export_map.js`, muted, re-synced every 250 ms), live export info (size, render time from a HEAD request), chapters re-timed per version, subtitles track on the original only (the export has them burned in), and feedback notes tagged `[orig m:ss]` / `[export m:ss]`.
 
@@ -420,6 +421,7 @@ Ways to do it: (a) `scripts/backup_drive.sh` does all of the above with `rclone`
 | Render slowed to 8.7 fps after adding the cleaned audio | The remux left `moov` at the end of the file. Use `-movflags +faststart`. |
 | Owner timecodes are on the export timeline | Convert to source time first (add the time saved by speed-ups); EDL shows both. |
 | Owner asked to "cut" a 3-minute noise | Remove the noise instead (denoise), explain, keep a cut as an option. |
+| `build_kit.sh kit-dist/x.zip` (relative path) wrote the zip into a temp folder and left the old zip | The script cds before zipping; resolve the output path to absolute first (fixed). After building, check the file's timestamp. |
 | HTML player showed no video | `long.mp4` was never in git (404, media error 4). Hard-link the render as `long.mp4` and serve with `scripts/serve.sh` (Range support); the player now shows a status message. |
 | `file://` pages can't be driven by the browser tool | Serve the folder over http://localhost:8000 for testing. |
 | Many small polls and image reads inflated token use | Local scripts produce one `REPORT.md`; wait once for background jobs; verify the export by OCR (`verify_export.py`), not by viewing. |

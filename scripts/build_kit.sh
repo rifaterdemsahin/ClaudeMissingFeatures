@@ -1,7 +1,8 @@
 #!/bin/zsh
 # Build the kit zip. Usage: scripts/build_kit.sh [out.zip]  (default ~/Downloads/claude-missing-features-kit.zip)
 cd "$(dirname "$0")/.." || exit 1
-OUT="${1:-$HOME/Downloads/claude-missing-features-kit.zip}"; ST=$(mktemp -d)/kit; mkdir -p "$ST/scripts" "$ST/remotion/src" "$ST/remotion/public/img" "$ST/templates"
+OUT="${1:-$HOME/Downloads/claude-missing-features-kit.zip}"; mkdir -p "$(dirname "$OUT")"; OUT="$(cd "$(dirname "$OUT")" && pwd)/$(basename "$OUT")";   # absolute: we cd into the staging dir before zipping
+ ST=$(mktemp -d)/kit; mkdir -p "$ST/scripts" "$ST/remotion/src" "$ST/remotion/public/img" "$ST/templates"
 cp MASTER_SPEC.md ENVIRONMENT.md nav.js architecture.html .gitignore "$ST/"; mkdir -p "$ST/assets"; for f in edl_decisions chapters audio_fixes; do echo "[]" > "$ST/assets/$f.json"; done; cp kit/KIT_README.md "$ST/README.md"; cp kit/new-video.sh "$ST/"
 cp scripts/{sync_clips.py,render_base.sh,build_subs.py,find_repeats.py,build_site.py,serve.sh,pull_kit.sh,build_kit.sh,build_blurs.py,ocr_frames.swift,build_base.py,ocr_all.sh,find_personal_windows.py,verify_export.py,report.py,pipeline.sh,build_architecture.py,check_env.sh,denoise_audio.py,build_edl.py,build_chapters.py,backup_drive.sh} "$ST/scripts/"
 cp remotion/{package.json,package-lock.json,tsconfig.json,remotion.config.ts} "$ST/remotion/"
