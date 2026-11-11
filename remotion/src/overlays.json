@@ -93,7 +93,7 @@
   },
   {
    "from": 672.5,
-   "to": 686.4,
+   "to": 689.0,
    "title": "Update finished",
    "bullets": [
     "Close and reopen Claude",
@@ -337,5 +337,26 @@
    "why": "typing the prompt (01:08:14 onwards)"
   }
  ],
- "images": []
+ "images": [],
+ "outro": [
+  {
+   "seconds": 11,
+   "kind": "slide",
+   "title": "Summary: what we learned",
+   "bullets": [
+    "The Whiteboard is rolling out gradually: it had not reached my Pro account yet",
+    "There is no beta switch to flip: Settings, Capabilities had nothing for it",
+    "Update everything: quit and reopen Claude, update the Mac, remove old copies",
+    "Use the other artifact types meanwhile: Docs, Slides, Design and Data"
+   ]
+  },
+  {
+   "seconds": 10,
+   "kind": "cta",
+   "title": "Learn it in depth",
+   "line": "Join the Delivery Pilot community on Skool",
+   "url": "skool.com/delivery-pilot-8938",
+   "note": "Link in the description and the pinned comment"
+  }
+ ]
 }

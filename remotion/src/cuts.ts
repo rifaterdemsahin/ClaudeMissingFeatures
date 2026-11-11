@@ -34,7 +34,7 @@ export const getSegments = (): Seg[] => {
   }
   return segs;
 };
-export const totalFrames = () => getSegments().reduce((n, s) => n + s.frames, 0);
+export const videoFrames = () => getSegments().reduce((n, s) => n + s.frames, 0);
 
 // output frame -> source seconds (captions, slides, blurs stay on the source timeline)
 export const srcTime = (outFrame: number): number => {

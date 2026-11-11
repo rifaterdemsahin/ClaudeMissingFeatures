@@ -1,7 +1,8 @@
-import { AbsoluteFill, OffthreadVideo, Series, staticFile, interpolate } from "remotion";
+import { AbsoluteFill, OffthreadVideo, Sequence, Series, staticFile, interpolate } from "remotion";
 import { FPS, theme } from "./theme";
 import { Subtitles } from "./Subtitles";
-import { getSegments } from "./cuts";
+import { getSegments, videoFrames } from "./cuts";
+import { Outro, outroFrames } from "./Outro";
 import { ImageOverlays } from "./ImageOverlays";
 
 const FADE = 3; // frames of audio fade at each cut
@@ -29,8 +30,13 @@ export const LongForm = () => {
           </Series.Sequence>
         ))}
       </Series>
-      <ImageOverlays />
-      <Subtitles />
+      <Sequence from={0} durationInFrames={videoFrames()}>
+        <ImageOverlays />
+        <Subtitles />
+      </Sequence>
+      <Sequence from={videoFrames()} durationInFrames={outroFrames()}>
+        <Outro />
+      </Sequence>
     </AbsoluteFill>
   );
 };

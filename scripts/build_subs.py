@@ -35,6 +35,8 @@ def segments():  # [src0, src1, rate, mute, out0_seconds] exactly like remotion/
         if p < kb: push(p, kb, 1, False)
     return segs
 SEGS = segments()
+_t = SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2]; OUTRO = []
+for _p in OV.get("outro", []): OUTRO.append([round(_t, 2), _p["title"], _p["seconds"]]); _t += _p["seconds"]
 def remap(t):  # source seconds -> final (export) seconds; None inside a cut
     for a, b, r, m, o in SEGS:
         if a <= t < b + 1e-9: return o + (t - a) / r
@@ -76,5 +78,5 @@ def wrap(c):
     mid = len(c) // 2; i = min((m.start() for m in re.finditer(" ", c)), key=lambda p: abs(p - mid)); return c[:i] + "\n" + c[i + 1:]
 (ROOT / "subtitles.srt").write_text("\n".join(f"{i+1}\n{ts(a,',')} --> {ts(b,',')}\n{wrap(c)}\n" for i, (a, b, c) in enumerate(final)))
 (ROOT / "subtitles.vtt").write_text("WEBVTT\n\n" + "\n".join(f"{ts(a,'.')} --> {ts(b,'.')}\n{wrap(c)}\n" for a, b, c in final))
-(ROOT / "export_map.js").write_text("window.EXPORT_MAP = " + json.dumps({"segs": [[round(a, 3), round(b, 3), r, m, round(o, 3)] for a, b, r, m, o in SEGS], "total": round(SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2], 3)}) + ";")
+(ROOT / "export_map.js").write_text("window.EXPORT_MAP = " + json.dumps({"segs": [[round(a, 3), round(b, 3), r, m, round(o, 3)] for a, b, r, m, o in SEGS], "total": round(SEGS[-1][4] + (SEGS[-1][1] - SEGS[-1][0]) / SEGS[-1][2], 3), "outro": OUTRO}) + ";")
 print(len(cues), "cues,", len(final), "after cuts,", "word timings" if raw["segments"][0].get("words") else "estimated word timings")

@@ -12,5 +12,5 @@ sed "s/{{TITLE}}/$TITLE/g; s/{{SLUG}}/$SLUG/g" templates/metadata.template.md > 
 sed "s/{{TITLE}}/$TITLE/g" templates/SANITY_CHECK.template.md > SANITY_CHECK.md
 [ -f README.md ] || printf "> 🌐 **Live site (GitHub Pages):** https://<user>.github.io/<repo>/  (enable Pages: MASTER_SPEC.md section 7a)\n\n# %s\n" "$TITLE" > README.md
 echo '[]' > remotion/src/subs.json; echo 'window.SUBS = [];' > subs.js
-git init -q 2>/dev/null; python3 -I scripts/build_site.py
+git init -q 2>/dev/null; python3 -I scripts/build_edl.py; python3 -I scripts/build_site.py
 echo "Done. Next: MASTER_SPEC.md section 1 (sync clips, render base, transcribe). Run: see run.html"

@@ -1,4 +1,4 @@
-# MASTER SPEC v3.5: long-form 1080p screen-recording video (YouTube)
+# MASTER SPEC v3.6: long-form 1080p screen-recording video (YouTube)
 
 Generic recipe for turning **screen recordings + your own voice recording** into a finished 16:9 YouTube long-form video: sync, render, Remotion overlays, title, description, chapters, site. Proven on "Claude Missing Features" (12:30, 1920x1080). It replaces the Shorts-only flow in `README.md` for long form; the Shorts rules there still apply to 9:16 videos.
 
@@ -51,6 +51,26 @@ cd remotion && npm run render && cd ..              # export
 python3 -I scripts/verify_export.py                 # privacy check; then scripts/serve.sh and review in the player
 ```
 Stages skip when their output exists, so a re-run only redoes what changed. `build_base.py` handles N clips (not just two): it finds offsets by cross-correlation, warns when confidence is under 3, checks clips tile, renders the base and sets `DURATION` in `theme.ts`.
+
+---
+
+## 0b. Environment (check it before you start)
+
+Page: [environment.html](environment.html) (menu: 🧰 Environment, built from `ENVIRONMENT.md`). Run `scripts/check_env.sh`: it prints a tick or a cross for every item with the install command for anything missing.
+
+| Need | Version here | Install |
+|---|---|---|
+| ffmpeg + ffprobe | 9.0.2 | `brew install ffmpeg` |
+| python3 | 3.15.2 | `brew install python` |
+| node + npm | 26.10.0 / 11.19.1 | `brew install node` |
+| git + Xcode CLT (`swiftc` for Apple Vision OCR) | 2.56.1 | `xcode-select --install` |
+| openai-whisper + model `small` (461 MB, auto-download) | pip | `pip install openai-whisper` |
+| Google Chrome (Remotion browser) | current | `brew install --cask google-chrome` |
+| Python packages numpy, scipy, noisereduce, soundfile | auto | created in `~/.cache/cmf-venv` by `build_base.py` / `denoise_audio.py` |
+| npm packages (remotion + cli 4.0.250, react 18.3.1, typescript 5.6.3) | in `remotion/` | `cd remotion && npm install` |
+| Optional: gh, az, rclone (remote `gdrive-shared`) | current | kit pull, Key Vault, Pages |
+
+Inputs: one folder with `*.mp4` clips and one `*.WAV`. `remotion/public/base.mp4` must be a **hard link**, and the base video must have its index at the front (`-movflags +faststart`). No API keys; about 20 GB free disk; ports 3000 and 8000. The page also lists every processing step (input, script, output, committed or not) and measured machine times.
 
 ---
 
@@ -231,8 +251,32 @@ python3 -I scripts/build_blurs.py                                               
 
 - `cd remotion && npm run render` -> `remotion/out/long.mp4`. 22,291 frames (12:23) took about 25 min at about 13 fps (10-core Apple silicon, concurrency 5). **The ETA printed in the first minutes is far too high (it said 2 h); measure frames per 30 s.** Do not run other heavy jobs (OCR, still renders) meanwhile.
 - `scripts/serve.sh` links `long.mp4` (hard link to the original) and `export.mp4` (symlink to `remotion/out/long.mp4`, always the newest render, git-ignored).
+- Chapters in the player and in `metadata.md` come from `assets/chapters.json` through `build_chapters.py` (source and export timelines).
 - **Keyboard (YouTube/editor style, on the player):** `Space` or `K` pause/play; `L` faster (1 -> 2 -> 4 -> 8x); `J` slower (halves down to 0.25x); `1` normal speed; `<-` / `->` skip 5 s; `,` / `.` step one frame while paused; `F` fullscreen. Keys are ignored while typing in the feedback box. The speed menu follows the keys (options 0.25x to 8x). Reference for the behaviour: https://www.youtube.com/shorts/H-KoWWXG5OI
 - `player.html` has **Original / Latest export** buttons, **Side by side** (the export follows the original through speed-ups and cuts via `export_map.js`, muted, re-synced every 250 ms), live export info (size, render time from a HEAD request), chapters re-timed per version, subtitles track on the original only (the export has them burned in), and feedback notes tagged `[orig m:ss]` / `[export m:ss]`.
+
+## 6g. EDL: the edit decision list (record every decision)
+
+Page: [edl.html](edl.html) (menu: ✂️ EDL), built from `EDL.md`, which `python3 -I scripts/build_edl.py` **generates** from the real edit data: `remotion/src/overlays.json` (intro, slides, blurs, speed-ups, outro), `cuts.json`, `assets/audio_fixes.json`, `assets/edl_decisions.json` and `export_map.js`. Edit those files, never `EDL.md`.
+
+It contains: (1) the list, one row per edit with **source and export timecodes**, duration, what, why, status; (2) how we worked (the loop below); (3) the **decision log**: every owner note, the interpretation, the decision, where it was implemented and how it was checked; (4) cut candidates (nothing applied until the owner decides); (5) rules for the next EDL. Add an entry to `assets/edl_decisions.json` for every note and every problem the checks find.
+
+**The loop:** prepare locally and read `REPORT.md` -> owner reviews in the player and pastes `[orig m:ss]` / `[export m:ss]` notes -> convert to source time (`source = export + time saved by earlier speed-ups`) -> check against data (transcript, OCR, audio analysis, one still) -> change `overlays.json` / `cuts.json` / run an audio step -> **one** render for all pending notes -> `verify_export.py` and stills -> log it in the EDL. If the literal request would damage the video, do the smaller fix that meets the goal and say so.
+
+**Decision rules:** cover before cut (slides over personal windows keep the narration whole); cut only dead or repeated parts and only when the owner says; no transitions unless asked (hard cuts; audio fades at cuts stay to avoid clicks); pad generated boxes and slides at the edges; measure instead of guessing; chapters follow the **export** timeline (`build_chapters.py`, each at least 10 s).
+
+## 6h. Audio: remove steady noise (hoover, fan)
+
+Owner note example: "[export 9:25] the hoover comes in the audio, cut all that part out".
+1. **Find it with numbers, not by ear:** `python3 scripts/denoise_audio.py in.mp4 --scan` (noise haze above the clean baseline per 20 s) and one spectrogram of the window (`ffmpeg -ss <t> -t 40 -i in.mp4 -lavfi showspectrumpic=s=1200x360:legend=1:scale=log:fscale=log:start=60:stop=6000 spec.png`): steady broadband haze plus horizontal tone lines = hoover or fan. Here it began at source 571 s and ran to the end.
+2. If the noise lasts for minutes, **do not cut it** (that removed the conclusion); remove it: `python3 scripts/denoise_audio.py in.mp4 out.mp4 --noise <start> <end> --from <t> --strength 0.8` where `--noise` is a stretch with only the noise and no speech (here 592 to 622 s). Library: `noisereduce` (stationary mode). Video is stream-copied; a 1.5 s crossfade enters the cleaned part.
+3. **Check by numbers:** the script prints haze before -> after per minute (want about 0 dB against the clean part; here +11 -> -1/0) and speech level change (want above -3 dB; here -0.5). Strength 0.95 over-cleans (below the natural room tone, watery); 0.8 is natural. Point `remotion/public/base.mp4` (hard link) at the cleaned file; keep the original for the player's Original.
+4. A hard cut stays available if the owner insists: add the range to `cuts.json`.
+5. **Fix the file layout:** the output must have `moov` first (`-movflags +faststart`, done by the script). Without it Remotion rendered at 8.7 instead of 13 frames per second.
+
+## 6i. Ending: summary and community call to action
+
+`overlays.json` -> `outro: [{seconds,kind,title,bullets|line,url,note}]`. `Outro.tsx` plays after the footage (silent, hard cuts): a **summary slide** (4 points taken from what was said, never invented) then a **CTA card**: "Learn it in depth", "Join the Delivery Pilot community on Skool", `skool.com/delivery-pilot-8938`, "Link in the description and the pinned comment". No income or result promises. The composition length is `videoFrames() + outroFrames()`. Each outro part counts as a YouTube chapter (the last must be at least 10 s). Also put the full URL in the description and pinned comment.
 
 ## 7. Website (GitHub Pages)
 
@@ -316,6 +360,9 @@ until [ "$(curl -s -o /dev/null -w '%{http_code}' https://<user>.github.io/<repo
 | Animated captions: words touched | The active-word scale ate the 14 px gap. Gap 26 px, scale 1.07. |
 | Whole transcript flagged as repeats | 3-word runs match everywhere ("be able to"). Use 4-word runs from a different cue. |
 | **A scaffold test run from the repo root overwrote real pages** (`new-video.sh` used relative paths) | Scaffold scripts must `cd` to their own folder, check `templates/` exists and refuse in a git folder with uncommitted changes. **Only ever test them in a temp dir** (`T=$(mktemp -d); unzip kit.zip -d $T; (cd /tmp && $T/new-video.sh ...)`), then confirm `git status` shows nothing new. Recovery was `git checkout -- <files>` because work was committed: commit before experimenting. |
+| Render slowed to 8.7 fps after adding the cleaned audio | The remux left `moov` at the end of the file. Use `-movflags +faststart`. |
+| Owner timecodes are on the export timeline | Convert to source time first (add the time saved by speed-ups); EDL shows both. |
+| Owner asked to "cut" a 3-minute noise | Remove the noise instead (denoise), explain, keep a cut as an option. |
 | HTML player showed no video | `long.mp4` was never in git (404, media error 4). Hard-link the render as `long.mp4` and serve with `scripts/serve.sh` (Range support); the player now shows a status message. |
 | `file://` pages can't be driven by the browser tool | Serve the folder over http://localhost:8000 for testing. |
 | Many small polls and image reads inflated token use | Local scripts produce one `REPORT.md`; wait once for background jobs; verify the export by OCR (`verify_export.py`), not by viewing. |

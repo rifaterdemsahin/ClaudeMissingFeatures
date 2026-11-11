@@ -23,22 +23,23 @@ What you will see:
 - Removing an old Claude copy that could be blocking the update
 - Making a weekly planner canvas (classes for an AI meetup around a day job) and why an infinite canvas beats a locked page
 
-Chapters:
+Chapters (export timeline, first at 0:00, each at least 10 s):
 0:00 What we are looking for: the new Whiteboard feature
-0:22 No beta toggle? Check Settings and Capabilities
+0:22 No beta toggle? Settings and Capabilities
 1:00 Asking Claude how to find the Whiteboard
-1:42 Artifacts tab: Design, but no Whiteboard
-3:27 Screenshot, pin the chat, ask Claude with the image
-4:07 Claude's answer: your plan qualifies, rollout not reached you yet
-4:13 Quit, reopen and update the machine
-5:51 Still not there: check artifacts and designs again
-6:35 Checking Claude desktop versions, removing the old copy
-7:32 Planning my week on a canvas (AI Cambridge meetup + day job)
-8:14 Infinite canvas vs a classic canvas
-9:02 What we learned
-10:08 The result: a calendar and class series Claude knows about
-11:07 Update finished, still no Whiteboard: don't panic
-12:06 Use the other artifact types in the meantime
+1:35 Artifacts tab: Design, but no Whiteboard
+3:20 Screenshot to Claude: your plan qualifies, rollout not reached me
+4:06 Quit, reopen, update the machine
+5:44 Still not there
+6:28 Versions, removing the old copy
+7:25 Planning my week on a canvas
+8:07 Infinite canvas vs classic canvas
+8:55 What we learned
+10:01 The result: calendar and class series
+11:00 Update done, still no Whiteboard
+11:59 Use the other artifact types meanwhile
+12:23 Summary: what we learned
+12:34 Join the Delivery Pilot community
 
 Takeaways:
 1. Keep Claude and your machine up to date.

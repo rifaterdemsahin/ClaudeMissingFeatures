@@ -3,7 +3,9 @@ import json, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MD = {"MASTER_SPEC.md": ("spec.html", "Master spec v3"),
       "metadata.md": ("metadata.html", "YouTube metadata"),
-      "README.md": ("readme.html", "README (Shorts flow)")}
+      "README.md": ("readme.html", "README (Shorts flow)"),
+      "ENVIRONMENT.md": ("environment.html", "Environment"),
+      "EDL.md": ("edl.html", "EDL")}
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Claude Missing Features: {title}</title></head><body><main><div id="md"></div><pre id="raw" hidden></pre></main>
 <script src="nav.js"></script>
@@ -21,6 +23,7 @@ if (window.marked) {{
 }} else {{ raw.hidden = false; raw.textContent = SRC; }}
 </script></body></html>"""
 for src, (out, title) in MD.items():
+    if not (ROOT / src).exists(): continue
     text = (ROOT / src).read_text()
     if text.startswith("---\n"): text = text.split("---\n", 2)[2]
     html = PAGE.format(title=title, src=json.dumps(text).replace("</", "<\\/"), copy="true" if src == "metadata.md" else "false")
