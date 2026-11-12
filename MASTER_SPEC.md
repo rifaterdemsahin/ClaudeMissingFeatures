@@ -69,6 +69,7 @@
 4. **Ship the structure:** rebuild the kit and back it up to Drive (section 7b) so the next video pulls the newest version with `scripts/pull_kit.sh`.
 5. **The kit carries blanks, not this video:** empty `[]` data files, `okr.template.json`, a blank `project.json`; no media, no OCR, no this-video text. Never commit media or OCR output.
 6. **Log reusable lessons here**, not in chat; the spec is the memory.
+7. **Trunk-based development (always merge to `main`):** Follow trunk-based development. All active code converges continuously into `main` (the trunk). Never leave work unmerged on stale or long-running branches. If short-lived topic branches are used, merge them immediately back to `main` upon verification ("remember to merge always") and keep `main` green, tested, and pushed.
 
 ## ⚙️ `project.json` (the one config per video)
 
@@ -610,7 +611,7 @@ Everything committed becomes public (repo must be public for free Pages). Keep e
 ## 7a. Publish: GitHub Pages (do this for every project, do not forget)
 
 1. `scripts/build_all.sh` (builds every page and checks them; section 7c), check no private data or media is staged: `git add -n . | grep -Ei "\.(mp4|wav|zip)$|ocr_|REPORT.md"` must print nothing.
-2. **Commit and push** the feature branch after every change: `git add -A && git commit -m "…" && git push -u origin <branch>`. When the video is finished and verified, **merge to `main`** (owner's rule): `git checkout main && git pull && git merge --no-ff <branch> && git push origin main`, then push the branch too. Work on a branch until then; do not commit unfinished work straight to `main`.
+2. **Trunk-based development & merge to `main`:** Follow trunk-based development. Work converges immediately into `main`. If working on a short-lived branch (`<slug>-v1`), commit after each change: `git add -A && git commit -m "…" && git push -u origin <branch>`, then immediately **merge to `main`** ("remember to merge always"): `git checkout main && git pull && git merge --no-ff <branch> && git push origin main`. Keep both `main` and the branch in parity, with `main` being the definitive source of truth for deployment.
 3. **Enable GitHub Pages** (once per repo; the repo must be public or on a paid plan; everything committed becomes public):
 ```bash
 gh api -X POST repos/<user>/<repo>/pages -f "source[branch]=<branch>" -f "source[path]=/"
@@ -698,7 +699,7 @@ Support files every page loads: `project.js` (from `project.json`), `nav.js` (me
 - [ ] **Whole site builds and checks** (`scripts/build_all.sh`, 7c); **evals pass** (`python3 scripts/eval_spec.py`, 6u)
 - [ ] **Reuse check passed** (`scripts/check_reuse.sh`) and the kit tested from scratch; OKRs measured and scored (6j); Artifacts page rebuilt (6k)
 - [ ] **Backed up to Google Drive** (section 7b); every `scripts/*.py` compiles (`for f in scripts/*.py; do python3 -m py_compile $f; done`) and `zsh -n scripts/*.sh`
-- [ ] Work on a branch (`<slug>-v1`), commit and push after each change, never commit media
+- [ ] Follow trunk-based development: merge all work into `main` ("remember to merge always"), keep branches in parity, never commit media
 - [ ] Show every file as a clickable URL; use emojis in summaries
 
 ---

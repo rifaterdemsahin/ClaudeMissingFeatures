@@ -32,6 +32,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 - 🧩 **Publish & Spec stats**: Disallowed angled brackets in publish.html placeholders and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html; added document stats banner (lines, words, chars, sections, read time) to the bottom of spec.html
 - ☁️ **Published & Analytics**: Recorded live published URLs for YouTube (youtu.be/fnKeTQYBHN8), LinkedIn (lnkd.in/p/eZreMED5), and X (status/2120640398091804833); status updated to shared in assets/publish.json and linked in top menu; created analytics.html to track Day 2, Day 14, Day 28 performance horizons and OKR reconciliation
 - 🎨 **AI Curiosity Thumbnail**: Created high-CTR curiosity thumbnail (assets/thumbnail_fal.jpg, 1920x1080) via AI image generation and fal.ai tooling; preserved Remotion title card still (assets/thumbnail_card.jpg); updated publish.html with dual thumbnail previews and download buttons; documented prompt formula, fal.ai integration, and specs in MASTER_SPEC.md (Section 6w)
+- 🌳 **Trunk-Based Development**: Formalized trunk-based development across the project: all work continuously merges into main; synchronized long-form-1080p-v1 with main; documented trunk-based workflow rules in MASTER_SPEC.md and delivery checklist
 
 ## Round 6 · 📣 Publishing: three platforms, Azure, script and changelog
 *2026-11-11 night*
@@ -126,6 +127,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | # | In | Said | Decision |
 |---|---|---|---|
+| 40 | site | merge all and have all in main > follow trunk based development also mention that in the spec as well. git commit push | Adopted trunk-based development policy: all work continuously converges into main; synchronized and fast-forwarded long-form-1080p-v1 to main; documented trunk-based development rules in MASTER_SPEC.md (Reuse standing rules #7, Section 7a, and Delivery checklist) |
 | 39 | site | use fal.ai create a much more curiosoty triggering thumbnail and document the spec in the master spec | Generated high-CTR AI curiosity thumbnail (assets/thumbnail_fal.jpg, 1920x1080) depicting the mysterious missing whiteboard artifact examined under neon inspection light; preserved Remotion title card (assets/thumbnail_card.jpg); created scripts/generate_thumbnail.py for fal.ai/FLUX generation with Key Vault fallback; updated publish.html with dual thumbnail options and documented AI thumbnail architecture in MASTER_SPEC.md (Section 6w) |
 | 38 | site | linkedin published to https://lnkd.in/p/eZreMED5 / youtube published to https://youtu.be/fnKeTQYBHN8 / x.com https://x.com/rifaterdemsahin/status/2120640398091804833 > document as output > and create analytics pages. | Recorded live published URLs in assets/publish.json (status: shared) and metadata.md; nav.js Links menu now shows all 3 post links; created analytics.html via scripts/build_analytics.py tracking Day 2, Day 14, Day 28 performance horizons and OKR reconciliation; documented in MASTER_SPEC.md (Section 6v) |
 | 37 | site | publish.html angled brackets not allowed, thumbnail on publish page, document stats at bottom of spec.html | Disallowed angled brackets in publish.html placeholders/hints and documented rule in MASTER_SPEC.md; added video thumbnail preview (assets/thumbnail.jpg, 1920x1080) to publish.html and export zip; added live document stats banner (lines, words, chars, sections, read time) to spec.html |
@@ -170,6 +172,7 @@ Legend: 🚀 start · 🎬 video edit · 🧩 site or tool · 🐛 bug found and
 
 | Commit | When | Message |
 |---|---|---|
+| `d54a1f6` | 2026-11-11 22:48 | Document abstract curiosity thumbnail formula in MASTER_SPEC.md (Section 6w) |
 | `9f48477` | 2026-11-11 22:46 | Add AI curiosity thumbnail (fal.ai/FLUX), dual thumbnail downloads to publish page, and spec documentation in Section 6w |
 | `75df5e0` | 2026-11-11 22:32 | Document published URLs on YouTube, LinkedIn and X, and add analytics tracking page |
 | `55b8dd5` | 2026-11-11 22:26 | Remove angled brackets from publish page, add video thumbnail preview, and add document stats to spec.html |

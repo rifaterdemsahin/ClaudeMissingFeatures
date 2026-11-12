@@ -389,6 +389,11 @@
     "🎨",
     "AI Curiosity Thumbnail",
     "Created high-CTR curiosity thumbnail (assets/thumbnail_fal.jpg, 1920x1080) via AI image generation and fal.ai tooling; preserved Remotion title card still (assets/thumbnail_card.jpg); updated publish.html with dual thumbnail previews and download buttons; documented prompt formula, fal.ai integration, and specs in MASTER_SPEC.md (Section 6w)"
+   ],
+   [
+    "🌳",
+    "Trunk-Based Development",
+    "Formalized trunk-based development across the project: all work continuously merges into main; synchronized long-form-1080p-v1 with main; documented trunk-based workflow rules in MASTER_SPEC.md and delivery checklist"
    ]
   ]
  }

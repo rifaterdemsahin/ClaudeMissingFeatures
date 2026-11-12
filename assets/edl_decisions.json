@@ -388,5 +388,15 @@
   "how": "scripts/generate_thumbnail.py, assets/thumbnail_fal.jpg, assets/thumbnail.jpg, scripts/build_publish.py, MASTER_SPEC.md",
   "check": "verified in Chrome, dual thumbnails displayed with download buttons, 100/100 evals score",
   "in": "site"
+ },
+ {
+  "id": 40,
+  "when": "round 6",
+  "who": "owner",
+  "said": "merge all and have all in main > follow trunk based development also mention that in the spec as well. git commit push",
+  "decision": "Adopted trunk-based development policy: all work continuously converges into main; synchronized and fast-forwarded long-form-1080p-v1 to main; documented trunk-based development rules in MASTER_SPEC.md (Reuse standing rules #7, Section 7a, and Delivery checklist)",
+  "how": "MASTER_SPEC.md, git branch, scripts/build_all.sh",
+  "check": "verified in git and Chrome, main and long-form-1080p-v1 identical and pushed",
+  "in": "site"
  }
 ]
